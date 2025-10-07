@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>翻译测试</title>
+</head>
+<body>
+    <h1>日语翻译测试</h1>
+    <pre id="test-output"></pre>
+
+    <script type="module">
+        // 导入翻译文件
+        import jaJP from './src/locales/ja-JP.js';
+        
+        // 显示翻译内容
+        const output = document.getElementById('test-output');
+        
+        // 检查data-viz分类
+        if (jaJP.categories['data-viz']) {
+            output.innerHTML += `data-viz分类名称: ${jaJP.categories['data-viz'].name}\n`;
+            output.innerHTML += `data-viz分类描述: ${jaJP.categories['data-viz'].description}\n\n`;
+        } else {
+            output.innerHTML += '未找到data-viz分类\n\n';
+        }
+        
+        // 检查一些工具翻译
+        const testTools = ['text-formatter', 'image-compress', 'json-to-ts'];
+        
+        testTools.forEach(toolId => {
+            if (jaJP.tools[toolId]) {
+                output.innerHTML += `${toolId} 名称: ${jaJP.tools[toolId].name}\n`;
+                output.innerHTML += `${toolId} 描述: ${jaJP.tools[toolId].description}\n\n`;
+            } else {
+                output.innerHTML += `未找到${toolId}工具\n\n`;
+            }
+        });
+        
+        // 显示整个翻译对象的键结构
+        output.innerHTML += '\n\n翻译对象结构:\n';
+        output.innerHTML += `Categories: ${Object.keys(jaJP.categories).join(', ')}\n`;
+        output.innerHTML += `Tools count: ${Object.keys(jaJP.tools).length}`;
+    </script>
+</body>
+</html>
