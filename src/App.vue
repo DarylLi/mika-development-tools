@@ -470,7 +470,7 @@ export default {
         })
       })
       
-      // 按匹配度排序（名称匹配优先级更高）
+      // 按匹配度排序(名称匹配优先级更高)
       results.sort((a, b) => {
         const aNameMatch = a.tool.name.toLowerCase().includes(query)
         const bNameMatch = b.tool.name.toLowerCase().includes(query)
@@ -507,52 +507,52 @@ export default {
         icon: 'fas fa-font',
         subTools: [
           {
-            id: 'text-formatter',
+            id: 'textFormatter',
             icon: 'fas fa-text-height',
             component: 'TextFormatter'
           },
           {
-            id: 'text-stats',
+            id: 'textStats',
             icon: 'fas fa-chart-bar',
             component: 'TextStats'
           },
           {
-            id: 'json-processor',
+            id: 'jsonProcessor',
             icon: 'fas fa-code',
             component: 'JsonProcessor'
           },
           {
-            id: 'slug-generator',
+            id: 'slugGenerator',
             icon: 'fas fa-link',
             component: 'SlugGenerator'
           },
           {
-            id: 'lorem-ipsum',
+            id: 'loremIpsum',
             icon: 'fas fa-font',
             component: 'LoremIpsum'
           },
           {
-            id: 'markdown-preview',
+            id: 'markdownPreview',
             icon: 'fab fa-markdown',
             component: 'MarkdownPreview'
           },
           {
-            id: 'yaml-to-json',
+            id: 'yamlToJson',
             icon: 'fas fa-exchange-alt',
             component: 'YamlToJson'
           },
           {
-            id: 'html-to-text',
+            id: 'htmlToText',
             icon: 'fas fa-code',
             component: 'HtmlToText'
           },
           {
-            id: 'regex-tester',
+            id: 'regexTester',
             icon: 'fas fa-search',
             component: 'RegexTester'
           },
           {
-            id: 'diff-viewer',
+            id: 'diffViewer',
             icon: 'fas fa-code-branch',
             component: 'DiffViewer'
           }
@@ -563,27 +563,27 @@ export default {
         icon: 'fas fa-exchange-alt',
         subTools: [
           {
-            id: 'color-converter',
+            id: 'colorConverter',
             icon: 'fas fa-palette',
             component: 'ColorConverter'
           },
           {
-            id: 'timestamp-converter',
+            id: 'timestampConverter',
             icon: 'fas fa-clock',
             component: 'TimestampConverter'
           },
           {
-            id: 'word-to-html',
+            id: 'wordToHtml',
             icon: 'fas fa-file-word',
             component: 'WordToHtml'
           },
           {
-            id: 'markdown-to-image',
+            id: 'markdownToImage',
             icon: 'fab fa-markdown',
             component: 'MarkdownToImage'
           },
           {
-            id: 'sql-converter',
+            id: 'sqlConverter',
             icon: 'fas fa-database',
             component: 'SqlConverter'
           }
@@ -594,52 +594,52 @@ export default {
         icon: 'fas fa-shield-alt',
         subTools: [
           {
-            id: 'base64-converter',
+            id: 'base64Converter',
             icon: 'fas fa-code',
             component: 'Base64Converter'
           },
           {
-            id: 'url-converter',
+            id: 'urlConverter',
             icon: 'fas fa-link',
             component: 'UrlConverter'
           },
           {
-            id: 'jwt-decoder',
+            id: 'jwtDecoder',
             icon: 'fas fa-key',
             component: 'JwtDecoder'
           },
           {
-            id: 'md5-hash',
+            id: 'md5Hash',
             icon: 'fas fa-hashtag',
             component: 'Md5Hash'
           },
           {
-            id: 'sha256-hash',
+            id: 'sha256Hash',
             icon: 'fas fa-shield-halved',
             component: 'Sha256Hash'
           },
           {
-            id: 'uuid-generator',
+            id: 'uuidGenerator',
             icon: 'fas fa-fingerprint',
             component: 'UuidGenerator'
           },
           {
-            id: 'bcrypt-hash',
+            id: 'bcryptHash',
             icon: 'fas fa-lock',
             component: 'BcryptHash'
           },
           {
-            id: 'qr-generator',
+            id: 'qrGenerator',
             icon: 'fas fa-qrcode',
             component: 'QRGenerator'
           },
           {
-            id: 'barcode-generator',
+            id: 'barcodeGenerator',
             icon: 'fas fa-barcode',
             component: 'BarcodeGenerator'
           },
           {
-            id: 'password-strength',
+            id: 'passwordStrength',
             icon: 'fas fa-user-shield',
             component: 'PasswordStrength'
           }
@@ -650,22 +650,22 @@ export default {
         icon: 'fas fa-magic',
         subTools: [
           {
-            id: 'password-generator',
+            id: 'passwordGenerator',
             icon: 'fas fa-key',
             component: 'PasswordGenerator'
           },
           {
-            id: 'sql-in-generator',
+            id: 'sqlInGenerator',
             icon: 'fas fa-list',
             component: 'SqlInGenerator'
           },
           {
-            id: 'sql-parameter-filler',
+            id: 'sqlParameterFiller',
             icon: 'fas fa-fill-drip',
             component: 'SqlParameterFiller'
           },
           {
-            id: 'credit-code-generator',
+            id: 'creditCodeGenerator',
             icon: 'fas fa-id-card',
             component: 'CreditCodeGenerator'
           }
@@ -681,52 +681,52 @@ export default {
             component: 'Calculator'
           },
           {
-            id: 'unit-converter',
+            id: 'unitConverter',
             icon: 'fas fa-ruler',
             component: 'UnitConverter'
           },
           {
-            id: 'percentage-calc',
+            id: 'percentageCalc',
             icon: 'fas fa-percent',
             component: 'PercentageCalc'
           },
           {
-            id: 'triangle-solver',
+            id: 'triangleSolver',
             icon: 'fas fa-play',
             component: 'TriangleSolver'
           },
           {
-            id: 'prime-checker',
+            id: 'primeChecker',
             icon: 'fas fa-hashtag',
             component: 'PrimeChecker'
           },
           {
-            id: 'quadratic-solver',
+            id: 'quadraticSolver',
             icon: 'fas fa-square-root-alt',
             component: 'QuadraticSolver'
           },
           {
-            id: 'matrix-math',
+            id: 'matrixMath',
             icon: 'fas fa-th',
             component: 'MatrixMath'
           },
           {
-            id: 'currency-converter',
+            id: 'currencyConverter',
             icon: 'fas fa-dollar-sign',
             component: 'CurrencyConverter'
           },
           {
-            id: 'roman-numeral',
+            id: 'romanNumeral',
             icon: 'fas fa-list-ol',
             component: 'RomanNumeral'
           },
           {
-            id: 'base-converter',
+            id: 'baseConverter',
             icon: 'fas fa-code',
             component: 'BaseNConverter'
           },
           {
-            id: 'random-number',
+            id: 'randomNumber',
             icon: 'fas fa-dice',
             component: 'RandomNumber'
           }
@@ -737,52 +737,52 @@ export default {
         icon: 'fas fa-palette',
         subTools: [
           {
-            id: 'color-picker',
+            id: 'colorPicker',
             icon: 'fas fa-eyedropper',
             component: 'ColorPicker'
           },
           {
-            id: 'hex-rgb-converter',
+            id: 'hexRgbConverter',
             icon: 'fas fa-exchange-alt',
             component: 'HexRgbConverter'
           },
           {
-            id: 'palette-generator',
+            id: 'paletteGenerator',
             icon: 'fas fa-swatchbook',
             component: 'PaletteGenerator'
           },
           {
-            id: 'contrast-checker',
+            id: 'contrastChecker',
             icon: 'fas fa-universal-access',
             component: 'ContrastChecker'
           },
           {
-            id: 'gradient-maker',
+            id: 'gradientMaker',
             icon: 'fas fa-paint-brush',
             component: 'GradientMaker'
           },
           {
-            id: 'shadow-generator',
+            id: 'shadowGenerator',
             icon: 'fas fa-square',
             component: 'ShadowGenerator'
           },
           {
-            id: 'border-radius',
+            id: 'borderRadius',
             icon: 'fas fa-circle',
             component: 'BorderRadius'
           },
           {
-            id: 'favicon-generator',
+            id: 'faviconGenerator',
             icon: 'fas fa-star',
             component: 'FaviconGenerator'
           },
           {
-            id: 'css-clamp',
+            id: 'cssClamp',
             icon: 'fas fa-expand-arrows-alt',
             component: 'CssClamp'
           },
           {
-            id: 'tailwind-cheatsheet',
+            id: 'tailwindCheatsheet',
             icon: 'fas fa-wind',
             component: 'TailwindCheatsheet'
           }
@@ -793,54 +793,52 @@ export default {
         icon: 'fas fa-images',
         subTools: [
           {
-            id: 'image-compress',
+            id: 'imageCompress',
             icon: 'fas fa-compress-alt',
             component: 'ImageCompress'
           },
           {
-            id: 'image-resize',
+            id: 'imageResize',
             icon: 'fas fa-expand-arrows-alt',
             component: 'ImageResize'
           },
           {
-            id: 'image-convert',
+            id: 'imageConvert',
             icon: 'fas fa-exchange-alt',
             component: 'ImageConvert'
           },
           {
-            id: 'image-crop',
+            id: 'imageCrop',
             icon: 'fas fa-crop-alt',
             component: 'ImageCrop'
           },
           {
-            id: 'exif-viewer',
+            id: 'exifViewer',
             icon: 'fas fa-info-circle',
             component: 'ExifViewer'
           },
           {
-            id: 'svg-minify',
-            name: 'SVG 压缩优化',
-            description: '压缩SVG文件，移除冗余代码',
+            id: 'svgMinify',
             icon: 'fas fa-code',
             component: 'SvgMinify'
           },
           {
-            id: 'gif-split',
+            id: 'gifSplit',
             icon: 'fas fa-film',
             component: 'GifSplit'
           },
           {
-            id: 'video-trim',
+            id: 'videoTrim',
             icon: 'fas fa-video',
             component: 'VideoTrim'
           },
           {
-            id: 'audio-convert',
+            id: 'audioConvert',
             icon: 'fas fa-music',
             component: 'AudioConvert'
           },
           {
-            id: 'icon-spriter',
+            id: 'iconSpriter',
             icon: 'fas fa-th',
             component: 'IconSpriter'
           }
@@ -851,52 +849,52 @@ export default {
         icon: 'fas fa-clock',
         subTools: [
           {
-            id: 'unix-timestamp',
+            id: 'unixTimestamp',
             icon: 'fas fa-clock',
             component: 'UnixTimestamp'
           },
           {
-            id: 'cron-parser',
+            id: 'cronParser',
             icon: 'fas fa-cogs',
             component: 'CronParser'
           },
           {
-            id: 'age-calculator',
+            id: 'ageCalculator',
             icon: 'fas fa-birthday-cake',
             component: 'AgeCalculator'
           },
           {
-            id: 'time-diff',
+            id: 'timeDiff',
             icon: 'fas fa-calendar-minus',
             component: 'TimeDiff'
           },
           {
-            id: 'timezone-convert',
+            id: 'timezoneConvert',
             icon: 'fas fa-globe',
             component: 'TimezoneConvert'
           },
           {
-            id: 'week-number',
+            id: 'weekNumber',
             icon: 'fas fa-calendar-week',
             component: 'WeekNumber'
           },
           {
-            id: 'countdown-timer',
+            id: 'countdownTimer',
             icon: 'fas fa-hourglass-half',
             component: 'CountdownTimer'
           },
           {
-            id: 'date-add',
+            id: 'dateAdd',
             icon: 'fas fa-plus-minus',
             component: 'DateAdd'
           },
           {
-            id: 'working-days',
+            id: 'workingDays',
             icon: 'fas fa-briefcase',
             component: 'WorkingDays'
           },
           {
-            id: 'calendar-maker',
+            id: 'calendarMaker',
             icon: 'fas fa-calendar-alt',
             component: 'CalendarMaker'
           }
@@ -907,54 +905,52 @@ export default {
         icon: 'fas fa-laptop-code',
         subTools: [
           {
-            id: 'json-to-ts',
+            id: 'jsonToTs',
             icon: 'fab fa-js-square',
             component: 'JsonToTs'
           },
           {
-            id: 'http-status',
+            id: 'httpStatus',
             icon: 'fas fa-globe',
             component: 'HttpStatus'
           },
           {
-            id: 'user-agent',
+            id: 'userAgent',
             icon: 'fas fa-user-secret',
             component: 'UserAgent'
           },
           {
-            id: 'mime-search',
+            id: 'mimeSearch',
             icon: 'fas fa-file-alt',
             component: 'MimeSearch'
           },
           {
-            id: 'dns-lookup',
+            id: 'dnsLookup',
             icon: 'fas fa-server',
             component: 'DnsLookup'
           },
           {
-            id: 'ip-info',
+            id: 'ipInfo',
             icon: 'fas fa-map-marker-alt',
             component: 'IpInfo'
           },
           {
-            id: 'jwt-generator',
+            id: 'jwtGenerator',
             icon: 'fas fa-key',
             component: 'JwtGenerator'
           },
           {
-            id: 'uuid-namespace',
+            id: 'uuidNamespace',
             icon: 'fas fa-fingerprint',
             component: 'UuidNamespace'
           },
           {
-            id: 'regex-cheatsheet',
+            id: 'regexCheatsheet',
             icon: 'fas fa-list-alt',
             component: 'RegexCheatsheet'
           },
           {
-            id: 'json-diff',
-            name: 'JSON Diff Viewer',
-            description: 'JSON对象差异对比工具',
+            id: 'jsonDiff',
             icon: 'fas fa-code-branch',
             component: 'JsonDiff'
           }
@@ -965,47 +961,47 @@ export default {
         icon: 'fas fa-dice',
         subTools: [
           {
-            id: 'lorem-image',
+            id: 'loremImage',
             icon: 'fas fa-image',
             component: 'LoremImage'
           },
           {
-            id: 'fake-user',
+            id: 'fakeUser',
             icon: 'fas fa-user-friends',
             component: 'FakeUser'
           },
           {
-            id: 'random-color',
+            id: 'randomColor',
             icon: 'fas fa-palette',
             component: 'RandomColor'
           },
           {
-            id: 'name-generator',
+            id: 'nameGenerator',
             icon: 'fas fa-user-tag',
             component: 'NameGenerator'
           },
           {
-            id: 'quote-generator',
+            id: 'quoteGenerator',
             icon: 'fas fa-quote-right',
             component: 'QuoteGenerator'
           },
           {
-            id: 'uuid-batch',
+            id: 'uuidBatch',
             icon: 'fas fa-fingerprint',
             component: 'UuidBatch'
           },
           {
-            id: 'dice-roller',
+            id: 'diceRoller',
             icon: 'fas fa-dice-d20',
             component: 'DiceRoller'
           },
           {
-            id: 'lottery-picker',
+            id: 'lotteryPicker',
             icon: 'fas fa-gift',
             component: 'LotteryPicker'
           },
           {
-            id: 'story-prompt',
+            id: 'storyPrompt',
             icon: 'fas fa-feather-alt',
             component: 'StoryPrompt'
           }
@@ -1016,144 +1012,108 @@ export default {
         icon: 'fas fa-file-alt',
         subTools: [
           {
-            id: 'csv-to-json',
+            id: 'csvToJson',
             icon: 'fas fa-table',
             component: 'CsvToJson'
           },
           {
-            id: 'json-to-csv',
+            id: 'jsonToCsv',
             icon: 'fas fa-code',
             component: 'JsonToCsv'
           },
           {
-            id: 'markdown-toc',
+            id: 'markdownToc',
             icon: 'fab fa-markdown',
             component: 'MarkdownToc'
           },
           {
-            id: 'text-to-pdf',
-            name: 'Text → PDF',
-            description: '将文本转换为PDF文档',
+            id: 'textToPdf',
             icon: 'fas fa-file-pdf',
             component: 'TextToPdf'
           },
           {
-            id: 'merge-pdf',
-            name: 'PDF Merger',
-            description: '合并多个PDF文件为一个文档',
+            id: 'mergePdf',
             icon: 'fas fa-object-group',
             component: 'MergePdf'
           },
           {
-            id: 'split-pdf',
-            name: 'PDF Split',
-            description: '将PDF文档按页面分割',
+            id: 'splitPdf',
             icon: 'fas fa-cut',
             component: 'SplitPdf'
           },
           {
-            id: 'excel-to-json',
-            name: 'XLSX → JSON',
-            description: '将Excel文件转换为JSON格式',
+            id: 'excelToJson',
             icon: 'fas fa-file-excel',
             component: 'ExcelToJson'
           },
           {
-            id: 'zip-extract',
-            name: 'ZIP Extract',
-            description: '在线解压ZIP文件',
+            id: 'zipExtract',
             icon: 'fas fa-file-archive',
             component: 'ZipExtract'
           },
           {
-            id: 'image-to-pdf',
-            name: 'Img → PDF',
-            description: '将图片转换为PDF文档',
+            id: 'imageToPdf',
             icon: 'fas fa-images',
             component: 'ImageToPdf'
           },
           {
-            id: 'file-hash',
-            name: 'File Checksum',
-            description: '计算文件的哈希值校验码',
+            id: 'fileHash',
             icon: 'fas fa-shield-alt',
             component: 'FileHash'
           }
         ]
       },
       {
-        id: 'data-viz',
-        name: '数据 / 可视化',
+        id: 'dataViz',
         icon: 'fas fa-chart-bar',
-        description: '数据分析、图表生成、格式预览等可视化工具',
         subTools: [
           {
-            id: 'csv-preview',
-            name: 'CSV Viewer',
-            description: 'CSV文件预览与分析工具',
+            id: 'csvPreview',
             icon: 'fas fa-table',
             component: 'CsvPreview'
           },
           {
-            id: 'json-plot',
-            name: 'JSON Plot | Chart.js',
-            description: 'JSON数据可视化图表生成',
+            id: 'jsonPlot',
             icon: 'fas fa-chart-line',
             component: 'JsonPlot'
           },
           {
-            id: 'markdown-mermaid',
-            name: 'Mermaid Preview',
-            description: 'Mermaid图表预览与编辑',
+            id: 'markdownMermaid',
             icon: 'fas fa-project-diagram',
             component: 'MarkdownMermaid'
           },
           {
-            id: 'geojson-viewer',
-            name: 'GeoJSON Map',
-            description: 'GeoJSON地图数据查看器',
+            id: 'geojsonViewer',
             icon: 'fas fa-map',
             component: 'GeojsonViewer'
           },
           {
-            id: 'base64-image',
-            name: 'Base64 Img Preview',
-            description: 'Base64图片编码预览与转换',
+            id: 'base64Image',
             icon: 'fas fa-image',
             component: 'Base64Image'
           },
           {
-            id: 'html-preview',
-            name: 'Live HTML | iframe',
-            description: 'HTML实时预览与调试工具',
+            id: 'htmlPreview',
             icon: 'fas fa-code',
             component: 'HtmlPreview'
           },
           {
-            id: 'table-sorter',
-            name: 'Table Sorter / Filter',
-            description: '表格数据排序与筛选工具',
+            id: 'tableSorter',
             icon: 'fas fa-sort',
             component: 'TableSorter'
           },
           {
-            id: 'url-parser',
-            name: 'URL Inspector',
-            description: 'URL结构解析与分析工具',
+            id: 'urlParser',
             icon: 'fas fa-link',
             component: 'UrlParser'
           },
           {
-            id: 'email-validator',
-            name: 'Email Regex Check',
-            description: '邮箱地址格式验证工具',
+            id: 'emailValidator',
             icon: 'fas fa-envelope',
             component: 'EmailValidator'
           },
           {
-            id: 'credit-card-check',
-            name: 'Luhn Validator',
-            description: '信用卡号码Luhn算法验证',
+            id: 'creditCardCheck',
             icon: 'fas fa-credit-card',
             component: 'CreditCardCheck'
           }
@@ -1191,37 +1151,37 @@ export default {
     // 常用工具定义 - 7个最常用的工具
     const popularTools = ref([
       {
-        id: 'json-processor',
+        id: 'jsonProcessor',
         icon: 'fas fa-code',
         component: 'JsonProcessor',
         category: 'text'
       },
       {
-        id: 'password-generator',
+        id: 'passwordGenerator',
         icon: 'fas fa-lock',
         component: 'PasswordGenerator',
         category: 'generator'
       },
       {
-        id: 'qr-generator',
+        id: 'qrGenerator',
         icon: 'fas fa-qrcode',
         component: 'QRGenerator',
         category: 'crypto'
       },
       {
-        id: 'base64-converter',
+        id: 'base64Converter',
         icon: 'fas fa-code',
         component: 'Base64Converter',
         category: 'crypto'
       },
       {
-        id: 'color-picker',
+        id: 'colorPicker',
         icon: 'fas fa-eye-dropper',
         component: 'ColorPicker',
         category: 'design'
       },
       {
-        id: 'unix-timestamp',
+        id: 'unixTimestamp',
         icon: 'fas fa-clock',
         component: 'UnixTimestamp',
         category: 'datetime'
@@ -2383,4 +2343,4 @@ export default {
 .dark-theme .no-results span {
   color: #94a3b8;
 }
-</style> 
+</style>
