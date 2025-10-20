@@ -1,7 +1,10 @@
 <template>
   <div class="tool-card">
     <!-- 渐变色头部 -->
-    <div class="tool-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div
+      class="tool-header"
+      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    >
       <div class="tool-icon">
         <i class="fas fa-list"></i>
       </div>
@@ -20,12 +23,10 @@
 
     <!-- 输入区域 -->
     <div class="form-group">
-      <label for="input-data">
-        <i class="fas fa-keyboard"></i> 输入数据
-      </label>
-      <textarea 
+      <label for="input-data"> <i class="fas fa-keyboard"></i> 输入数据 </label>
+      <textarea
         id="input-data"
-        v-model="inputData" 
+        v-model="inputData"
         placeholder="支持多种格式：&#10;1. 逗号分隔：1,2,3,4&#10;2. 换行分隔：&#10;   apple&#10;   banana&#10;   cherry&#10;3. JSON数组：[1,2,3]&#10;4. 带引号：'a','b','c'"
         rows="8"
       ></textarea>
@@ -45,7 +46,7 @@
 
       <div class="form-group">
         <label>字段名</label>
-        <input v-model="fieldName" type="text" placeholder="id">
+        <input v-model="fieldName" type="text" placeholder="id" />
       </div>
 
       <div class="form-group">
@@ -70,19 +71,19 @@
     <!-- 高级选项 -->
     <div class="checkbox-group">
       <label>
-        <input type="checkbox" v-model="removeDuplicates">
+        <input type="checkbox" v-model="removeDuplicates" />
         <span>去除重复项</span>
       </label>
       <label>
-        <input type="checkbox" v-model="removeEmpty">
+        <input type="checkbox" v-model="removeEmpty" />
         <span>移除空值</span>
       </label>
       <label>
-        <input type="checkbox" v-model="sortResults">
+        <input type="checkbox" v-model="sortResults" />
         <span>排序结果</span>
       </label>
       <label>
-        <input type="checkbox" v-model="includeNot">
+        <input type="checkbox" v-model="includeNot" />
         <span>生成 NOT IN 语句</span>
       </label>
     </div>
@@ -128,8 +129,12 @@
     <div class="help-section">
       <h3><i class="fas fa-question-circle"></i> 使用说明</h3>
       <ul>
-        <li><strong>输入格式：</strong>支持逗号分隔、换行分隔、JSON数组等多种格式</li>
-        <li><strong>自动检测：</strong>工具会自动识别数据类型并选择合适的引号</li>
+        <li>
+          <strong>输入格式：</strong>支持逗号分隔、换行分隔、JSON数组等多种格式
+        </li>
+        <li>
+          <strong>自动检测：</strong>工具会自动识别数据类型并选择合适的引号
+        </li>
         <li><strong>字段名：</strong>指定SQL查询中的字段名，默认为 "id"</li>
         <li><strong>去重排序：</strong>可选择去除重复项并对结果排序</li>
         <li><strong>NOT IN：</strong>勾选可生成 NOT IN 查询语句</li>
@@ -139,90 +144,90 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, getCurrentInstance } from "vue";
 
 export default {
-  name: 'SqlInGenerator',
+  name: "SqlInGenerator",
   setup() {
-    const instance = getCurrentInstance()
+    const instance = getCurrentInstance();
     // 响应式数据
-    const inputData = ref('')
-    const fieldName = ref('id')
-    const dataType = ref('auto')
-    const quoteType = ref('single')
-    const outputFormat = ref('single')
-    const removeDuplicates = ref(true)
-    const removeEmpty = ref(true)
-    const sortResults = ref(false)
-    const includeNot = ref(false)
+    const inputData = ref("");
+    const fieldName = ref("id");
+    const dataType = ref("auto");
+    const quoteType = ref("single");
+    const outputFormat = ref("single");
+    const removeDuplicates = ref(true);
+    const removeEmpty = ref(true);
+    const sortResults = ref(false);
+    const includeNot = ref(false);
 
     // 统计信息
     const statistics = ref({
       total: 0,
       valid: 0,
       duplicates: 0,
-      empty: 0
-    })
+      empty: 0,
+    });
 
     // 解析输入数据
     const parseInputData = (input) => {
-      if (!input.trim()) return []
+      if (!input.trim()) return [];
 
-      let items = []
-      
+      let items = [];
+
       try {
         // 尝试解析为JSON数组
-        if (input.trim().startsWith('[') && input.trim().endsWith(']')) {
-          items = JSON.parse(input)
+        if (input.trim().startsWith("[") && input.trim().endsWith("]")) {
+          items = JSON.parse(input);
         } else {
           // 按逗号分隔
-          if (input.includes(',')) {
-            items = input.split(',')
+          if (input.includes(",")) {
+            items = input.split(",");
           } else {
             // 按换行分隔
-            items = input.split('\n')
+            items = input.split("\n");
           }
         }
       } catch (e) {
         // 如果JSON解析失败，按逗号或换行分隔
-        if (input.includes(',')) {
-          items = input.split(',')
+        if (input.includes(",")) {
+          items = input.split(",");
         } else {
-          items = input.split('\n')
+          items = input.split("\n");
         }
       }
 
       // 清理数据
-      const originalLength = items.length
-      let cleaned = items.map(item => {
-        if (typeof item === 'string') {
-          return item.trim().replace(/^['"]|['"]$/g, '') // 移除首尾引号
+      const originalLength = items.length;
+      let cleaned = items.map((item) => {
+        if (typeof item === "string") {
+          return item.trim().replace(/^['"]|['"]$/g, ""); // 移除首尾引号
         }
-        return String(item).trim()
-      })
+        return String(item).trim();
+      });
 
       // 统计信息
-      const emptyCount = cleaned.filter(item => !item).length
-      
+      const emptyCount = cleaned.filter((item) => !item).length;
+
       if (removeEmpty.value) {
-        cleaned = cleaned.filter(item => item)
+        cleaned = cleaned.filter((item) => item);
       }
 
-      const duplicateCount = originalLength - [...new Set(cleaned)].length
-      
+      const duplicateCount = originalLength - [...new Set(cleaned)].length;
+
       if (removeDuplicates.value) {
-        cleaned = [...new Set(cleaned)]
+        cleaned = [...new Set(cleaned)];
       }
 
       if (sortResults.value) {
         cleaned.sort((a, b) => {
-          const aNum = Number(a)
-          const bNum = Number(b)
+          const aNum = Number(a);
+          const bNum = Number(b);
           if (!isNaN(aNum) && !isNaN(bNum)) {
-            return aNum - bNum
+            return aNum - bNum;
           }
-          return a.localeCompare(b)
-        })
+          return a.localeCompare(b);
+        });
       }
 
       // 更新统计
@@ -230,69 +235,95 @@ export default {
         total: originalLength,
         valid: cleaned.length,
         duplicates: duplicateCount,
-        empty: emptyCount
-      }
+        empty: emptyCount,
+      };
 
-      return cleaned
-    }
+      return cleaned;
+    };
 
     // 检测数据类型
     const detectDataType = (items) => {
-      if (items.length === 0) return 'string'
-      
-      const allNumbers = items.every(item => !isNaN(Number(item)) && item !== '')
-      if (allNumbers) return 'number'
-      
-      return 'string'
-    }
+      if (items.length === 0) return "string";
+
+      const allNumbers = items.every(
+        (item) => !isNaN(Number(item)) && item !== ""
+      );
+      if (allNumbers) return "number";
+
+      return "string";
+    };
 
     // 格式化值
     const formatValue = (value, type, quote) => {
-      if (type === 'number' || quote === 'none') {
-        return value
+      if (type === "number" || quote === "none") {
+        return value;
       }
-      
-      const quoteChar = quote === 'double' ? '"' : "'"
-      return `${quoteChar}${value}${quoteChar}`
-    }
+
+      const quoteChar = quote === "double" ? '"' : "'";
+      return `${quoteChar}${value}${quoteChar}`;
+    };
 
     // 生成SQL语句
     const sqlResult = computed(() => {
-      if (!inputData.value.trim()) return ''
+      if (!inputData.value.trim()) return "";
 
-      const items = parseInputData(inputData.value)
-      if (items.length === 0) return ''
+      const items = parseInputData(inputData.value);
+      if (items.length === 0) return "";
 
       // 确定数据类型
-      const actualType = dataType.value === 'auto' ? detectDataType(items) : dataType.value
-      const actualQuote = dataType.value === 'auto' && actualType === 'number' ? 'none' : quoteType.value
+      const actualType =
+        dataType.value === "auto" ? detectDataType(items) : dataType.value;
+      const actualQuote =
+        dataType.value === "auto" && actualType === "number"
+          ? "none"
+          : quoteType.value;
 
       // 格式化值
-      const formattedItems = items.map(item => formatValue(item, actualType, actualQuote))
+      const formattedItems = items.map((item) =>
+        formatValue(item, actualType, actualQuote)
+      );
 
       // 构建SQL语句
-      const operator = includeNot.value ? 'NOT IN' : 'IN'
-      const field = fieldName.value || 'id'
+      const operator = includeNot.value ? "NOT IN" : "IN";
+      const field = fieldName.value || "id";
 
-      if (outputFormat.value === 'single') {
-        return `${field} ${operator} (${formattedItems.join(', ')})`
-      } else if (outputFormat.value === 'multi') {
-        const indentedItems = formattedItems.map(item => `  ${item}`).join(',\n')
-        return `${field} ${operator} (\n${indentedItems}\n)`
-      } else { // formatted
-        const chunks = []
+      if (outputFormat.value === "single") {
+        return `${field} ${operator} (${formattedItems.join(", ")})`;
+      } else if (outputFormat.value === "multi") {
+        const indentedItems = formattedItems
+          .map((item) => `  ${item}`)
+          .join(",\n");
+        return `${field} ${operator} (\n${indentedItems}\n)`;
+      } else {
+        // formatted
+        const chunks = [];
         for (let i = 0; i < formattedItems.length; i += 5) {
-          chunks.push(formattedItems.slice(i, i + 5))
+          chunks.push(formattedItems.slice(i, i + 5));
         }
-        const formattedChunks = chunks.map(chunk => `  ${chunk.join(', ')}`).join(',\n')
-        return `${field} ${operator} (\n${formattedChunks}\n)`
+        const formattedChunks = chunks
+          .map((chunk) => `  ${chunk.join(", ")}`)
+          .join(",\n");
+        return `${field} ${operator} (\n${formattedChunks}\n)`;
       }
-    })
+    });
 
     // 监听输入变化
-    watch([inputData, fieldName, dataType, quoteType, outputFormat, removeDuplicates, removeEmpty, sortResults, includeNot], () => {
-      // 触发重新计算
-    })
+    watch(
+      [
+        inputData,
+        fieldName,
+        dataType,
+        quoteType,
+        outputFormat,
+        removeDuplicates,
+        removeEmpty,
+        sortResults,
+        includeNot,
+      ],
+      () => {
+        // 触发重新计算
+      }
+    );
 
     // 加载示例数据
     const loadExample = () => {
@@ -302,41 +333,41 @@ user_002
 user_003
 'admin'
 "guest"
-1000`
-      fieldName.value = 'user_id'
-    }
+1000`;
+      fieldName.value = "user_id";
+    };
 
     // 复制到剪贴板
     const copyToClipboard = async (text) => {
       try {
-        await navigator.clipboard.writeText(text)
-        instance.proxy.$message.success('已复制到剪贴板！')
+        await navigator.clipboard.writeText(text);
+        instance.proxy.$message.success("已复制到剪贴板！");
       } catch (err) {
         // 备用方法
-        const textArea = document.createElement('textarea')
-        textArea.value = text
-        document.body.appendChild(textArea)
-        textArea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textArea)
-        instance.proxy.$message.success('已复制到剪贴板！')
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        instance.proxy.$message.success("已复制到剪贴板！");
       }
-    }
+    };
 
     // 下载SQL文件
     const downloadSql = () => {
-      if (!sqlResult.value) return
+      if (!sqlResult.value) return;
 
-      const blob = new Blob([sqlResult.value], { type: 'text/sql' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `sql_in_statement_${Date.now()}.sql`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    }
+      const blob = new Blob([sqlResult.value], { type: "text/sql" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `sql_in_statement_${Date.now()}.sql`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
 
     return {
       inputData,
@@ -352,10 +383,10 @@ user_003
       statistics,
       loadExample,
       copyToClipboard,
-      downloadSql
-    }
-  }
-}
+      downloadSql,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -371,7 +402,7 @@ user_003
   border: 1px solid #e9ecef;
   border-radius: 8px;
   padding: 10px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   white-space: pre-wrap;
   max-height: 300px;
   overflow-y: auto;
@@ -384,7 +415,8 @@ user_003
   margin-top: 1rem;
 }
 
-.copy-btn, .download-btn {
+.copy-btn,
+.download-btn {
   background: linear-gradient(45deg, #28a745, #20c997);
   color: white;
   border: none;
@@ -395,7 +427,8 @@ user_003
   transition: all 0.3s ease;
 }
 
-.copy-btn:hover, .download-btn:hover {
+.copy-btn:hover,
+.download-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
 }
@@ -419,7 +452,7 @@ user_003
   padding: 0.8rem;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .stat-label {
@@ -456,7 +489,7 @@ user_003
 }
 
 .help-section li::before {
-  content: '•';
+  content: "•";
   color: #1976d2;
   font-weight: bold;
   position: absolute;
@@ -467,11 +500,11 @@ user_003
   .options-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .result-actions {
     flex-direction: column;
   }

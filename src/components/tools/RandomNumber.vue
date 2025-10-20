@@ -6,24 +6,32 @@
       <div class="input-row">
         <div class="input-group">
           <label>最小值</label>
-          <input v-model.number="basicMin" type="number" placeholder="0">
+          <input v-model.number="basicMin" type="number" placeholder="0" />
         </div>
         <div class="input-group">
           <label>最大值</label>
-          <input v-model.number="basicMax" type="number" placeholder="100">
+          <input v-model.number="basicMax" type="number" placeholder="100" />
         </div>
         <div class="input-group">
           <label>数量</label>
-          <input v-model.number="basicCount" type="number" min="1" max="10000" placeholder="1">
+          <input
+            v-model.number="basicCount"
+            type="number"
+            min="1"
+            max="10000"
+            placeholder="1"
+          />
         </div>
       </div>
-      
+
       <div class="button-row">
         <button @click="generateBasicNumbers" class="btn-primary">
           <i class="fas fa-random"></i> 生成随机数
         </button>
-        <button @click="basicAllowDuplicates = !basicAllowDuplicates" 
-                :class="['btn-toggle', { active: basicAllowDuplicates }]">
+        <button
+          @click="basicAllowDuplicates = !basicAllowDuplicates"
+          :class="['btn-toggle', { active: basicAllowDuplicates }]"
+        >
           <i class="fas fa-clone"></i> 允许重复
         </button>
       </div>
@@ -36,14 +44,25 @@
           </button>
         </div>
         <div class="number-grid">
-          <span v-for="(num, index) in basicResult" :key="index" class="number-tag">
+          <span
+            v-for="(num, index) in basicResult"
+            :key="index"
+            class="number-tag"
+          >
             {{ num }}
           </span>
         </div>
         <div class="statistics">
           <span>最小: {{ Math.min(...basicResult) }}</span>
           <span>最大: {{ Math.max(...basicResult) }}</span>
-          <span>平均: {{ (basicResult.reduce((a, b) => a + b, 0) / basicResult.length).toFixed(2) }}</span>
+          <span
+            >平均:
+            {{
+              (
+                basicResult.reduce((a, b) => a + b, 0) / basicResult.length
+              ).toFixed(2)
+            }}</span
+          >
           <span>总和: {{ basicResult.reduce((a, b) => a + b, 0) }}</span>
         </div>
       </div>
@@ -56,9 +75,19 @@
         <div class="special-item">
           <h4>随机小数</h4>
           <div class="input-row">
-            <input v-model.number="floatMin" type="number" step="0.01" placeholder="0.0">
+            <input
+              v-model.number="floatMin"
+              type="number"
+              step="0.01"
+              placeholder="0.0"
+            />
             <span>到</span>
-            <input v-model.number="floatMax" type="number" step="0.01" placeholder="1.0">
+            <input
+              v-model.number="floatMax"
+              type="number"
+              step="0.01"
+              placeholder="1.0"
+            />
             <select v-model="floatPrecision">
               <option value="2">2位小数</option>
               <option value="3">3位小数</option>
@@ -69,7 +98,10 @@
           <button @click="generateFloat" class="btn-secondary">生成</button>
           <div v-if="floatResult !== null" class="result-display">
             {{ floatResult }}
-            <button @click="copyResult(floatResult.toString())" class="btn-mini">
+            <button
+              @click="copyResult(floatResult.toString())"
+              class="btn-mini"
+            >
               <i class="fas fa-copy"></i>
             </button>
           </div>
@@ -77,10 +109,15 @@
 
         <div class="special-item">
           <h4>随机百分比</h4>
-          <button @click="generatePercentage" class="btn-secondary">生成百分比</button>
+          <button @click="generatePercentage" class="btn-secondary">
+            生成百分比
+          </button>
           <div v-if="percentageResult !== null" class="result-display">
             {{ percentageResult }}%
-            <button @click="copyResult(percentageResult + '%')" class="btn-mini">
+            <button
+              @click="copyResult(percentageResult + '%')"
+              class="btn-mini"
+            >
               <i class="fas fa-copy"></i>
             </button>
           </div>
@@ -89,9 +126,15 @@
         <div class="special-item">
           <h4>随机布尔值</h4>
           <div class="boolean-controls">
-            <button @click="generateBoolean" class="btn-secondary">生成 True/False</button>
-            <button @click="generateBoolean('chinese')" class="btn-secondary">生成 是/否</button>
-            <button @click="generateBoolean('yesno')" class="btn-secondary">生成 Yes/No</button>
+            <button @click="generateBoolean" class="btn-secondary">
+              生成 True/False
+            </button>
+            <button @click="generateBoolean('chinese')" class="btn-secondary">
+              生成 是/否
+            </button>
+            <button @click="generateBoolean('yesno')" class="btn-secondary">
+              生成 Yes/No
+            </button>
           </div>
           <div v-if="booleanResult !== null" class="result-display">
             {{ booleanResult }}
@@ -110,32 +153,56 @@
         <div class="input-group">
           <label>序列范围</label>
           <div class="range-inputs">
-            <input v-model.number="sequenceStart" type="number" placeholder="1">
+            <input
+              v-model.number="sequenceStart"
+              type="number"
+              placeholder="1"
+            />
             <span>到</span>
-            <input v-model.number="sequenceEnd" type="number" placeholder="100">
+            <input
+              v-model.number="sequenceEnd"
+              type="number"
+              placeholder="100"
+            />
           </div>
         </div>
         <div class="input-group">
           <label>选择数量</label>
-          <input v-model.number="sequenceCount" type="number" min="1" placeholder="10">
+          <input
+            v-model.number="sequenceCount"
+            type="number"
+            min="1"
+            placeholder="10"
+          />
         </div>
       </div>
-      
+
       <div class="button-row">
-        <button @click="generateSequence" class="btn-primary">生成随机序列</button>
-        <button @click="generatePermutation" class="btn-secondary">生成排列</button>
+        <button @click="generateSequence" class="btn-primary">
+          生成随机序列
+        </button>
+        <button @click="generatePermutation" class="btn-secondary">
+          生成排列
+        </button>
         <button @click="shuffleSequence" class="btn-secondary">打乱序列</button>
       </div>
 
       <div v-if="sequenceResult.length > 0" class="result-section">
         <div class="result-header">
           <span>序列结果 ({{ sequenceResult.length }}个数字)</span>
-          <button @click="copyResult(sequenceResult.join(', '))" class="btn-copy">
+          <button
+            @click="copyResult(sequenceResult.join(', '))"
+            class="btn-copy"
+          >
             <i class="fas fa-copy"></i>
           </button>
         </div>
         <div class="number-grid">
-          <span v-for="(num, index) in sequenceResult" :key="index" class="number-tag">
+          <span
+            v-for="(num, index) in sequenceResult"
+            :key="index"
+            class="number-tag"
+          >
             {{ num }}
           </span>
         </div>
@@ -148,23 +215,48 @@
       <div class="string-controls">
         <div class="input-group">
           <label>字符串长度</label>
-          <input v-model.number="stringLength" type="number" min="1" max="1000" placeholder="10">
+          <input
+            v-model.number="stringLength"
+            type="number"
+            min="1"
+            max="1000"
+            placeholder="10"
+          />
         </div>
         <div class="charset-options">
-          <label><input type="checkbox" v-model="charsets.uppercase"> 大写字母</label>
-          <label><input type="checkbox" v-model="charsets.lowercase"> 小写字母</label>
-          <label><input type="checkbox" v-model="charsets.numbers"> 数字</label>
-          <label><input type="checkbox" v-model="charsets.symbols"> 符号</label>
-          <label><input type="checkbox" v-model="charsets.custom"> 自定义字符</label>
+          <label
+            ><input type="checkbox" v-model="charsets.uppercase" />
+            大写字母</label
+          >
+          <label
+            ><input type="checkbox" v-model="charsets.lowercase" />
+            小写字母</label
+          >
+          <label
+            ><input type="checkbox" v-model="charsets.numbers" /> 数字</label
+          >
+          <label
+            ><input type="checkbox" v-model="charsets.symbols" /> 符号</label
+          >
+          <label
+            ><input type="checkbox" v-model="charsets.custom" />
+            自定义字符</label
+          >
         </div>
         <div v-if="charsets.custom" class="input-group">
           <label>自定义字符集</label>
-          <input v-model="customCharset" type="text" placeholder="输入自定义字符">
+          <input
+            v-model="customCharset"
+            type="text"
+            placeholder="输入自定义字符"
+          />
         </div>
       </div>
-      
-      <button @click="generateRandomString" class="btn-primary">生成随机字符串</button>
-      
+
+      <button @click="generateRandomString" class="btn-primary">
+        生成随机字符串
+      </button>
+
       <div v-if="stringResult" class="result-section">
         <div class="result-header">
           <span>生成的字符串</span>
@@ -184,7 +276,10 @@
           <h4>随机色值</h4>
           <button @click="generateColor" class="btn-secondary">生成颜色</button>
           <div v-if="colorResult" class="color-result">
-            <div class="color-preview" :style="{ backgroundColor: colorResult }"></div>
+            <div
+              class="color-preview"
+              :style="{ backgroundColor: colorResult }"
+            ></div>
             <span>{{ colorResult }}</span>
             <button @click="copyResult(colorResult)" class="btn-mini">
               <i class="fas fa-copy"></i>
@@ -206,9 +301,14 @@
         <div class="advanced-item">
           <h4>随机权重选择</h4>
           <div class="weight-input">
-            <textarea v-model="weightedOptions" placeholder="选项1:权重1&#10;选项2:权重2&#10;选项3:权重3"></textarea>
+            <textarea
+              v-model="weightedOptions"
+              placeholder="选项1:权重1&#10;选项2:权重2&#10;选项3:权重3"
+            ></textarea>
           </div>
-          <button @click="generateWeightedChoice" class="btn-secondary">随机选择</button>
+          <button @click="generateWeightedChoice" class="btn-secondary">
+            随机选择
+          </button>
           <div v-if="weightedResult" class="result-display">
             {{ weightedResult }}
             <button @click="copyResult(weightedResult)" class="btn-mini">
@@ -227,7 +327,11 @@
         <button @click="exportHistory" class="btn-secondary">导出历史</button>
       </div>
       <div v-if="history.length > 0" class="history-list">
-        <div v-for="(item, index) in history.slice(-10)" :key="index" class="history-item">
+        <div
+          v-for="(item, index) in history.slice(-10)"
+          :key="index"
+          class="history-item"
+        >
           <div class="history-info">
             <span class="history-type">{{ item.type }}</span>
             <span class="history-time">{{ item.time }}</span>
@@ -248,8 +352,13 @@
           <h4>随机数类型</h4>
           <ul>
             <li><strong>真随机数</strong>：基于物理过程产生的不可预测序列</li>
-            <li><strong>伪随机数</strong>：通过算法生成的确定性序列，但统计上接近随机</li>
-            <li><strong>密码学安全随机数</strong>：用于安全应用的高质量随机数</li>
+            <li>
+              <strong>伪随机数</strong
+              >：通过算法生成的确定性序列，但统计上接近随机
+            </li>
+            <li>
+              <strong>密码学安全随机数</strong>：用于安全应用的高质量随机数
+            </li>
           </ul>
         </div>
         <div class="info-section">
@@ -277,272 +386,290 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
+import { ref, reactive, getCurrentInstance } from "vue";
 
 export default {
-  name: 'RandomNumber',
+  name: "RandomNumber",
   setup() {
-    const instance = getCurrentInstance()
+    const instance = getCurrentInstance();
     // 基础随机数
-    const basicMin = ref(0)
-    const basicMax = ref(100)
-    const basicCount = ref(1)
-    const basicAllowDuplicates = ref(true)
-    const basicResult = ref([])
+    const basicMin = ref(0);
+    const basicMax = ref(100);
+    const basicCount = ref(1);
+    const basicAllowDuplicates = ref(true);
+    const basicResult = ref([]);
 
     // 特殊类型
-    const floatMin = ref(0.0)
-    const floatMax = ref(1.0)
-    const floatPrecision = ref(2)
-    const floatResult = ref(null)
-    const percentageResult = ref(null)
-    const booleanResult = ref(null)
+    const floatMin = ref(0.0);
+    const floatMax = ref(1.0);
+    const floatPrecision = ref(2);
+    const floatResult = ref(null);
+    const percentageResult = ref(null);
+    const booleanResult = ref(null);
 
     // 序列
-    const sequenceStart = ref(1)
-    const sequenceEnd = ref(100)
-    const sequenceCount = ref(10)
-    const sequenceResult = ref([])
+    const sequenceStart = ref(1);
+    const sequenceEnd = ref(100);
+    const sequenceCount = ref(10);
+    const sequenceResult = ref([]);
 
     // 字符串
-    const stringLength = ref(10)
+    const stringLength = ref(10);
     const charsets = reactive({
       uppercase: true,
       lowercase: true,
       numbers: true,
       symbols: false,
-      custom: false
-    })
-    const customCharset = ref('')
-    const stringResult = ref('')
+      custom: false,
+    });
+    const customCharset = ref("");
+    const stringResult = ref("");
 
     // 高级功能
-    const colorResult = ref('')
-    const uuidResult = ref('')
-    const weightedOptions = ref('选项1:10\n选项2:20\n选项3:30')
-    const weightedResult = ref('')
+    const colorResult = ref("");
+    const uuidResult = ref("");
+    const weightedOptions = ref("选项1:10\n选项2:20\n选项3:30");
+    const weightedResult = ref("");
 
     // 历史记录
-    const history = ref([])
+    const history = ref([]);
 
     const addToHistory = (type, result) => {
       history.value.push({
         type,
         result: result.toString(),
-        time: new Date().toLocaleTimeString()
-      })
-    }
+        time: new Date().toLocaleTimeString(),
+      });
+    };
 
     const generateBasicNumbers = () => {
       if (basicMin.value >= basicMax.value) {
-        instance.proxy.$message.success('最小值必须小于最大值')
-        return
+        instance.proxy.$message.success("最小值必须小于最大值");
+        return;
       }
 
-      const min = Math.ceil(basicMin.value)
-      const max = Math.floor(basicMax.value)
-      const count = Math.min(basicCount.value, basicAllowDuplicates.value ? 10000 : (max - min + 1))
-      
-      const numbers = []
-      
+      const min = Math.ceil(basicMin.value);
+      const max = Math.floor(basicMax.value);
+      const count = Math.min(
+        basicCount.value,
+        basicAllowDuplicates.value ? 10000 : max - min + 1
+      );
+
+      const numbers = [];
+
       if (basicAllowDuplicates.value) {
         for (let i = 0; i < count; i++) {
-          numbers.push(Math.floor(Math.random() * (max - min + 1)) + min)
+          numbers.push(Math.floor(Math.random() * (max - min + 1)) + min);
         }
       } else {
         // 不允许重复
-        const available = []
+        const available = [];
         for (let i = min; i <= max; i++) {
-          available.push(i)
+          available.push(i);
         }
-        
+
         for (let i = 0; i < count && available.length > 0; i++) {
-          const index = Math.floor(Math.random() * available.length)
-          numbers.push(available.splice(index, 1)[0])
+          const index = Math.floor(Math.random() * available.length);
+          numbers.push(available.splice(index, 1)[0]);
         }
       }
-      
-      basicResult.value = numbers
-      addToHistory('基础随机数', numbers.join(', '))
-    }
+
+      basicResult.value = numbers;
+      addToHistory("基础随机数", numbers.join(", "));
+    };
 
     const generateFloat = () => {
-      const range = floatMax.value - floatMin.value
-      const randomFloat = Math.random() * range + floatMin.value
-      floatResult.value = parseFloat(randomFloat.toFixed(floatPrecision.value))
-      addToHistory('随机小数', floatResult.value)
-    }
+      const range = floatMax.value - floatMin.value;
+      const randomFloat = Math.random() * range + floatMin.value;
+      floatResult.value = parseFloat(randomFloat.toFixed(floatPrecision.value));
+      addToHistory("随机小数", floatResult.value);
+    };
 
     const generatePercentage = () => {
-      percentageResult.value = parseFloat((Math.random() * 100).toFixed(2))
-      addToHistory('随机百分比', percentageResult.value + '%')
-    }
+      percentageResult.value = parseFloat((Math.random() * 100).toFixed(2));
+      addToHistory("随机百分比", percentageResult.value + "%");
+    };
 
-    const generateBoolean = (type = 'boolean') => {
-      const random = Math.random() < 0.5
-      
+    const generateBoolean = (type = "boolean") => {
+      const random = Math.random() < 0.5;
+
       switch (type) {
-        case 'chinese':
-          booleanResult.value = random ? '是' : '否'
-          break
-        case 'yesno':
-          booleanResult.value = random ? 'Yes' : 'No'
-          break
+        case "chinese":
+          booleanResult.value = random ? "是" : "否";
+          break;
+        case "yesno":
+          booleanResult.value = random ? "Yes" : "No";
+          break;
         default:
-          booleanResult.value = random ? 'True' : 'False'
+          booleanResult.value = random ? "True" : "False";
       }
-      
-      addToHistory('随机布尔值', booleanResult.value)
-    }
+
+      addToHistory("随机布尔值", booleanResult.value);
+    };
 
     const generateSequence = () => {
       if (sequenceStart.value >= sequenceEnd.value) {
-        instance.proxy.$message.success('起始值必须小于结束值')
-        return
+        instance.proxy.$message.success("起始值必须小于结束值");
+        return;
       }
 
-      const range = sequenceEnd.value - sequenceStart.value + 1
-      const count = Math.min(sequenceCount.value, range)
-      const numbers = []
-      
+      const range = sequenceEnd.value - sequenceStart.value + 1;
+      const count = Math.min(sequenceCount.value, range);
+      const numbers = [];
+
       for (let i = 0; i < count; i++) {
-        let num
+        let num;
         do {
-          num = Math.floor(Math.random() * range) + sequenceStart.value
-        } while (numbers.includes(num))
-        numbers.push(num)
+          num = Math.floor(Math.random() * range) + sequenceStart.value;
+        } while (numbers.includes(num));
+        numbers.push(num);
       }
-      
-      sequenceResult.value = numbers.sort((a, b) => a - b)
-      addToHistory('随机序列', sequenceResult.value.join(', '))
-    }
+
+      sequenceResult.value = numbers.sort((a, b) => a - b);
+      addToHistory("随机序列", sequenceResult.value.join(", "));
+    };
 
     const generatePermutation = () => {
-      const numbers = []
+      const numbers = [];
       for (let i = sequenceStart.value; i <= sequenceEnd.value; i++) {
-        numbers.push(i)
+        numbers.push(i);
       }
-      
+
       // Fisher-Yates 洗牌算法
       for (let i = numbers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [numbers[i], numbers[j]] = [numbers[j], numbers[i]]
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
       }
-      
-      sequenceResult.value = numbers.slice(0, sequenceCount.value || numbers.length)
-      addToHistory('随机排列', sequenceResult.value.join(', '))
-    }
+
+      sequenceResult.value = numbers.slice(
+        0,
+        sequenceCount.value || numbers.length
+      );
+      addToHistory("随机排列", sequenceResult.value.join(", "));
+    };
 
     const shuffleSequence = () => {
       if (sequenceResult.value.length === 0) {
-        generateSequence()
-        return
+        generateSequence();
+        return;
       }
-      
-      const shuffled = [...sequenceResult.value]
+
+      const shuffled = [...sequenceResult.value];
       for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
       }
-      
-      sequenceResult.value = shuffled
-      addToHistory('打乱序列', sequenceResult.value.join(', '))
-    }
+
+      sequenceResult.value = shuffled;
+      addToHistory("打乱序列", sequenceResult.value.join(", "));
+    };
 
     const generateRandomString = () => {
-      let charset = ''
-      
-      if (charsets.uppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-      if (charsets.lowercase) charset += 'abcdefghijklmnopqrstuvwxyz'
-      if (charsets.numbers) charset += '0123456789'
-      if (charsets.symbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?'
-      if (charsets.custom && customCharset.value) charset += customCharset.value
-      
+      let charset = "";
+
+      if (charsets.uppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      if (charsets.lowercase) charset += "abcdefghijklmnopqrstuvwxyz";
+      if (charsets.numbers) charset += "0123456789";
+      if (charsets.symbols) charset += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+      if (charsets.custom && customCharset.value)
+        charset += customCharset.value;
+
       if (!charset) {
-        instance.proxy.$message.success('请至少选择一种字符类型')
-        return
+        instance.proxy.$message.success("请至少选择一种字符类型");
+        return;
       }
-      
-      let result = ''
+
+      let result = "";
       for (let i = 0; i < stringLength.value; i++) {
-        result += charset.charAt(Math.floor(Math.random() * charset.length))
+        result += charset.charAt(Math.floor(Math.random() * charset.length));
       }
-      
-      stringResult.value = result
-      addToHistory('随机字符串', result)
-    }
+
+      stringResult.value = result;
+      addToHistory("随机字符串", result);
+    };
 
     const generateColor = () => {
-      const hex = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')
-      colorResult.value = hex
-      addToHistory('随机颜色', hex)
-    }
+      const hex =
+        "#" +
+        Math.floor(Math.random() * 16777215)
+          .toString(16)
+          .padStart(6, "0");
+      colorResult.value = hex;
+      addToHistory("随机颜色", hex);
+    };
 
     const generateUUID = () => {
-      const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0
-        const v = c === 'x' ? r : (r & 0x3 | 0x8)
-        return v.toString(16)
-      })
-      uuidResult.value = uuid
-      addToHistory('UUID', uuid)
-    }
+      const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          const r = (Math.random() * 16) | 0;
+          const v = c === "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        }
+      );
+      uuidResult.value = uuid;
+      addToHistory("UUID", uuid);
+    };
 
     const generateWeightedChoice = () => {
-      const lines = weightedOptions.value.split('\n').filter(line => line.trim())
-      const options = []
-      let totalWeight = 0
-      
+      const lines = weightedOptions.value
+        .split("\n")
+        .filter((line) => line.trim());
+      const options = [];
+      let totalWeight = 0;
+
       for (const line of lines) {
-        const [option, weight] = line.split(':').map(s => s.trim())
+        const [option, weight] = line.split(":").map((s) => s.trim());
         if (option && weight && !isNaN(weight)) {
-          const w = parseFloat(weight)
-          options.push({ option, weight: w })
-          totalWeight += w
+          const w = parseFloat(weight);
+          options.push({ option, weight: w });
+          totalWeight += w;
         }
       }
-      
+
       if (options.length === 0) {
-        instance.proxy.$message.success('请输入有效的选项和权重')
-        return
+        instance.proxy.$message.success("请输入有效的选项和权重");
+        return;
       }
-      
-      const random = Math.random() * totalWeight
-      let currentWeight = 0
-      
+
+      const random = Math.random() * totalWeight;
+      let currentWeight = 0;
+
       for (const { option, weight } of options) {
-        currentWeight += weight
+        currentWeight += weight;
         if (random <= currentWeight) {
-          weightedResult.value = option
-          addToHistory('权重选择', option)
-          break
+          weightedResult.value = option;
+          addToHistory("权重选择", option);
+          break;
         }
       }
-    }
+    };
 
     const copyResult = async (text) => {
       try {
-        await navigator.clipboard.writeText(text)
+        await navigator.clipboard.writeText(text);
         // 可以添加复制成功的提示
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error("复制失败:", err);
       }
-    }
+    };
 
     const clearHistory = () => {
-      history.value = []
-    }
+      history.value = [];
+    };
 
     const exportHistory = () => {
-      const data = history.value.map(item => `${item.time} - ${item.type}: ${item.result}`).join('\n')
-      const blob = new Blob([data], { type: 'text/plain' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'random_history.txt'
-      a.click()
-      URL.revokeObjectURL(url)
-    }
+      const data = history.value
+        .map((item) => `${item.time} - ${item.type}: ${item.result}`)
+        .join("\n");
+      const blob = new Blob([data], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "random_history.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    };
 
     return {
       // 基础随机数
@@ -552,7 +679,7 @@ export default {
       basicAllowDuplicates,
       basicResult,
       generateBasicNumbers,
-      
+
       // 特殊类型
       floatMin,
       floatMax,
@@ -563,7 +690,7 @@ export default {
       generateFloat,
       generatePercentage,
       generateBoolean,
-      
+
       // 序列
       sequenceStart,
       sequenceEnd,
@@ -572,14 +699,14 @@ export default {
       generateSequence,
       generatePermutation,
       shuffleSequence,
-      
+
       // 字符串
       stringLength,
       charsets,
       customCharset,
       stringResult,
       generateRandomString,
-      
+
       // 高级功能
       colorResult,
       uuidResult,
@@ -588,15 +715,15 @@ export default {
       generateColor,
       generateUUID,
       generateWeightedChoice,
-      
+
       // 历史和工具
       history,
       copyResult,
       clearHistory,
-      exportHistory
-    }
-  }
-}
+      exportHistory,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -788,7 +915,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .boolean-controls {
@@ -826,7 +953,7 @@ export default {
   padding: 12px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   word-break: break-all;
 }
 
@@ -870,7 +997,7 @@ export default {
   border-radius: 4px;
   color: white;
   resize: vertical;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 14px;
 }
 
@@ -915,7 +1042,7 @@ export default {
 
 .history-result {
   flex: 1;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -953,32 +1080,32 @@ export default {
   .random-number-generator {
     padding: 16px;
   }
-  
+
   .input-row {
     flex-direction: column;
   }
-  
+
   .sequence-controls {
     grid-template-columns: 1fr;
   }
-  
+
   .advanced-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .info-content {
     grid-template-columns: 1fr;
   }
-  
+
   .statistics {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .button-row {
     flex-direction: column;
   }
-  
+
   .btn-primary,
   .btn-secondary {
     width: 100%;

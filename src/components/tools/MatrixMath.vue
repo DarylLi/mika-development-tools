@@ -4,15 +4,16 @@
       <!-- 矩阵设置 -->
       <div class="matrix-setup">
         <h3><i class="fas fa-th"></i> 矩阵运算器</h3>
-        
+
         <div class="operation-selector">
           <div class="operation-tabs">
-            <button 
-              v-for="op in operations" 
+            <button
+              v-for="op in operations"
               :key="op.id"
               @click="selectedOperation = op.id"
               :class="{ active: selectedOperation === op.id }"
-              class="operation-tab">
+              class="operation-tab"
+            >
               <i :class="op.icon"></i>
               {{ op.name }}
             </button>
@@ -23,22 +24,30 @@
           <div class="size-group">
             <label>矩阵A尺寸：</label>
             <select v-model="matrixA.rows" @change="resizeMatrix('A')">
-              <option v-for="n in [1,2,3,4,5]" :key="n" :value="n">{{ n }}</option>
+              <option v-for="n in [1, 2, 3, 4, 5]" :key="n" :value="n">
+                {{ n }}
+              </option>
             </select>
             ×
             <select v-model="matrixA.cols" @change="resizeMatrix('A')">
-              <option v-for="n in [1,2,3,4,5]" :key="n" :value="n">{{ n }}</option>
+              <option v-for="n in [1, 2, 3, 4, 5]" :key="n" :value="n">
+                {{ n }}
+              </option>
             </select>
           </div>
-          
+
           <div v-if="needsMatrixB" class="size-group">
             <label>矩阵B尺寸：</label>
             <select v-model="matrixB.rows" @change="resizeMatrix('B')">
-              <option v-for="n in [1,2,3,4,5]" :key="n" :value="n">{{ n }}</option>
+              <option v-for="n in [1, 2, 3, 4, 5]" :key="n" :value="n">
+                {{ n }}
+              </option>
             </select>
             ×
             <select v-model="matrixB.cols" @change="resizeMatrix('B')">
-              <option v-for="n in [1,2,3,4,5]" :key="n" :value="n">{{ n }}</option>
+              <option v-for="n in [1, 2, 3, 4, 5]" :key="n" :value="n">
+                {{ n }}
+              </option>
             </select>
           </div>
         </div>
@@ -51,15 +60,19 @@
           <h4>矩阵 A ({{ matrixA.rows }}×{{ matrixA.cols }})</h4>
           <div class="matrix-input">
             <div class="matrix-bracket left">[</div>
-            <div class="matrix-grid" :style="{ gridTemplateColumns: `repeat(${matrixA.cols}, 1fr)` }">
-              <input 
-                v-for="(value, index) in matrixA.data" 
+            <div
+              class="matrix-grid"
+              :style="{ gridTemplateColumns: `repeat(${matrixA.cols}, 1fr)` }"
+            >
+              <input
+                v-for="(value, index) in matrixA.data"
                 :key="`a-${index}`"
                 v-model="matrixA.data[index]"
-                type="number" 
+                type="number"
                 step="0.1"
                 class="matrix-cell"
-                @input="calculate">
+                @input="calculate"
+              />
             </div>
             <div class="matrix-bracket right">]</div>
           </div>
@@ -67,7 +80,11 @@
             <button @click="fillRandom('A')" class="tool-btn">
               <i class="fas fa-dice"></i> 随机填充
             </button>
-            <button @click="fillIdentity('A')" class="tool-btn" :disabled="matrixA.rows !== matrixA.cols">
+            <button
+              @click="fillIdentity('A')"
+              class="tool-btn"
+              :disabled="matrixA.rows !== matrixA.cols"
+            >
               <i class="fas fa-eye"></i> 单位矩阵
             </button>
             <button @click="clearMatrix('A')" class="tool-btn">
@@ -81,15 +98,19 @@
           <h4>矩阵 B ({{ matrixB.rows }}×{{ matrixB.cols }})</h4>
           <div class="matrix-input">
             <div class="matrix-bracket left">[</div>
-            <div class="matrix-grid" :style="{ gridTemplateColumns: `repeat(${matrixB.cols}, 1fr)` }">
-              <input 
-                v-for="(value, index) in matrixB.data" 
+            <div
+              class="matrix-grid"
+              :style="{ gridTemplateColumns: `repeat(${matrixB.cols}, 1fr)` }"
+            >
+              <input
+                v-for="(value, index) in matrixB.data"
                 :key="`b-${index}`"
                 v-model="matrixB.data[index]"
-                type="number" 
+                type="number"
                 step="0.1"
                 class="matrix-cell"
-                @input="calculate">
+                @input="calculate"
+              />
             </div>
             <div class="matrix-bracket right">]</div>
           </div>
@@ -97,7 +118,11 @@
             <button @click="fillRandom('B')" class="tool-btn">
               <i class="fas fa-dice"></i> 随机填充
             </button>
-            <button @click="fillIdentity('B')" class="tool-btn" :disabled="matrixB.rows !== matrixB.cols">
+            <button
+              @click="fillIdentity('B')"
+              class="tool-btn"
+              :disabled="matrixB.rows !== matrixB.cols"
+            >
               <i class="fas fa-eye"></i> 单位矩阵
             </button>
             <button @click="clearMatrix('B')" class="tool-btn">
@@ -109,14 +134,20 @@
         <!-- 标量输入 -->
         <div v-if="needsScalar" class="scalar-section">
           <h4>标量</h4>
-          <input v-model="scalar" type="number" step="0.1" class="scalar-input" @input="calculate">
+          <input
+            v-model="scalar"
+            type="number"
+            step="0.1"
+            class="scalar-input"
+            @input="calculate"
+          />
         </div>
       </div>
 
       <!-- 计算结果 -->
       <div v-if="result.calculated" class="result-section">
         <h3><i class="fas fa-equals"></i> 计算结果</h3>
-        
+
         <div class="result-display">
           <div class="result-header">
             <h4>{{ result.title }}</h4>
@@ -124,14 +155,18 @@
               尺寸：{{ result.rows }}×{{ result.cols }}
             </div>
           </div>
-          
+
           <div class="result-matrix">
             <div class="matrix-bracket left">[</div>
-            <div class="matrix-grid" :style="{ gridTemplateColumns: `repeat(${result.cols}, 1fr)` }">
-              <span 
-                v-for="(value, index) in result.data" 
+            <div
+              class="matrix-grid"
+              :style="{ gridTemplateColumns: `repeat(${result.cols}, 1fr)` }"
+            >
+              <span
+                v-for="(value, index) in result.data"
                 :key="`result-${index}`"
-                class="result-cell">
+                class="result-cell"
+              >
                 {{ formatNumber(value) }}
               </span>
             </div>
@@ -141,21 +176,33 @@
           <div class="result-properties" v-if="result.properties">
             <h5>矩阵属性</h5>
             <div class="properties-grid">
-              <div v-if="result.properties.determinant !== undefined" class="property-item">
+              <div
+                v-if="result.properties.determinant !== undefined"
+                class="property-item"
+              >
                 <label>行列式：</label>
                 <span>{{ formatNumber(result.properties.determinant) }}</span>
               </div>
-              <div v-if="result.properties.trace !== undefined" class="property-item">
+              <div
+                v-if="result.properties.trace !== undefined"
+                class="property-item"
+              >
                 <label>迹：</label>
                 <span>{{ formatNumber(result.properties.trace) }}</span>
               </div>
-              <div v-if="result.properties.rank !== undefined" class="property-item">
+              <div
+                v-if="result.properties.rank !== undefined"
+                class="property-item"
+              >
                 <label>秩：</label>
                 <span>{{ result.properties.rank }}</span>
               </div>
-              <div v-if="result.properties.isSquare !== undefined" class="property-item">
+              <div
+                v-if="result.properties.isSquare !== undefined"
+                class="property-item"
+              >
                 <label>方阵：</label>
-                <span>{{ result.properties.isSquare ? '是' : '否' }}</span>
+                <span>{{ result.properties.isSquare ? "是" : "否" }}</span>
               </div>
             </div>
           </div>
@@ -181,7 +228,12 @@
       <div class="examples-section">
         <h3><i class="fas fa-lightbulb"></i> 矩阵示例</h3>
         <div class="examples-grid">
-          <div v-for="example in examples" :key="example.name" class="example-card" @click="loadExample(example)">
+          <div
+            v-for="example in examples"
+            :key="example.name"
+            class="example-card"
+            @click="loadExample(example)"
+          >
             <div class="example-name">{{ example.name }}</div>
             <div class="example-desc">{{ example.description }}</div>
             <div class="example-size">{{ example.size }}</div>
@@ -242,422 +294,440 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, getCurrentInstance } from "vue";
 
 export default {
-  name: 'MatrixMath',
+  name: "MatrixMath",
   setup() {
-    const instance = getCurrentInstance()
-    const selectedOperation = ref('add')
-    const scalar = ref(1)
-    const error = ref('')
-    
+    const instance = getCurrentInstance();
+    const selectedOperation = ref("add");
+    const scalar = ref(1);
+    const error = ref("");
+
     const matrixA = ref({
       rows: 2,
       cols: 2,
-      data: ['1', '2', '3', '4']
-    })
-    
+      data: ["1", "2", "3", "4"],
+    });
+
     const matrixB = ref({
       rows: 2,
       cols: 2,
-      data: ['5', '6', '7', '8']
-    })
-    
+      data: ["5", "6", "7", "8"],
+    });
+
     const result = ref({
       calculated: false,
-      title: '',
+      title: "",
       rows: 0,
       cols: 0,
       data: [],
-      properties: null
-    })
-    
+      properties: null,
+    });
+
     const operations = [
-      { id: 'add', name: '加法', icon: 'fas fa-plus' },
-      { id: 'subtract', name: '减法', icon: 'fas fa-minus' },
-      { id: 'multiply', name: '乘法', icon: 'fas fa-times' },
-      { id: 'scalar', name: '数乘', icon: 'fas fa-expand-arrows-alt' },
-      { id: 'transpose', name: '转置', icon: 'fas fa-exchange-alt' },
-      { id: 'determinant', name: '行列式', icon: 'fas fa-calculator' },
-      { id: 'inverse', name: '逆矩阵', icon: 'fas fa-undo' },
-      { id: 'power', name: '幂运算', icon: 'fas fa-superscript' }
-    ]
-    
+      { id: "add", name: "加法", icon: "fas fa-plus" },
+      { id: "subtract", name: "减法", icon: "fas fa-minus" },
+      { id: "multiply", name: "乘法", icon: "fas fa-times" },
+      { id: "scalar", name: "数乘", icon: "fas fa-expand-arrows-alt" },
+      { id: "transpose", name: "转置", icon: "fas fa-exchange-alt" },
+      { id: "determinant", name: "行列式", icon: "fas fa-calculator" },
+      { id: "inverse", name: "逆矩阵", icon: "fas fa-undo" },
+      { id: "power", name: "幂运算", icon: "fas fa-superscript" },
+    ];
+
     const examples = [
       {
-        name: '2×2基础',
-        description: '基本2×2矩阵运算',
-        size: '2×2',
-        matrixA: { rows: 2, cols: 2, data: ['1', '2', '3', '4'] },
-        matrixB: { rows: 2, cols: 2, data: ['5', '6', '7', '8'] }
+        name: "2×2基础",
+        description: "基本2×2矩阵运算",
+        size: "2×2",
+        matrixA: { rows: 2, cols: 2, data: ["1", "2", "3", "4"] },
+        matrixB: { rows: 2, cols: 2, data: ["5", "6", "7", "8"] },
       },
       {
-        name: '3×3单位矩阵',
-        description: '3阶单位矩阵',
-        size: '3×3',
-        matrixA: { rows: 3, cols: 3, data: ['1', '0', '0', '0', '1', '0', '0', '0', '1'] },
-        matrixB: { rows: 3, cols: 3, data: ['2', '1', '0', '1', '2', '1', '0', '1', '2'] }
+        name: "3×3单位矩阵",
+        description: "3阶单位矩阵",
+        size: "3×3",
+        matrixA: {
+          rows: 3,
+          cols: 3,
+          data: ["1", "0", "0", "0", "1", "0", "0", "0", "1"],
+        },
+        matrixB: {
+          rows: 3,
+          cols: 3,
+          data: ["2", "1", "0", "1", "2", "1", "0", "1", "2"],
+        },
       },
       {
-        name: '矩形矩阵',
-        description: '非方阵运算',
-        size: '2×3',
-        matrixA: { rows: 2, cols: 3, data: ['1', '2', '3', '4', '5', '6'] },
-        matrixB: { rows: 3, cols: 2, data: ['1', '2', '3', '4', '5', '6'] }
-      }
-    ]
-    
+        name: "矩形矩阵",
+        description: "非方阵运算",
+        size: "2×3",
+        matrixA: { rows: 2, cols: 3, data: ["1", "2", "3", "4", "5", "6"] },
+        matrixB: { rows: 3, cols: 2, data: ["1", "2", "3", "4", "5", "6"] },
+      },
+    ];
+
     const needsMatrixB = computed(() => {
-      return ['add', 'subtract', 'multiply'].includes(selectedOperation.value)
-    })
-    
+      return ["add", "subtract", "multiply"].includes(selectedOperation.value);
+    });
+
     const needsScalar = computed(() => {
-      return ['scalar', 'power'].includes(selectedOperation.value)
-    })
-    
+      return ["scalar", "power"].includes(selectedOperation.value);
+    });
+
     const resizeMatrix = (matrix) => {
-      const target = matrix === 'A' ? matrixA.value : matrixB.value
-      const newSize = target.rows * target.cols
-      const currentData = target.data.slice()
-      
-      target.data = Array(newSize).fill('').map((_, index) => 
-        currentData[index] || '0'
-      )
-      
-      calculate()
-    }
-    
+      const target = matrix === "A" ? matrixA.value : matrixB.value;
+      const newSize = target.rows * target.cols;
+      const currentData = target.data.slice();
+
+      target.data = Array(newSize)
+        .fill("")
+        .map((_, index) => currentData[index] || "0");
+
+      calculate();
+    };
+
     const fillRandom = (matrix) => {
-      const target = matrix === 'A' ? matrixA.value : matrixB.value
-      target.data = target.data.map(() => 
-        (Math.random() * 20 - 10).toFixed(1)
-      )
-      calculate()
-    }
-    
+      const target = matrix === "A" ? matrixA.value : matrixB.value;
+      target.data = target.data.map(() => (Math.random() * 20 - 10).toFixed(1));
+      calculate();
+    };
+
     const fillIdentity = (matrix) => {
-      const target = matrix === 'A' ? matrixA.value : matrixB.value
-      if (target.rows !== target.cols) return
-      
+      const target = matrix === "A" ? matrixA.value : matrixB.value;
+      if (target.rows !== target.cols) return;
+
       target.data = target.data.map((_, index) => {
-        const row = Math.floor(index / target.cols)
-        const col = index % target.cols
-        return row === col ? '1' : '0'
-      })
-      calculate()
-    }
-    
+        const row = Math.floor(index / target.cols);
+        const col = index % target.cols;
+        return row === col ? "1" : "0";
+      });
+      calculate();
+    };
+
     const clearMatrix = (matrix) => {
-      const target = matrix === 'A' ? matrixA.value : matrixB.value
-      target.data = target.data.map(() => '0')
-      calculate()
-    }
-    
+      const target = matrix === "A" ? matrixA.value : matrixB.value;
+      target.data = target.data.map(() => "0");
+      calculate();
+    };
+
     const getMatrixArray = (matrix) => {
-      return matrix.data.map(x => parseFloat(x) || 0)
-    }
-    
+      return matrix.data.map((x) => parseFloat(x) || 0);
+    };
+
     const matrixAddition = () => {
-      if (matrixA.value.rows !== matrixB.value.rows || matrixA.value.cols !== matrixB.value.cols) {
-        throw new Error('矩阵加法要求两矩阵尺寸相同')
+      if (
+        matrixA.value.rows !== matrixB.value.rows ||
+        matrixA.value.cols !== matrixB.value.cols
+      ) {
+        throw new Error("矩阵加法要求两矩阵尺寸相同");
       }
-      
-      const dataA = getMatrixArray(matrixA.value)
-      const dataB = getMatrixArray(matrixB.value)
-      
+
+      const dataA = getMatrixArray(matrixA.value);
+      const dataB = getMatrixArray(matrixB.value);
+
       return {
-        title: 'A + B',
+        title: "A + B",
         rows: matrixA.value.rows,
         cols: matrixA.value.cols,
-        data: dataA.map((a, i) => a + dataB[i])
-      }
-    }
-    
+        data: dataA.map((a, i) => a + dataB[i]),
+      };
+    };
+
     const matrixSubtraction = () => {
-      if (matrixA.value.rows !== matrixB.value.rows || matrixA.value.cols !== matrixB.value.cols) {
-        throw new Error('矩阵减法要求两矩阵尺寸相同')
+      if (
+        matrixA.value.rows !== matrixB.value.rows ||
+        matrixA.value.cols !== matrixB.value.cols
+      ) {
+        throw new Error("矩阵减法要求两矩阵尺寸相同");
       }
-      
-      const dataA = getMatrixArray(matrixA.value)
-      const dataB = getMatrixArray(matrixB.value)
-      
+
+      const dataA = getMatrixArray(matrixA.value);
+      const dataB = getMatrixArray(matrixB.value);
+
       return {
-        title: 'A - B',
+        title: "A - B",
         rows: matrixA.value.rows,
         cols: matrixA.value.cols,
-        data: dataA.map((a, i) => a - dataB[i])
-      }
-    }
-    
+        data: dataA.map((a, i) => a - dataB[i]),
+      };
+    };
+
     const matrixMultiplication = () => {
       if (matrixA.value.cols !== matrixB.value.rows) {
-        throw new Error('矩阵乘法要求A的列数等于B的行数')
+        throw new Error("矩阵乘法要求A的列数等于B的行数");
       }
-      
-      const dataA = getMatrixArray(matrixA.value)
-      const dataB = getMatrixArray(matrixB.value)
-      const resultData = []
-      
+
+      const dataA = getMatrixArray(matrixA.value);
+      const dataB = getMatrixArray(matrixB.value);
+      const resultData = [];
+
       for (let i = 0; i < matrixA.value.rows; i++) {
         for (let j = 0; j < matrixB.value.cols; j++) {
-          let sum = 0
+          let sum = 0;
           for (let k = 0; k < matrixA.value.cols; k++) {
-            sum += dataA[i * matrixA.value.cols + k] * dataB[k * matrixB.value.cols + j]
+            sum +=
+              dataA[i * matrixA.value.cols + k] *
+              dataB[k * matrixB.value.cols + j];
           }
-          resultData.push(sum)
+          resultData.push(sum);
         }
       }
-      
+
       return {
-        title: 'A × B',
+        title: "A × B",
         rows: matrixA.value.rows,
         cols: matrixB.value.cols,
-        data: resultData
-      }
-    }
-    
+        data: resultData,
+      };
+    };
+
     const scalarMultiplication = () => {
-      const dataA = getMatrixArray(matrixA.value)
-      const s = parseFloat(scalar.value) || 1
-      
+      const dataA = getMatrixArray(matrixA.value);
+      const s = parseFloat(scalar.value) || 1;
+
       return {
         title: `${s} × A`,
         rows: matrixA.value.rows,
         cols: matrixA.value.cols,
-        data: dataA.map(x => x * s)
-      }
-    }
-    
+        data: dataA.map((x) => x * s),
+      };
+    };
+
     const matrixTranspose = () => {
-      const dataA = getMatrixArray(matrixA.value)
-      const resultData = []
-      
+      const dataA = getMatrixArray(matrixA.value);
+      const resultData = [];
+
       for (let j = 0; j < matrixA.value.cols; j++) {
         for (let i = 0; i < matrixA.value.rows; i++) {
-          resultData.push(dataA[i * matrixA.value.cols + j])
+          resultData.push(dataA[i * matrixA.value.cols + j]);
         }
       }
-      
+
       return {
-        title: 'A^T',
+        title: "A^T",
         rows: matrixA.value.cols,
         cols: matrixA.value.rows,
-        data: resultData
-      }
-    }
-    
+        data: resultData,
+      };
+    };
+
     const calculateDeterminant = () => {
       if (matrixA.value.rows !== matrixA.value.cols) {
-        throw new Error('只有方阵才能计算行列式')
+        throw new Error("只有方阵才能计算行列式");
       }
-      
-      const data = getMatrixArray(matrixA.value)
-      const n = matrixA.value.rows
-      let det = 0
-      
+
+      const data = getMatrixArray(matrixA.value);
+      const n = matrixA.value.rows;
+      let det = 0;
+
       if (n === 1) {
-        det = data[0]
+        det = data[0];
       } else if (n === 2) {
-        det = data[0] * data[3] - data[1] * data[2]
+        det = data[0] * data[3] - data[1] * data[2];
       } else if (n === 3) {
-        det = data[0] * (data[4] * data[8] - data[5] * data[7]) -
-              data[1] * (data[3] * data[8] - data[5] * data[6]) +
-              data[2] * (data[3] * data[7] - data[4] * data[6])
+        det =
+          data[0] * (data[4] * data[8] - data[5] * data[7]) -
+          data[1] * (data[3] * data[8] - data[5] * data[6]) +
+          data[2] * (data[3] * data[7] - data[4] * data[6]);
       } else {
         // 简化实现，仅支持3阶以下
-        throw new Error('当前仅支持3阶以下方阵的行列式计算')
+        throw new Error("当前仅支持3阶以下方阵的行列式计算");
       }
-      
+
       return {
-        title: 'det(A)',
+        title: "det(A)",
         rows: 1,
         cols: 1,
         data: [det],
         properties: {
           determinant: det,
-          isSquare: true
-        }
-      }
-    }
-    
+          isSquare: true,
+        },
+      };
+    };
+
     const calculateInverse = () => {
       if (matrixA.value.rows !== matrixA.value.cols) {
-        throw new Error('只有方阵才能计算逆矩阵')
+        throw new Error("只有方阵才能计算逆矩阵");
       }
-      
-      const data = getMatrixArray(matrixA.value)
-      const n = matrixA.value.rows
-      
+
+      const data = getMatrixArray(matrixA.value);
+      const n = matrixA.value.rows;
+
       if (n === 2) {
-        const det = data[0] * data[3] - data[1] * data[2]
+        const det = data[0] * data[3] - data[1] * data[2];
         if (Math.abs(det) < 1e-10) {
-          throw new Error('矩阵不可逆（行列式为0）')
+          throw new Error("矩阵不可逆（行列式为0）");
         }
-        
+
         const invData = [
-          data[3] / det, -data[1] / det,
-          -data[2] / det, data[0] / det
-        ]
-        
+          data[3] / det,
+          -data[1] / det,
+          -data[2] / det,
+          data[0] / det,
+        ];
+
         return {
-          title: 'A^(-1)',
+          title: "A^(-1)",
           rows: 2,
           cols: 2,
           data: invData,
           properties: {
             determinant: det,
-            isSquare: true
-          }
-        }
+            isSquare: true,
+          },
+        };
       } else {
-        throw new Error('当前仅支持2×2矩阵的逆矩阵计算')
+        throw new Error("当前仅支持2×2矩阵的逆矩阵计算");
       }
-    }
-    
+    };
+
     const matrixPower = () => {
       if (matrixA.value.rows !== matrixA.value.cols) {
-        throw new Error('只有方阵才能进行幂运算')
+        throw new Error("只有方阵才能进行幂运算");
       }
-      
-      const power = parseInt(scalar.value) || 1
+
+      const power = parseInt(scalar.value) || 1;
       if (power < 0) {
-        throw new Error('当前不支持负幂运算')
+        throw new Error("当前不支持负幂运算");
       }
-      
-      let resultData = getMatrixArray(matrixA.value)
-      
+
+      let resultData = getMatrixArray(matrixA.value);
+
       // 简化实现：仅支持正整数幂
       if (power === 0) {
         // 返回单位矩阵
         resultData = resultData.map((_, index) => {
-          const row = Math.floor(index / matrixA.value.cols)
-          const col = index % matrixA.value.cols
-          return row === col ? 1 : 0
-        })
+          const row = Math.floor(index / matrixA.value.cols);
+          const col = index % matrixA.value.cols;
+          return row === col ? 1 : 0;
+        });
       } else if (power > 1) {
         // 连续乘法（简化实现）
-        throw new Error('当前仅支持0次和1次幂运算')
+        throw new Error("当前仅支持0次和1次幂运算");
       }
-      
+
       return {
         title: `A^${power}`,
         rows: matrixA.value.rows,
         cols: matrixA.value.cols,
-        data: resultData
-      }
-    }
-    
+        data: resultData,
+      };
+    };
+
     const calculate = () => {
-      error.value = ''
-      
+      error.value = "";
+
       try {
-        let operationResult
-        
+        let operationResult;
+
         switch (selectedOperation.value) {
-          case 'add':
-            operationResult = matrixAddition()
-            break
-          case 'subtract':
-            operationResult = matrixSubtraction()
-            break
-          case 'multiply':
-            operationResult = matrixMultiplication()
-            break
-          case 'scalar':
-            operationResult = scalarMultiplication()
-            break
-          case 'transpose':
-            operationResult = matrixTranspose()
-            break
-          case 'determinant':
-            operationResult = calculateDeterminant()
-            break
-          case 'inverse':
-            operationResult = calculateInverse()
-            break
-          case 'power':
-            operationResult = matrixPower()
-            break
+          case "add":
+            operationResult = matrixAddition();
+            break;
+          case "subtract":
+            operationResult = matrixSubtraction();
+            break;
+          case "multiply":
+            operationResult = matrixMultiplication();
+            break;
+          case "scalar":
+            operationResult = scalarMultiplication();
+            break;
+          case "transpose":
+            operationResult = matrixTranspose();
+            break;
+          case "determinant":
+            operationResult = calculateDeterminant();
+            break;
+          case "inverse":
+            operationResult = calculateInverse();
+            break;
+          case "power":
+            operationResult = matrixPower();
+            break;
           default:
-            return
+            return;
         }
-        
+
         result.value = {
           calculated: true,
-          ...operationResult
-        }
-        
+          ...operationResult,
+        };
       } catch (e) {
-        error.value = e.message
-        result.value.calculated = false
+        error.value = e.message;
+        result.value.calculated = false;
       }
-    }
-    
+    };
+
     const formatNumber = (num) => {
-      if (Math.abs(num) < 1e-10) return '0'
-      return Math.abs(num - Math.round(num)) < 1e-10 ? Math.round(num).toString() : num.toFixed(3)
-    }
-    
+      if (Math.abs(num) < 1e-10) return "0";
+      return Math.abs(num - Math.round(num)) < 1e-10
+        ? Math.round(num).toString()
+        : num.toFixed(3);
+    };
+
     const copyResult = () => {
-      if (!result.value.calculated) return
-      
+      if (!result.value.calculated) return;
+
       const matrixText = result.value.data
         .map((val, index) => {
           if ((index + 1) % result.value.cols === 0) {
-            return formatNumber(val) + '\n'
+            return formatNumber(val) + "\n";
           }
-          return formatNumber(val) + '\t'
+          return formatNumber(val) + "\t";
         })
-        .join('')
-      
+        .join("");
+
       navigator.clipboard.writeText(matrixText).then(() => {
-        instance.proxy.$message.success('结果已复制到剪贴板')
-      })
-    }
-    
+        instance.proxy.$message.success("结果已复制到剪贴板");
+      });
+    };
+
     const exportResult = () => {
-      if (!result.value.calculated) return
-      
+      if (!result.value.calculated) return;
+
       const csvContent = result.value.data
         .map((val, index) => {
           if ((index + 1) % result.value.cols === 0) {
-            return formatNumber(val) + '\n'
+            return formatNumber(val) + "\n";
           }
-          return formatNumber(val) + ','
+          return formatNumber(val) + ",";
         })
-        .join('')
-      
-      const blob = new Blob([csvContent], { type: 'text/csv' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'matrix_result.csv'
-      a.click()
-      URL.revokeObjectURL(url)
-    }
-    
+        .join("");
+
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "matrix_result.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
     const loadExample = (example) => {
-      matrixA.value = { ...example.matrixA }
+      matrixA.value = { ...example.matrixA };
       if (example.matrixB) {
-        matrixB.value = { ...example.matrixB }
+        matrixB.value = { ...example.matrixB };
       }
-      calculate()
-    }
-    
+      calculate();
+    };
+
     // 监听操作类型变化
     watch(selectedOperation, () => {
       // 调整矩阵B的尺寸以匹配运算需求
-      if (selectedOperation.value === 'multiply') {
-        matrixB.value.rows = matrixA.value.cols
-        resizeMatrix('B')
+      if (selectedOperation.value === "multiply") {
+        matrixB.value.rows = matrixA.value.cols;
+        resizeMatrix("B");
       }
-      calculate()
-    })
-    
+      calculate();
+    });
+
     // 初始计算
-    calculate()
-    
+    calculate();
+
     return {
       selectedOperation,
       scalar,
@@ -677,10 +747,10 @@ export default {
       formatNumber,
       copyResult,
       exportResult,
-      loadExample
-    }
-  }
-}
+      loadExample,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -776,7 +846,8 @@ export default {
   align-items: start;
 }
 
-.matrix-section, .scalar-section {
+.matrix-section,
+.scalar-section {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 12px;
@@ -784,7 +855,8 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.matrix-section h4, .scalar-section h4 {
+.matrix-section h4,
+.scalar-section h4 {
   margin: 0 0 1rem 0;
   color: #667eea;
   font-size: 1.1rem;
@@ -1101,31 +1173,31 @@ export default {
   .operation-tabs {
     justify-content: center;
   }
-  
+
   .matrix-size-controls {
     justify-content: center;
   }
-  
+
   .matrices-input {
     grid-template-columns: 1fr;
   }
-  
+
   .matrix-cell {
     width: 50px;
     height: 35px;
     font-size: 0.8rem;
   }
-  
+
   .result-cell {
     width: 60px;
     height: 35px;
     font-size: 0.8rem;
   }
-  
+
   .examples-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .knowledge-grid {
     grid-template-columns: 1fr;
   }

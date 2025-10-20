@@ -1,6 +1,9 @@
 // ===== 导入Sass模块 =====
 @use "sass:map";
-
+@font-face {
+    font-family: "mika_xi";
+    src: url(https://all.franxxdaryl.site/assets/mika_xi.ttf);
+}
 // ===== SCSS 变量定义 =====
 
 // 颜色变量 - 浅色主题
@@ -187,10 +190,13 @@ $current-theme: $light-theme !default;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'mika_xi','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   @include theme-styles($light-theme);
   min-height: 100vh;
   line-height: 1.6;
+  span,div{
+    font-family: 'mika_xi';
+  }
 }
 
 // ===== 主容器 =====
@@ -262,6 +268,8 @@ main {
   margin-bottom: 2rem;
   text-shadow: theme(text-shadow);
   font-weight: 600;
+  padding: 24px 0;
+  border-bottom: 1px solid #dedede7d;
 }
 
 // ===== 工具网格布局 =====
@@ -757,7 +765,7 @@ footer {
 
 // ===== 分类概览 =====
 .category-overview {
-  padding: 2rem 1rem;
+  padding: 0rem 1rem;
   max-width: 1200px;
   margin: 0 auto;
   
@@ -1309,3 +1317,4 @@ footer {
     }
   }
 }
+
