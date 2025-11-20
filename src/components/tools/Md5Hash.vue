@@ -1,27 +1,27 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-hashtag"></i> MD5 Hash</h2>
-    <p>计算文本的MD5哈希值</p>
+    <h2><i class="fas fa-hashtag"></i> {{ $t('tools.md5Hash.ui.title') }}</h2>
+    <p>{{ $t('tools.md5Hash.ui.description') }}</p>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.md5Hash.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="inputText" placeholder="输入要计算MD5哈希的文本..."></textarea>
+    <textarea v-model="inputText" :placeholder="$t('tools.md5Hash.ui.placeholder')"></textarea>
     
     <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-      <button @click="calculateHash">计算 MD5</button>
-      <button @click="clearText">清空</button>
+      <button @click="calculateHash">{{ $t('tools.md5Hash.ui.calculateMd5') }}</button>
+      <button @click="clearText">{{ $t('tools.md5Hash.ui.clear') }}</button>
     </div>
     
     <div class="result-display" v-if="result">
       <div class="hash-result">
-        <label>MD5 哈希值:</label>
+        <label>{{ $t('tools.md5Hash.ui.md5HashValue') }}</label>
         <div class="hash-value">{{ result }}</div>
         <button @click="copyHash" class="copy-btn">
-          <i class="fas fa-copy"></i> 复制
+          <i class="fas fa-copy"></i> {{ $t('tools.md5Hash.ui.copy') }}
         </button>
       </div>
     </div>
@@ -30,6 +30,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import CryptoJS from 'crypto-js'
 
 export default {
@@ -38,6 +39,7 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const inputText = ref('')
     const result = ref('')
 
@@ -63,7 +65,7 @@ export default {
       try {
         await navigator.clipboard.writeText(result.value)
       } catch (e) {
-        console.error('复制失败:', e)
+        console.error(t('tools.md5Hash.ui.copyFailed'), e)
       }
     }
 

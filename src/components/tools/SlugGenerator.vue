@@ -1,20 +1,20 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-link"></i> Slug Generator</h2>
+    <h2><i class="fas fa-link"></i> {{ $t('tools.slugGenerator.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.slugGenerator.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="textInput" placeholder="请输入要转换的文本..."></textarea>
+    <textarea v-model="textInput" :placeholder="$t('common.enterText')"></textarea>
     
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-      <button @click="generateSlug('kebab')">kebab-case</button>
-      <button @click="generateSlug('snake')">snake_case</button>
-      <button @click="generateSlug('camel')">camelCase</button>
-      <button @click="generateSlug('pascal')">PascalCase</button>
+      <button @click="generateSlug('kebab')">{{ $t('tools.slugGenerator.ui.kebabCase') }}</button>
+      <button @click="generateSlug('snake')">{{ $t('tools.slugGenerator.ui.snakeCase') }}</button>
+      <button @click="generateSlug('camel')">{{ $t('tools.slugGenerator.ui.camelCase') }}</button>
+      <button @click="generateSlug('pascal')">{{ $t('tools.slugGenerator.ui.pascalCase') }}</button>
     </div>
     
     <div class="result-display">{{ slugResult }}</div>
@@ -23,6 +23,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'SlugGenerator',
@@ -30,6 +31,7 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const textInput = ref('')
     const slugResult = ref('')
 
@@ -89,8 +91,9 @@ export default {
       textInput,
       slugResult,
       loadExample,
-      generateSlug
+      generateSlug,
+      t
     }
   }
 }
-</script> 
+</script>

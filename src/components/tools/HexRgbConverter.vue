@@ -1,13 +1,13 @@
 <template>
   <div class="hex-rgb-container">
     <div class="tool-header">
-      <h2>🔄 HEX ↔ RGB</h2>
-      <p>颜色格式互转工具</p>
+      <h2>🔄 {{ $t('tools.hexRgbConverter.ui.title') }}</h2>
+      <p>{{ $t('tools.hexRgbConverter.ui.description') }}</p>
     </div>
 
     <div class="converter-section">
       <div class="input-group">
-        <label>HEX 颜色</label>
+        <label>{{ $t('tools.hexRgbConverter.ui.hexColorLabel') }}</label>
         <div class="input-with-preview">
           <input 
             type="text" 
@@ -23,7 +23,7 @@
       <div class="converter-arrow">⇅</div>
 
       <div class="input-group">
-        <label>RGB 颜色</label>
+        <label>{{ $t('tools.hexRgbConverter.ui.rgbColorLabel') }}</label>
         <div class="rgb-inputs">
           <div class="rgb-input-group">
             <label>R</label>
@@ -60,14 +60,14 @@
           </div>
         </div>
         <div class="rgb-text">
-          <span>CSS: rgb({{ rgbValues.r }}, {{ rgbValues.g }}, {{ rgbValues.b }})</span>
+          <span>{{ $t('tools.hexRgbConverter.ui.cssPrefix') }}rgb({{ rgbValues.r }}, {{ rgbValues.g }}, {{ rgbValues.b }})</span>
           <button @click="copyRgb" class="copy-btn">📋</button>
         </div>
       </div>
     </div>
 
     <div class="additional-formats">
-      <h3>其他格式</h3>
+      <h3>{{ $t('tools.hexRgbConverter.ui.otherFormats') }}</h3>
       <div class="format-grid">
         <div class="format-item" @click="copyFormat(hslValue)">
           <span class="format-label">HSL:</span>
@@ -88,11 +88,11 @@
     </div>
 
     <div class="quick-colors">
-      <h3>快速颜色</h3>
+      <h3>{{ $t('tools.hexRgbConverter.ui.quickColors') }}</h3>
       <div class="color-swatches">
         <div 
           v-for="color in quickColors" 
-          :key="color.name"
+          :key="color.key"
           class="color-swatch"
           :style="{ backgroundColor: color.hex }"
           @click="loadColor(color.hex)"
@@ -107,10 +107,12 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'HexRgbConverter',
   setup() {
+    const { t } = useI18n()
     const hexValue = ref('#FF5733')
     const rgbValues = ref({ r: 255, g: 87, b: 51 })
 
@@ -133,20 +135,20 @@ export default {
       return `cmyk(${Math.round(cmyk.c)}%, ${Math.round(cmyk.m)}%, ${Math.round(cmyk.y)}%, ${Math.round(cmyk.k)}%)`
     })
 
-    const quickColors = [
-      { name: '红色', hex: '#FF0000' },
-      { name: '绿色', hex: '#00FF00' },
-      { name: '蓝色', hex: '#0000FF' },
-      { name: '黄色', hex: '#FFFF00' },
-      { name: '紫色', hex: '#800080' },
-      { name: '橙色', hex: '#FFA500' },
-      { name: '粉色', hex: '#FFC0CB' },
-      { name: '青色', hex: '#00FFFF' },
-      { name: '黑色', hex: '#000000' },
-      { name: '白色', hex: '#FFFFFF' },
-      { name: '灰色', hex: '#808080' },
-      { name: '棕色', hex: '#A52A2A' }
-    ]
+    const quickColors = computed(() => [
+      { key: 'red', name: t('tools.hexRgbConverter.ui.colorRed'), hex: '#FF0000' },
+      { key: 'green', name: t('tools.hexRgbConverter.ui.colorGreen'), hex: '#00FF00' },
+      { key: 'blue', name: t('tools.hexRgbConverter.ui.colorBlue'), hex: '#0000FF' },
+      { key: 'yellow', name: t('tools.hexRgbConverter.ui.colorYellow'), hex: '#FFFF00' },
+      { key: 'purple', name: t('tools.hexRgbConverter.ui.colorPurple'), hex: '#800080' },
+      { key: 'orange', name: t('tools.hexRgbConverter.ui.colorOrange'), hex: '#FFA500' },
+      { key: 'pink', name: t('tools.hexRgbConverter.ui.colorPink'), hex: '#FFC0CB' },
+      { key: 'cyan', name: t('tools.hexRgbConverter.ui.colorCyan'), hex: '#00FFFF' },
+      { key: 'black', name: t('tools.hexRgbConverter.ui.colorBlack'), hex: '#000000' },
+      { key: 'white', name: t('tools.hexRgbConverter.ui.colorWhite'), hex: '#FFFFFF' },
+      { key: 'gray', name: t('tools.hexRgbConverter.ui.colorGray'), hex: '#808080' },
+      { key: 'brown', name: t('tools.hexRgbConverter.ui.colorBrown'), hex: '#A52A2A' }
+    ])
 
     const hexToRgb = () => {
       if (isValidHex(hexValue.value)) {
@@ -177,10 +179,9 @@ export default {
     const copyToClipboard = async (text) => {
       try {
         await navigator.clipboard.writeText(text)
-        // 简单提示
-        console.log('已复制:', text)
+        console.log(t('tools.hexRgbConverter.ui.copied'), text)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.hexRgbConverter.ui.copyFailed'), err)
       }
     }
 

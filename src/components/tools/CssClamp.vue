@@ -1,60 +1,60 @@
 <template>
   <div class="css-clamp-container">
     <div class="tool-header">
-      <h2>📏 CSS Clamp</h2>
-      <p>Fluid size 响应式尺寸计算器</p>
+      <h2>📏 {{ $t('tools.cssClamp.ui.title') }}</h2>
+      <p>{{ $t('tools.cssClamp.ui.description') }}</p>
     </div>
 
     <div class="clamp-inputs">
       <div class="input-group">
-        <label>最小值 (rem)</label>
+        <label>{{ $t('tools.cssClamp.ui.minValue') }} (rem)</label>
         <input type="number" v-model="minValue" step="0.1" @input="updateClamp" class="value-input">
       </div>
 
       <div class="input-group">
-        <label>最大值 (rem)</label>
+        <label>{{ $t('tools.cssClamp.ui.maxValue') }} (rem)</label>
         <input type="number" v-model="maxValue" step="0.1" @input="updateClamp" class="value-input">
       </div>
 
       <div class="input-group">
-        <label>最小视口 (px)</label>
+        <label>{{ $t('tools.cssClamp.ui.minViewport') }} (px)</label>
         <input type="number" v-model="minViewport" @input="updateClamp" class="value-input">
       </div>
 
       <div class="input-group">
-        <label>最大视口 (px)</label>
+        <label>{{ $t('tools.cssClamp.ui.maxViewport') }} (px)</label>
         <input type="number" v-model="maxViewport" @input="updateClamp" class="value-input">
       </div>
     </div>
 
     <div class="clamp-result">
-      <label>CSS Clamp 代码</label>
+      <label>{{ $t('tools.cssClamp.ui.cssCode') }}</label>
       <textarea v-model="clampCSS" readonly class="css-textarea" @click="copyCSS"></textarea>
-      <button @click="copyCSS" class="copy-btn">📋 复制CSS</button>
+      <button @click="copyCSS" class="copy-btn">📋 {{ $t('tools.cssClamp.ui.copyCSS') }}</button>
     </div>
 
     <div class="preview-section">
-      <h3>响应式预览</h3>
+      <h3>{{ $t('tools.cssClamp.ui.responsivePreview') }}</h3>
       <div class="preview-controls">
-        <label>当前视口宽度: {{ currentViewport }}px</label>
+        <label>{{ $t('tools.cssClamp.ui.currentViewportWidth') }}: {{ currentViewport }}px</label>
         <input type="range" class="modern-slider viewport-slider" v-model="currentViewport" :min="minViewport" :max="maxViewport">
       </div>
       <div class="preview-box">
         <div class="sample-text" :style="{ fontSize: currentSize + 'rem' }">
-          示例文字 ({{ currentSize.toFixed(2) }}rem)
+          {{ $t('tools.cssClamp.ui.sampleText') }} ({{ currentSize.toFixed(2) }}rem)
         </div>
       </div>
     </div>
 
     <div class="size-table">
-      <h3>尺寸对应表</h3>
+      <h3>{{ $t('tools.cssClamp.ui.sizeTable') }}</h3>
       <div class="table-wrapper">
         <table>
           <thead>
             <tr>
-              <th>视口宽度</th>
-              <th>计算尺寸</th>
-              <th>像素值 (16px基准)</th>
+              <th>{{ $t('tools.cssClamp.ui.viewportWidth') }}</th>
+              <th>{{ $t('tools.cssClamp.ui.calculatedSize') }}</th>
+              <th>{{ $t('tools.cssClamp.ui.pixelValue') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -69,11 +69,11 @@
     </div>
 
     <div class="clamp-presets">
-      <h3>常用预设</h3>
+      <h3>{{ $t('tools.cssClamp.ui.commonPresets') }}</h3>
       <div class="presets-grid">
         <div 
           v-for="preset in clampPresets" 
-          :key="preset.name"
+          :key="preset.key"
           class="preset-item"
           @click="loadPreset(preset)"
         >
@@ -85,12 +85,12 @@
     </div>
 
     <div class="clamp-info">
-      <h3>CSS Clamp 说明</h3>
+      <h3>{{ $t('tools.cssClamp.ui.clampInfo') }}</h3>
       <div class="info-content">
-        <p><strong>语法:</strong> clamp(最小值, 首选值, 最大值)</p>
-        <p><strong>首选值计算:</strong> 基础值 + 变化率 × (100vw - 最小视口)</p>
-        <p><strong>变化率:</strong> (最大值 - 最小值) ÷ (最大视口 - 最小视口)</p>
-        <p><strong>使用场景:</strong> 响应式字体大小、间距、容器宽度等</p>
+        <p><strong>{{ $t('tools.cssClamp.ui.syntax') }}:</strong> {{ $t('tools.cssClamp.ui.syntaxDesc') }}</p>
+        <p><strong>{{ $t('tools.cssClamp.ui.preferredValueCalc') }}:</strong> {{ $t('tools.cssClamp.ui.preferredValueDesc') }}</p>
+        <p><strong>{{ $t('tools.cssClamp.ui.slope') }}:</strong> {{ $t('tools.cssClamp.ui.slopeDesc') }}</p>
+        <p><strong>{{ $t('tools.cssClamp.ui.useCase') }}:</strong> {{ $t('tools.cssClamp.ui.useCaseDesc') }}</p>
       </div>
     </div>
   </div>
@@ -98,24 +98,26 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'CssClamp',
   setup() {
+    const { t } = useI18n()
     const minValue = ref(1.0)
     const maxValue = ref(3.0)
     const minViewport = ref(320)
     const maxViewport = ref(1200)
     const currentViewport = ref(768)
 
-    const clampPresets = [
-      { name: '标题', description: '大标题字体', min: 2.0, max: 4.0, minVp: 320, maxVp: 1200 },
-      { name: '副标题', description: '副标题字体', min: 1.5, max: 2.5, minVp: 320, maxVp: 1200 },
-      { name: '正文', description: '正文字体', min: 1.0, max: 1.2, minVp: 320, maxVp: 1200 },
-      { name: '小字', description: '说明文字', min: 0.8, max: 1.0, minVp: 320, maxVp: 1200 },
-      { name: '间距', description: '容器间距', min: 1.0, max: 3.0, minVp: 320, maxVp: 1200 },
-      { name: '容器', description: '容器宽度(rem)', min: 20, max: 60, minVp: 320, maxVp: 1200 }
-    ]
+    const clampPresets = computed(() => [
+      { key: 'heading', name: t('tools.cssClamp.ui.presetHeading'), description: t('tools.cssClamp.ui.presetHeadingDesc'), min: 2.0, max: 4.0, minVp: 320, maxVp: 1200 },
+      { key: 'subheading', name: t('tools.cssClamp.ui.presetSubheading'), description: t('tools.cssClamp.ui.presetSubheadingDesc'), min: 1.5, max: 2.5, minVp: 320, maxVp: 1200 },
+      { key: 'body', name: t('tools.cssClamp.ui.presetBody'), description: t('tools.cssClamp.ui.presetBodyDesc'), min: 1.0, max: 1.2, minVp: 320, maxVp: 1200 },
+      { key: 'small', name: t('tools.cssClamp.ui.presetSmall'), description: t('tools.cssClamp.ui.presetSmallDesc'), min: 0.8, max: 1.0, minVp: 320, maxVp: 1200 },
+      { key: 'spacing', name: t('tools.cssClamp.ui.presetSpacing'), description: t('tools.cssClamp.ui.presetSpacingDesc'), min: 1.0, max: 3.0, minVp: 320, maxVp: 1200 },
+      { key: 'container', name: t('tools.cssClamp.ui.presetContainer'), description: t('tools.cssClamp.ui.presetContainerDesc'), min: 20, max: 60, minVp: 320, maxVp: 1200 }
+    ])
 
     const sampleViewports = [320, 480, 768, 1024, 1200, 1440, 1920]
 
@@ -159,9 +161,9 @@ export default {
     const copyCSS = async () => {
       try {
         await navigator.clipboard.writeText(clampCSS.value)
-        console.log('CSS已复制')
+        console.log(t('tools.cssClamp.ui.cssCopied'))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.cssClamp.ui.copyFailed'), err)
       }
     }
 

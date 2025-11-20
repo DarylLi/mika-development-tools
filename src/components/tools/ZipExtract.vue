@@ -1,13 +1,13 @@
 <template>
   <div class="tool-container">
     <div class="tool-header">
-      <h2><i class="fas fa-file-archive"></i> ZIP 解压工具</h2>
-      <p>在线解压ZIP文件，查看和下载压缩包内容</p>
+      <h2><i class="fas fa-file-archive"></i> {{ $t('tools.zipExtract.name') }}</h2>
+      <p>{{ $t('tools.zipExtract.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
-        <h3><i class="fas fa-upload"></i> 选择ZIP文件</h3>
+        <h3><i class="fas fa-upload"></i> {{ $t('tools.zipExtract.selectZipFile') }}</h3>
         <div class="file-upload-area">
           <input
             type="file"
@@ -17,24 +17,24 @@
             style="display: none"
           />
           <button @click="$refs.fileInput.click()" class="upload-btn">
-            <i class="fas fa-cloud-upload-alt"></i> 选择ZIP文件
+            <i class="fas fa-cloud-upload-alt"></i> {{ $t('tools.zipExtract.selectZipFile') }}
           </button>
-          <span class="file-info" v-if="fileName">已选择: {{ fileName }}</span>
+          <span class="file-info" v-if="fileName">{{ $t('tools.zipExtract.ui.selected') }}: {{ fileName }}</span>
         </div>
       </div>
 
       <div class="action-section">
         <button @click="extractZip" class="extract-btn" :disabled="!fileName || isProcessing">
           <i :class="isProcessing ? 'fas fa-spinner fa-spin' : 'fas fa-expand-arrows-alt'"></i>
-          {{ isProcessing ? '解压中...' : '解压文件' }}
+          {{ isProcessing ? $t('tools.zipExtract.extracting') : $t('tools.zipExtract.extractFiles') }}
         </button>
         <button @click="clearAll" class="clear-btn">
-          <i class="fas fa-trash"></i> 清空
+          <i class="fas fa-trash"></i> {{ $t('tools.zipExtract.ui.clear') }}
         </button>
       </div>
 
       <div class="file-list" v-if="extractedFiles.length > 0">
-        <h3><i class="fas fa-folder-open"></i> 解压内容 ({{ extractedFiles.length }} 个文件)</h3>
+        <h3><i class="fas fa-folder-open"></i> {{ $t('tools.zipExtract.extractedFiles') }} ({{ extractedFiles.length }} {{ $t('tools.zipExtract.files') }})</h3>
         <div class="file-item" v-for="(file, index) in extractedFiles" :key="index">
           <div class="file-info">
             <i :class="getFileIcon(file.name)"></i>
@@ -42,13 +42,13 @@
             <span class="file-size">({{ formatFileSize(file.size) }})</span>
           </div>
           <button @click="downloadFile(file)" class="download-btn">
-            <i class="fas fa-download"></i> 下载
+            <i class="fas fa-download"></i> {{ $t('tools.zipExtract.ui.download') }}
           </button>
         </div>
         
         <div class="batch-actions">
           <button @click="downloadAll" class="download-all-btn">
-            <i class="fas fa-download"></i> 下载所有文件
+            <i class="fas fa-download"></i> {{ $t('tools.zipExtract.downloadAll') }}
           </button>
         </div>
       </div>
@@ -58,12 +58,12 @@
       </div>
 
       <div class="note-section">
-        <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.zipExtract.ui.usageInstructions') }}</h4>
         <ul>
-          <li>支持标准ZIP格式文件</li>
-          <li>可以预览压缩包内的文件列表</li>
-          <li>支持单个或批量下载文件</li>
-          <li>处理过程在浏览器本地完成，保护隐私</li>
+          <li>{{ $t('tools.zipExtract.supportStandardZip') }}</li>
+          <li>{{ $t('tools.zipExtract.previewFileList') }}</li>
+          <li>{{ $t('tools.zipExtract.supportDownload') }}</li>
+          <li>{{ $t('tools.zipExtract.localProcessing') }}</li>
         </ul>
       </div>
     </div>
@@ -72,10 +72,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ZipExtract',
   setup() {
+    const { t } = useI18n()
     const fileName = ref('')
     const extractedFiles = ref([])
     const error = ref('')
@@ -87,7 +89,7 @@ export default {
         fileName.value = file.name
         error.value = ''
       } else {
-        error.value = '请选择有效的ZIP文件'
+        error.value = t('tools.zipExtract.invalidZipFile')
       }
     }
 
@@ -128,21 +130,21 @@ export default {
       error.value = ''
       isProcessing.value = true
       
-      // ZIP解压需要专业的库（如JSZip），这里提供说明
+      // ZIP extraction requires professional libraries (e.g., JSZip), providing instructions here
       setTimeout(() => {
-        error.value = '抱歉，ZIP解压功能需要JSZip等专业库。建议使用在线ZIP解压工具。'
+        error.value = t('tools.zipExtract.libRequired')
         isProcessing.value = false
       }, 1000)
     }
 
     const downloadFile = (file) => {
-      // 下载单个文件的逻辑
-      console.log('下载文件:', file.name)
+      // Download single file logic
+      console.log(t('tools.zipExtract.ui.downloadingFile') + ':', file.name)
     }
 
     const downloadAll = () => {
-      // 下载所有文件的逻辑
-      console.log('下载所有文件')
+      // Download all files logic
+      console.log(t('tools.zipExtract.ui.downloadingAll'))
     }
 
     const clearAll = () => {
@@ -162,7 +164,8 @@ export default {
       extractZip,
       downloadFile,
       downloadAll,
-      clearAll
+      clearAll,
+      t
     }
   }
 }
@@ -369,4 +372,4 @@ export default {
   margin-top: 15px;
   border: 1px solid var(--danger-color);
 }
-</style> 
+</style>

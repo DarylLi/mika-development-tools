@@ -1,8 +1,8 @@
 <template>
   <div class="http-status-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-globe"></i> HTTP 状态码查询</h3>
-      <p>查找 HTTP 状态码的含义和使用场景</p>
+      <h3><i class="fas fa-globe"></i> {{ $t('tools.httpStatus.ui.title') }}</h3>
+      <p>{{ $t('tools.httpStatus.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
@@ -12,7 +12,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="输入状态码或关键词搜索 (如: 404, Not Found)"
+            :placeholder="$t('tools.httpStatus.ui.searchPlaceholder')"
             class="search-input"
           />
           <button v-if="searchQuery" @click="clearSearch" class="clear-btn">
@@ -58,7 +58,7 @@
             </div>
           </div>
           <div v-if="status.examples" class="status-examples">
-            <h5><i class="fas fa-lightbulb"></i> 使用场景:</h5>
+            <h5><i class="fas fa-lightbulb"></i> {{ $t('tools.httpStatus.ui.useCases') }}</h5>
             <ul>
               <li v-for="example in status.examples" :key="example">{{ example }}</li>
             </ul>
@@ -68,32 +68,32 @@
 
       <div v-if="filteredStatuses.length === 0" class="no-results">
         <i class="fas fa-search"></i>
-        <p>没有找到匹配的状态码</p>
-        <button @click="clearSearch" class="clear-btn">清除搜索</button>
+        <p>{{ $t('tools.httpStatus.ui.noResults') }}</p>
+        <button @click="clearSearch" class="clear-btn">{{ $t('tools.httpStatus.ui.clearSearch') }}</button>
       </div>
 
       <div class="reference-section">
-        <h4><i class="fas fa-info-circle"></i> HTTP 状态码分类</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.httpStatus.ui.statusCodeCategories') }}</h4>
         <div class="reference-grid">
           <div class="ref-card">
-            <div class="ref-header">1xx 信息性响应</div>
-            <p>表示请求已被接受，需要继续处理</p>
+            <div class="ref-header">{{ $t('tools.httpStatus.ui.category1xx') }}</div>
+            <p>{{ $t('tools.httpStatus.ui.category1xxDesc') }}</p>
           </div>
           <div class="ref-card">
-            <div class="ref-header">2xx 成功</div>
-            <p>表示请求已成功被服务器接收、理解并处理</p>
+            <div class="ref-header">{{ $t('tools.httpStatus.ui.category2xx') }}</div>
+            <p>{{ $t('tools.httpStatus.ui.category2xxDesc') }}</p>
           </div>
           <div class="ref-card">
-            <div class="ref-header">3xx 重定向</div>
-            <p>表示需要客户端采取进一步的操作才能完成请求</p>
+            <div class="ref-header">{{ $t('tools.httpStatus.ui.category3xx') }}</div>
+            <p>{{ $t('tools.httpStatus.ui.category3xxDesc') }}</p>
           </div>
           <div class="ref-card">
-            <div class="ref-header">4xx 客户端错误</div>
-            <p>表示客户端看起来可能发生了错误</p>
+            <div class="ref-header">{{ $t('tools.httpStatus.ui.category4xx') }}</div>
+            <p>{{ $t('tools.httpStatus.ui.category4xxDesc') }}</p>
           </div>
           <div class="ref-card">
-            <div class="ref-header">5xx 服务器错误</div>
-            <p>表示服务器在处理请求的过程中发生了错误</p>
+            <div class="ref-header">{{ $t('tools.httpStatus.ui.category5xx') }}</div>
+            <p>{{ $t('tools.httpStatus.ui.category5xxDesc') }}</p>
           </div>
         </div>
       </div>
@@ -103,10 +103,12 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'HttpStatus',
   setup() {
+    const { t } = useI18n()
     const searchQuery = ref('')
     const activeCategory = ref('all')
 
@@ -146,12 +148,12 @@ export default {
     ])
 
     const categories = computed(() => [
-      { range: 'all', name: '全部', count: httpStatuses.value.length },
-      { range: '1xx', name: '信息性响应', count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 1).length },
-      { range: '2xx', name: '成功', count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 2).length },
-      { range: '3xx', name: '重定向', count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 3).length },
-      { range: '4xx', name: '客户端错误', count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 4).length },
-      { range: '5xx', name: '服务器错误', count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 5).length },
+      { range: 'all', name: t('tools.httpStatus.ui.categoryAll'), count: httpStatuses.value.length },
+      { range: '1xx', name: t('tools.httpStatus.ui.categoryInformational'), count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 1).length },
+      { range: '2xx', name: t('tools.httpStatus.ui.categorySuccess'), count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 2).length },
+      { range: '3xx', name: t('tools.httpStatus.ui.categoryRedirect'), count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 3).length },
+      { range: '4xx', name: t('tools.httpStatus.ui.categoryClientError'), count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 4).length },
+      { range: '5xx', name: t('tools.httpStatus.ui.categoryServerError'), count: httpStatuses.value.filter(s => Math.floor(s.code / 100) === 5).length },
     ])
 
     const filteredStatuses = computed(() => {
@@ -179,13 +181,13 @@ export default {
     function getCategoryName(code) {
       const category = Math.floor(code / 100)
       const names = {
-        1: '信息性响应',
-        2: '成功',
-        3: '重定向',
-        4: '客户端错误',
-        5: '服务器错误'
+        1: t('tools.httpStatus.ui.categoryInformational'),
+        2: t('tools.httpStatus.ui.categorySuccess'),
+        3: t('tools.httpStatus.ui.categoryRedirect'),
+        4: t('tools.httpStatus.ui.categoryClientError'),
+        5: t('tools.httpStatus.ui.categoryServerError')
       }
-      return names[category] || '未知'
+      return names[category] || t('tools.httpStatus.ui.categoryUnknown')
     }
 
     function filterByCategory(category) {

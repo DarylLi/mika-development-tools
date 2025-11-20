@@ -2,35 +2,35 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">📧</div>
-      <h2>邮箱验证器</h2>
-      <p>验证邮箱地址格式，检测常见错误，支持批量验证</p>
+      <h2>{{ $t('tools.emailValidator.ui.title') }}</h2>
+      <p>{{ $t('tools.emailValidator.ui.description') }}</p>
       
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.emailValidator.ui.quickStart') }}</span>
         <button @click="loadExample('valid')" class="example-btn">
-          <i class="fas fa-check"></i> 有效邮箱
+          <i class="fas fa-check"></i> {{ $t('tools.emailValidator.ui.validEmail') }}
         </button>
         <button @click="loadExample('invalid')" class="example-btn">
-          <i class="fas fa-times"></i> 无效邮箱
+          <i class="fas fa-times"></i> {{ $t('tools.emailValidator.ui.invalidEmail') }}
         </button>
         <button @click="loadExample('batch')" class="example-btn">
-          <i class="fas fa-list"></i> 批量验证
+          <i class="fas fa-list"></i> {{ $t('tools.emailValidator.ui.batchValidation') }}
         </button>
       </div>
     </div>
 
     <div class="input-card">
       <div class="card-header">
-        <h3><i class="fas fa-envelope"></i> 邮箱输入</h3>
+        <h3><i class="fas fa-envelope"></i> {{ $t('tools.emailValidator.ui.emailInput') }}</h3>
         <div class="input-actions">
           <button @click="pasteFromClipboard" class="action-btn">
-            <i class="fas fa-paste"></i> 粘贴
+            <i class="fas fa-paste"></i> {{ $t('tools.emailValidator.ui.paste') }}
           </button>
           <button @click="clearInput" class="action-btn">
-            <i class="fas fa-trash"></i> 清空
+            <i class="fas fa-trash"></i> {{ $t('tools.emailValidator.ui.clear') }}
           </button>
           <button @click="validateEmails" class="action-btn validate-btn">
-            <i class="fas fa-check-circle"></i> 验证
+            <i class="fas fa-check-circle"></i> {{ $t('tools.emailValidator.ui.validate') }}
           </button>
         </div>
       </div>
@@ -42,14 +42,14 @@
             class="tab-btn"
             :class="{ active: inputMode === 'single' }"
           >
-            <i class="fas fa-envelope"></i> 单个邮箱
+            <i class="fas fa-envelope"></i> {{ $t('tools.emailValidator.ui.singleEmail') }}
           </button>
           <button 
             @click="inputMode = 'batch'"
             class="tab-btn"
             :class="{ active: inputMode === 'batch' }"
           >
-            <i class="fas fa-list"></i> 批量验证
+            <i class="fas fa-list"></i> {{ $t('tools.emailValidator.ui.batchValidation') }}
           </button>
         </div>
         
@@ -57,7 +57,7 @@
           v-if="inputMode === 'single'"
           v-model="singleEmail"
           type="email"
-          placeholder="请输入邮箱地址..."
+          :placeholder="$t('tools.emailValidator.ui.emailPlaceholder')"
           class="email-input"
           @input="validateSingle"
         />
@@ -65,7 +65,7 @@
         <textarea
           v-if="inputMode === 'batch'"
           v-model="batchEmails"
-          placeholder="请输入多个邮箱地址，每行一个..."
+          :placeholder="$t('tools.emailValidator.ui.batchPlaceholder')"
           class="batch-input"
           @input="validateBatch"
         ></textarea>
@@ -74,14 +74,14 @@
           <div v-if="inputMode === 'single'" class="single-status">
             <div class="validation-status" :class="singleResult?.isValid ? 'valid' : 'invalid'">
               <i :class="singleResult?.isValid ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
-              {{ singleResult?.message || '等待输入邮箱地址' }}
+              {{ singleResult?.message || $t('tools.emailValidator.ui.waitingInput') }}
             </div>
           </div>
           
           <div v-if="inputMode === 'batch'" class="batch-stats">
-            <span>总数: {{ batchResults.length }}</span>
-            <span>有效: {{ validCount }}</span>
-            <span>无效: {{ invalidCount }}</span>
+            <span>{{ $t('tools.emailValidator.ui.total') }} {{ batchResults.length }}</span>
+            <span>{{ $t('tools.emailValidator.ui.valid') }} {{ validCount }}</span>
+            <span>{{ $t('tools.emailValidator.ui.invalid') }} {{ invalidCount }}</span>
           </div>
         </div>
       </div>
@@ -89,10 +89,10 @@
 
     <div v-if="singleResult && inputMode === 'single'" class="result-card">
       <div class="card-header">
-        <h3><i class="fas fa-search"></i> 验证结果</h3>
+        <h3><i class="fas fa-search"></i> {{ $t('tools.emailValidator.ui.validationResult') }}</h3>
         <div class="result-actions">
           <button @click="copyResult" class="action-btn">
-            <i class="fas fa-copy"></i> 复制结果
+            <i class="fas fa-copy"></i> {{ $t('tools.emailValidator.ui.copyResult') }}
           </button>
         </div>
       </div>
@@ -103,36 +103,36 @@
             <i :class="singleResult.isValid ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
           </div>
           <div class="result-text">
-            <h4>{{ singleResult.isValid ? '邮箱格式正确' : '邮箱格式错误' }}</h4>
+            <h4>{{ singleResult.isValid ? $t('tools.emailValidator.ui.emailFormatCorrect') : $t('tools.emailValidator.ui.emailFormatError') }}</h4>
             <p>{{ singleResult.message }}</p>
           </div>
         </div>
 
         <div class="result-details">
           <div class="detail-section">
-            <h5><i class="fas fa-info-circle"></i> 邮箱信息</h5>
+            <h5><i class="fas fa-info-circle"></i> {{ $t('tools.emailValidator.ui.emailInfo') }}</h5>
             <div class="detail-grid">
               <div class="detail-item">
-                <label>完整邮箱:</label>
+                <label>{{ $t('tools.emailValidator.ui.fullEmail') }}</label>
                 <span class="value">{{ singleResult.email }}</span>
               </div>
               <div class="detail-item" v-if="singleResult.parts">
-                <label>用户名:</label>
+                <label>{{ $t('tools.emailValidator.ui.username') }}</label>
                 <span class="value">{{ singleResult.parts.username }}</span>
               </div>
               <div class="detail-item" v-if="singleResult.parts">
-                <label>域名:</label>
+                <label>{{ $t('tools.emailValidator.ui.domain') }}</label>
                 <span class="value">{{ singleResult.parts.domain }}</span>
               </div>
               <div class="detail-item" v-if="singleResult.provider">
-                <label>邮箱提供商:</label>
+                <label>{{ $t('tools.emailValidator.ui.emailProvider') }}</label>
                 <span class="value provider">{{ singleResult.provider }}</span>
               </div>
             </div>
           </div>
 
           <div class="detail-section" v-if="singleResult.checks">
-            <h5><i class="fas fa-list-check"></i> 检查项目</h5>
+            <h5><i class="fas fa-list-check"></i> {{ $t('tools.emailValidator.ui.checkItems') }}</h5>
             <div class="checks-list">
               <div v-for="check in singleResult.checks" :key="check.name" 
                    class="check-item" 
@@ -144,7 +144,7 @@
           </div>
 
           <div class="detail-section" v-if="singleResult.suggestions?.length > 0">
-            <h5><i class="fas fa-lightbulb"></i> 建议修正</h5>
+            <h5><i class="fas fa-lightbulb"></i> {{ $t('tools.emailValidator.ui.suggestions') }}</h5>
             <div class="suggestions-list">
               <div v-for="suggestion in singleResult.suggestions" :key="suggestion" class="suggestion-item">
                 <i class="fas fa-arrow-right"></i>
@@ -158,13 +158,13 @@
 
     <div v-if="batchResults.length > 0 && inputMode === 'batch'" class="batch-card">
       <div class="card-header">
-        <h3><i class="fas fa-list"></i> 批量验证结果</h3>
+        <h3><i class="fas fa-list"></i> {{ $t('tools.emailValidator.ui.batchValidationResult') }}</h3>
         <div class="batch-actions">
           <button @click="exportResults" class="action-btn">
-            <i class="fas fa-download"></i> 导出结果
+            <i class="fas fa-download"></i> {{ $t('tools.emailValidator.ui.exportResults') }}
           </button>
           <button @click="copyValidEmails" class="action-btn">
-            <i class="fas fa-copy"></i> 复制有效邮箱
+            <i class="fas fa-copy"></i> {{ $t('tools.emailValidator.ui.copyValidEmails') }}
           </button>
         </div>
       </div>
@@ -175,29 +175,29 @@
           class="filter-btn"
           :class="{ active: filter === 'all' }"
         >
-          全部 ({{ batchResults.length }})
+          {{ $t('tools.emailValidator.ui.all') }} ({{ batchResults.length }})
         </button>
         <button 
           @click="filter = 'valid'"
           class="filter-btn valid"
           :class="{ active: filter === 'valid' }"
         >
-          有效 ({{ validCount }})
+          {{ $t('tools.emailValidator.ui.valid') }} ({{ validCount }})
         </button>
         <button 
           @click="filter = 'invalid'"
           class="filter-btn invalid"
           :class="{ active: filter === 'invalid' }"
         >
-          无效 ({{ invalidCount }})
+          {{ $t('tools.emailValidator.ui.invalid') }} ({{ invalidCount }})
         </button>
       </div>
 
       <div class="results-table">
         <div class="table-header">
-          <span>邮箱地址</span>
-          <span>状态</span>
-          <span>问题描述</span>
+          <span>{{ $t('tools.emailValidator.ui.emailAddress') }}</span>
+          <span>{{ $t('tools.emailValidator.ui.status') }}</span>
+          <span>{{ $t('tools.emailValidator.ui.issueDescription') }}</span>
         </div>
         <div class="table-body">
           <div v-for="result in filteredResults" :key="result.email" 
@@ -206,7 +206,7 @@
             <span class="email-cell">{{ result.email }}</span>
             <span class="status-cell">
               <i :class="result.isValid ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
-              {{ result.isValid ? '有效' : '无效' }}
+              {{ result.isValid ? $t('tools.emailValidator.ui.valid') : $t('tools.emailValidator.ui.invalid') }}
             </span>
             <span class="message-cell">{{ result.message }}</span>
           </div>
@@ -261,10 +261,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'EmailValidator',
   setup() {
+    const { t } = useI18n()
     const inputMode = ref('single')
     const singleEmail = ref('')
     const batchEmails = ref('')
@@ -504,8 +506,8 @@ valid.email@test.org`
       if (singleResult.value) {
         const text = `邮箱: ${singleResult.value.email}\n状态: ${singleResult.value.isValid ? '有效' : '无效'}\n描述: ${singleResult.value.message}`
         navigator.clipboard.writeText(text)
-        success.value = '验证结果已复制'
-        setTimeout(() => success.value = '', 3000)
+      success.value = t('tools.emailValidator.ui.validationResultCopied')
+      setTimeout(() => success.value = '', 3000)
       }
     }
 
@@ -516,7 +518,7 @@ valid.email@test.org`
         .join('\n')
       
       navigator.clipboard.writeText(validEmails)
-      success.value = `已复制 ${validCount.value} 个有效邮箱`
+      success.value = t('tools.emailValidator.ui.validEmailsCopied', { count: validCount.value })
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -536,7 +538,7 @@ valid.email@test.org`
       a.click()
       URL.revokeObjectURL(url)
       
-      success.value = '验证结果已导出'
+      success.value = t('tools.emailValidator.ui.resultsExported')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -559,7 +561,8 @@ valid.email@test.org`
       clearInput,
       copyResult,
       copyValidEmails,
-      exportResults
+      exportResults,
+      t
     }
   }
 }

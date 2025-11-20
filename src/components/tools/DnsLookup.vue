@@ -1,8 +1,8 @@
 <template>
   <div class="dns-lookup-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-server"></i> DNS 查询工具</h3>
-      <p>查询域名的 DNS 记录信息</p>
+      <h3><i class="fas fa-server"></i> {{ $t('tools.dnsLookup.ui.title') }}</h3>
+      <p>{{ $t('tools.dnsLookup.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
@@ -11,44 +11,44 @@
           <input
             v-model="domain"
             type="text"
-            placeholder="输入域名 (如: example.com)"
+            :placeholder="$t('tools.dnsLookup.ui.domainPlaceholder')"
             class="domain-input"
             @keyup.enter="lookupDNS"
           />
           <select v-model="recordType" class="record-select">
-            <option value="A">A 记录</option>
-            <option value="AAAA">AAAA 记录</option>
-            <option value="CNAME">CNAME 记录</option>
-            <option value="MX">MX 记录</option>
-            <option value="TXT">TXT 记录</option>
-            <option value="NS">NS 记录</option>
-            <option value="SOA">SOA 记录</option>
+            <option value="A">{{ $t('tools.dnsLookup.ui.recordA') }}</option>
+            <option value="AAAA">{{ $t('tools.dnsLookup.ui.recordAAAA') }}</option>
+            <option value="CNAME">{{ $t('tools.dnsLookup.ui.recordCNAME') }}</option>
+            <option value="MX">{{ $t('tools.dnsLookup.ui.recordMX') }}</option>
+            <option value="TXT">{{ $t('tools.dnsLookup.ui.recordTXT') }}</option>
+            <option value="NS">{{ $t('tools.dnsLookup.ui.recordNS') }}</option>
+            <option value="SOA">{{ $t('tools.dnsLookup.ui.recordSOA') }}</option>
           </select>
           <button @click="lookupDNS" class="lookup-btn" :disabled="loading || !domain.trim()">
             <i class="fas fa-search" v-if="!loading"></i>
             <i class="fas fa-spinner fa-spin" v-else></i>
-            查询
+            {{ $t('tools.dnsLookup.ui.query') }}
           </button>
         </div>
         <div class="quick-actions">
           <button @click="loadExample" class="action-btn">
-            <i class="fas fa-lightbulb"></i> 示例域名
+            <i class="fas fa-lightbulb"></i> {{ $t('tools.dnsLookup.ui.exampleDomain') }}
           </button>
           <button @click="lookupAll" class="action-btn" :disabled="loading || !domain.trim()">
-            <i class="fas fa-list"></i> 查询所有记录
+            <i class="fas fa-list"></i> {{ $t('tools.dnsLookup.ui.queryAllRecords') }}
           </button>
         </div>
       </div>
 
       <div v-if="results.length > 0" class="results-section">
         <div class="results-header">
-          <h4><i class="fas fa-list-ul"></i> DNS 查询结果</h4>
+          <h4><i class="fas fa-list-ul"></i> {{ $t('tools.dnsLookup.ui.dnsQueryResults') }}</h4>
           <div class="result-actions">
             <button @click="exportResults" class="export-btn">
-              <i class="fas fa-download"></i> 导出
+              <i class="fas fa-download"></i> {{ $t('tools.dnsLookup.ui.export') }}
             </button>
             <button @click="clearResults" class="clear-btn">
-              <i class="fas fa-trash"></i> 清空
+              <i class="fas fa-trash"></i> {{ $t('tools.dnsLookup.ui.clear') }}
             </button>
           </div>
         </div>
@@ -63,7 +63,7 @@
             <div class="record-header">
               <span class="record-type">{{ result.type }}</span>
               <span class="record-domain">{{ result.domain }}</span>
-              <button @click="copyRecord(result)" class="copy-btn" title="复制记录">
+              <button @click="copyRecord(result)" class="copy-btn" :title="$t('tools.dnsLookup.ui.copyRecord')">
                 <i class="fas fa-copy"></i>
               </button>
             </div>
@@ -76,7 +76,7 @@
                 >
                   <div class="record-value">{{ record.value }}</div>
                   <div v-if="record.ttl" class="record-ttl">TTL: {{ record.ttl }}</div>
-                  <div v-if="record.priority" class="record-priority">优先级: {{ record.priority }}</div>
+                  <div v-if="record.priority" class="record-priority">{{ $t('tools.dnsLookup.ui.priority') }} {{ record.priority }}</div>
                 </div>
               </div>
               <div v-else-if="result.error" class="record-error">
@@ -84,7 +84,7 @@
                 {{ result.error }}
               </div>
               <div v-else class="record-empty">
-                没有找到 {{ result.type }} 记录
+                {{ $t('tools.dnsLookup.ui.noRecordFound') }} {{ result.type }} {{ $t('tools.dnsLookup.ui.record') }}
               </div>
             </div>
           </div>
@@ -94,36 +94,36 @@
       <div v-if="loading" class="loading-section">
         <div class="loading-spinner">
           <i class="fas fa-spinner fa-spin"></i>
-          <p>正在查询 DNS 记录...</p>
+          <p>{{ $t('tools.dnsLookup.ui.querying') }}</p>
         </div>
       </div>
 
       <div class="info-section">
-        <h4><i class="fas fa-info-circle"></i> DNS 记录类型说明</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.dnsLookup.ui.recordTypeInfo') }}</h4>
         <div class="info-grid">
           <div class="info-card">
-            <div class="info-header">A 记录</div>
-            <p>将域名指向 IPv4 地址</p>
+            <div class="info-header">{{ $t('tools.dnsLookup.ui.recordA') }}</div>
+            <p>{{ $t('tools.dnsLookup.ui.recordADesc') }}</p>
           </div>
           <div class="info-card">
-            <div class="info-header">AAAA 记录</div>
-            <p>将域名指向 IPv6 地址</p>
+            <div class="info-header">{{ $t('tools.dnsLookup.ui.recordAAAA') }}</div>
+            <p>{{ $t('tools.dnsLookup.ui.recordAAAADesc') }}</p>
           </div>
           <div class="info-card">
-            <div class="info-header">CNAME 记录</div>
-            <p>将域名指向另一个域名</p>
+            <div class="info-header">{{ $t('tools.dnsLookup.ui.recordCNAME') }}</div>
+            <p>{{ $t('tools.dnsLookup.ui.recordCNAMEDesc') }}</p>
           </div>
           <div class="info-card">
-            <div class="info-header">MX 记录</div>
-            <p>指定邮件服务器地址</p>
+            <div class="info-header">{{ $t('tools.dnsLookup.ui.recordMX') }}</div>
+            <p>{{ $t('tools.dnsLookup.ui.recordMXDesc') }}</p>
           </div>
           <div class="info-card">
-            <div class="info-header">TXT 记录</div>
-            <p>存储文本信息，常用于验证</p>
+            <div class="info-header">{{ $t('tools.dnsLookup.ui.recordTXT') }}</div>
+            <p>{{ $t('tools.dnsLookup.ui.recordTXTDesc') }}</p>
           </div>
           <div class="info-card">
-            <div class="info-header">NS 记录</div>
-            <p>指定域名服务器</p>
+            <div class="info-header">{{ $t('tools.dnsLookup.ui.recordNS') }}</div>
+            <p>{{ $t('tools.dnsLookup.ui.recordNSDesc') }}</p>
           </div>
         </div>
       </div>
@@ -133,10 +133,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'DnsLookup',
   setup() {
+    const { t } = useI18n()
     const domain = ref('')
     const recordType = ref('A')
     const loading = ref(false)
@@ -167,11 +169,11 @@ export default {
           results.value.unshift(result)
         }
       } catch (error) {
-        console.error('DNS 查询失败:', error)
+        console.error(t('tools.dnsLookup.ui.queryFailed') + ':', error)
         results.value.unshift({
           domain: domain.value.trim(),
           type: recordType.value,
-          error: 'DNS 查询失败: ' + error.message,
+          error: t('tools.dnsLookup.ui.queryFailed') + ': ' + error.message,
           timestamp: new Date()
         })
       } finally {
@@ -200,7 +202,7 @@ export default {
           }
         }
       } catch (error) {
-        console.error('DNS 批量查询失败:', error)
+        console.error(t('tools.dnsLookup.ui.batchQueryFailed') + ':', error)
       } finally {
         loading.value = false
       }
@@ -253,22 +255,22 @@ export default {
       try {
         await navigator.clipboard.writeText(text)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.dnsLookup.ui.copyFailed') + ':', err)
       }
     }
 
     function formatRecordForCopy(record) {
-      let text = `${record.domain} ${record.type} 记录:\n`
+      let text = `${record.domain} ${record.type} ${t('tools.dnsLookup.ui.record')}:\n`
       
       if (record.records && record.records.length > 0) {
         record.records.forEach(r => {
           text += `  ${r.value}`
           if (r.ttl) text += ` (TTL: ${r.ttl})`
-          if (r.priority) text += ` (优先级: ${r.priority})`
+          if (r.priority) text += ` (${t('tools.dnsLookup.ui.priority')} ${r.priority})`
           text += '\n'
         })
       } else {
-        text += '  无记录\n'
+        text += `  ${t('tools.dnsLookup.ui.noRecordFound')}\n`
       }
       
       return text

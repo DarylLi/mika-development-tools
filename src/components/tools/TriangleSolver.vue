@@ -3,7 +3,7 @@
     <div class="solver-container">
       <!-- 三角形可视化 -->
       <div class="triangle-visualization">
-        <h3><i class="fas fa-shapes"></i> 三角形可视化</h3>
+        <h3><i class="fas fa-shapes"></i> {{ $t('tools.triangleSolver.ui.visualization') }}</h3>
         <div class="triangle-canvas">
           <svg viewBox="0 0 400 300" class="triangle-svg">
             <!-- 三角形 -->
@@ -45,37 +45,37 @@
 
       <!-- 输入面板 -->
       <div class="input-panel">
-        <h3><i class="fas fa-edit"></i> 已知条件输入</h3>
+        <h3><i class="fas fa-edit"></i> {{ $t('tools.triangleSolver.ui.inputPanel') }}</h3>
         
         <!-- 边长输入 -->
         <div class="input-section">
           <h4>边长</h4>
           <div class="input-row">
             <div class="input-group">
-              <label>边 a (BC对边)</label>
+              <label>{{ $t('tools.triangleSolver.ui.labelSideA') }}</label>
               <input 
                 v-model="inputs.a" 
                 type="number" 
                 step="0.01" 
-                placeholder="输入边长a"
+                :placeholder="$t('tools.triangleSolver.ui.placeholderSide')"
                 @input="calculate">
             </div>
             <div class="input-group">
-              <label>边 b (AC对边)</label>
+              <label>{{ $t('tools.triangleSolver.ui.labelSideB') }}</label>
               <input 
                 v-model="inputs.b" 
                 type="number" 
                 step="0.01" 
-                placeholder="输入边长b"
+                :placeholder="$t('tools.triangleSolver.ui.placeholderSide')"
                 @input="calculate">
             </div>
             <div class="input-group">
-              <label>边 c (AB对边)</label>
+              <label>{{ $t('tools.triangleSolver.ui.labelSideC') }}</label>
               <input 
                 v-model="inputs.c" 
                 type="number" 
                 step="0.01" 
-                placeholder="输入边长c"
+                :placeholder="$t('tools.triangleSolver.ui.placeholderSide')"
                 @input="calculate">
             </div>
           </div>
@@ -83,41 +83,41 @@
 
         <!-- 角度输入 -->
         <div class="input-section">
-          <h4>角度 (单位：度)</h4>
+          <h4>{{ $t('tools.triangleSolver.ui.angles') }}</h4>
           <div class="input-row">
             <div class="input-group">
-              <label>角 A (边a对角)</label>
+              <label>{{ $t('tools.triangleSolver.ui.labelAngleA') }}</label>
               <input 
                 v-model="inputs.A" 
                 type="number" 
                 step="0.1" 
                 min="0" 
                 max="180"
-                placeholder="输入角度A"
+                :placeholder="$t('tools.triangleSolver.ui.placeholderAngle')"
                 @input="calculate">
               <span class="input-suffix">°</span>
             </div>
             <div class="input-group">
-              <label>角 B (边b对角)</label>
+              <label>{{ $t('tools.triangleSolver.ui.labelAngleB') }}</label>
               <input 
                 v-model="inputs.B" 
                 type="number" 
                 step="0.1" 
                 min="0" 
                 max="180"
-                placeholder="输入角度B"
+                :placeholder="$t('tools.triangleSolver.ui.placeholderAngle')"
                 @input="calculate">
               <span class="input-suffix">°</span>
             </div>
             <div class="input-group">
-              <label>角 C (边c对角)</label>
+              <label>{{ $t('tools.triangleSolver.ui.labelAngleC') }}</label>
               <input 
                 v-model="inputs.C" 
                 type="number" 
                 step="0.1" 
                 min="0" 
                 max="180"
-                placeholder="输入角度C"
+                :placeholder="$t('tools.triangleSolver.ui.placeholderAngle')"
                 @input="calculate">
               <span class="input-suffix">°</span>
             </div>
@@ -127,72 +127,72 @@
         <!-- 操作按钮 -->
         <div class="action-buttons">
           <button @click="clearAll" class="btn-secondary">
-            <i class="fas fa-eraser"></i> 清空所有
+            <i class="fas fa-eraser"></i> {{ $t('tools.triangleSolver.ui.clearAll') }}
           </button>
           <button @click="loadExample" class="btn-primary">
-            <i class="fas fa-lightbulb"></i> 加载示例
+            <i class="fas fa-lightbulb"></i> {{ $t('tools.triangleSolver.ui.loadExample') }}
           </button>
         </div>
       </div>
 
       <!-- 计算结果 -->
       <div v-if="result.valid" class="result-panel">
-        <h3><i class="fas fa-calculator"></i> 计算结果</h3>
+        <h3><i class="fas fa-calculator"></i> {{ $t('tools.triangleSolver.ui.resultTitle') }}</h3>
         
         <div class="result-grid">
           <!-- 边长结果 -->
           <div class="result-section">
-            <h4>边长</h4>
+            <h4>{{ $t('tools.triangleSolver.ui.resultSides') }}</h4>
             <div class="result-items">
               <div class="result-item">
                 <span class="label">边 a:</span>
-                <span class="value">{{ triangle.a?.toFixed(2) || '未知' }}</span>
+                <span class="value">{{ triangle.a?.toFixed(2) || $t('tools.triangleSolver.ui.labelUnknown') }}</span>
               </div>
               <div class="result-item">
                 <span class="label">边 b:</span>
-                <span class="value">{{ triangle.b?.toFixed(2) || '未知' }}</span>
+                <span class="value">{{ triangle.b?.toFixed(2) || $t('tools.triangleSolver.ui.labelUnknown') }}</span>
               </div>
               <div class="result-item">
                 <span class="label">边 c:</span>
-                <span class="value">{{ triangle.c?.toFixed(2) || '未知' }}</span>
+                <span class="value">{{ triangle.c?.toFixed(2) || $t('tools.triangleSolver.ui.labelUnknown') }}</span>
               </div>
             </div>
           </div>
 
           <!-- 角度结果 -->
           <div class="result-section">
-            <h4>角度</h4>
+            <h4>{{ $t('tools.triangleSolver.ui.resultAngles') }}</h4>
             <div class="result-items">
               <div class="result-item">
                 <span class="label">角 A:</span>
-                <span class="value">{{ triangle.A?.toFixed(1) || '未知' }}°</span>
+                <span class="value">{{ triangle.A?.toFixed(1) || $t('tools.triangleSolver.ui.labelUnknown') }}°</span>
               </div>
               <div class="result-item">
                 <span class="label">角 B:</span>
-                <span class="value">{{ triangle.B?.toFixed(1) || '未知' }}°</span>
+                <span class="value">{{ triangle.B?.toFixed(1) || $t('tools.triangleSolver.ui.labelUnknown') }}°</span>
               </div>
               <div class="result-item">
                 <span class="label">角 C:</span>
-                <span class="value">{{ triangle.C?.toFixed(1) || '未知' }}°</span>
+                <span class="value">{{ triangle.C?.toFixed(1) || $t('tools.triangleSolver.ui.labelUnknown') }}°</span>
               </div>
             </div>
           </div>
 
           <!-- 其他属性 -->
           <div class="result-section">
-            <h4>其他属性</h4>
+            <h4>{{ $t('tools.triangleSolver.ui.resultOther') }}</h4>
             <div class="result-items">
               <div class="result-item">
-                <span class="label">周长:</span>
-                <span class="value">{{ result.perimeter?.toFixed(2) || '未知' }}</span>
+                <span class="label">{{ $t('tools.triangleSolver.ui.labelPerimeter') }}</span>
+                <span class="value">{{ result.perimeter?.toFixed(2) || $t('tools.triangleSolver.ui.labelUnknown') }}</span>
               </div>
               <div class="result-item">
-                <span class="label">面积:</span>
-                <span class="value">{{ result.area?.toFixed(2) || '未知' }}</span>
+                <span class="label">{{ $t('tools.triangleSolver.ui.labelArea') }}</span>
+                <span class="value">{{ result.area?.toFixed(2) || $t('tools.triangleSolver.ui.labelUnknown') }}</span>
               </div>
               <div class="result-item">
-                <span class="label">类型:</span>
-                <span class="value">{{ result.type || '未知' }}</span>
+                <span class="label">{{ $t('tools.triangleSolver.ui.labelType') }}</span>
+                <span class="value">{{ result.type || $t('tools.triangleSolver.ui.labelUnknown') }}</span>
               </div>
             </div>
           </div>
@@ -200,7 +200,7 @@
 
         <!-- 解题过程 -->
         <div v-if="result.steps.length > 0" class="solution-steps">
-          <h4><i class="fas fa-list-ol"></i> 解题过程</h4>
+          <h4><i class="fas fa-list-ol"></i> {{ $t('tools.triangleSolver.ui.solutionSteps') }}</h4>
           <div class="steps-container">
             <div v-for="(step, index) in result.steps" :key="index" class="step-item">
               <div class="step-number">{{ index + 1 }}</div>
@@ -215,40 +215,40 @@
 
       <!-- 错误提示 -->
       <div v-if="error" class="error-panel">
-        <h3><i class="fas fa-exclamation-triangle"></i> 错误提示</h3>
+        <h3><i class="fas fa-exclamation-triangle"></i> {{ $t('tools.triangleSolver.ui.errorTitle') }}</h3>
         <p>{{ error }}</p>
       </div>
 
       <!-- 三角形知识 -->
       <div class="knowledge-section">
-        <h3><i class="fas fa-book"></i> 三角形基础知识</h3>
+        <h3><i class="fas fa-book"></i> {{ $t('tools.triangleSolver.ui.knowledgeTitle') }}</h3>
         <div class="knowledge-grid">
           <div class="knowledge-card">
             <i class="fas fa-ruler"></i>
             <div>
-              <strong>正弦定理</strong>
-              <p>a/sin(A) = b/sin(B) = c/sin(C) = 2R</p>
+              <strong>{{ $t('tools.triangleSolver.ui.knowledgeSine') }}</strong>
+              <p>{{ $t('tools.triangleSolver.ui.knowledgeSineDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-square-root-alt"></i>
             <div>
-              <strong>余弦定理</strong>
-              <p>c² = a² + b² - 2ab·cos(C)</p>
+              <strong>{{ $t('tools.triangleSolver.ui.knowledgeCosine') }}</strong>
+              <p>{{ $t('tools.triangleSolver.ui.knowledgeCosineDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-plus"></i>
             <div>
-              <strong>角度和</strong>
-              <p>A + B + C = 180°</p>
+              <strong>{{ $t('tools.triangleSolver.ui.knowledgeAngleSum') }}</strong>
+              <p>{{ $t('tools.triangleSolver.ui.knowledgeAngleSumDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-chart-area"></i>
             <div>
-              <strong>海伦公式</strong>
-              <p>S = √[s(s-a)(s-b)(s-c)]，其中s = (a+b+c)/2</p>
+              <strong>{{ $t('tools.triangleSolver.ui.knowledgeHeron') }}</strong>
+              <p>{{ $t('tools.triangleSolver.ui.knowledgeHeronDesc') }}</p>
             </div>
           </div>
         </div>
@@ -259,10 +259,12 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'TriangleSolver',
   setup() {
+    const { t } = useI18n()
     const inputs = ref({
       a: '',
       b: '',
@@ -331,7 +333,7 @@ export default {
         } else if (knownSides === 1 && knownAngles === 2) {
           solveASAorAASTriangle()
         } else if (knownAngles === 3) {
-          error.value = '仅知道三个角度无法确定三角形的大小'
+          error.value = t('tools.triangleSolver.ui.errorThreeAnglesOnly')
           result.value.valid = false
           return
         }
@@ -402,7 +404,7 @@ export default {
         // 已知两边和其中一边的对角
         const sinB = b * Math.sin(toRadians(A)) / a
         if (sinB > 1) {
-          throw new Error('无解：给定条件无法构成三角形')
+          throw new Error(t('tools.triangleSolver.ui.errorNoSolution'))
         }
         triangle.value.B = toDegrees(Math.asin(sinB))
         triangle.value.C = 180 - A - triangle.value.B
@@ -438,20 +440,20 @@ export default {
       
       // 检查边长是否为正数
       if ((a && a <= 0) || (b && b <= 0) || (c && c <= 0)) {
-        error.value = '边长必须为正数'
+        error.value = t('tools.triangleSolver.ui.errorSideMustBePositive')
         return false
       }
       
       // 检查角度范围
       if ((A && (A <= 0 || A >= 180)) || (B && (B <= 0 || B >= 180)) || (C && (C <= 0 || C >= 180))) {
-        error.value = '角度必须在0°到180°之间'
+        error.value = t('tools.triangleSolver.ui.errorAngleRange')
         return false
       }
       
       // 检查三角形不等式
       if (a && b && c) {
         if (a + b <= c || a + c <= b || b + c <= a) {
-          error.value = '不满足三角形不等式：任意两边之和必须大于第三边'
+          error.value = t('tools.triangleSolver.ui.errorTriangleInequality')
           return false
         }
       }

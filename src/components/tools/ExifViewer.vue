@@ -1,8 +1,8 @@
 <template>
   <div class="exif-viewer-container">
     <div class="tool-header">
-      <h3>EXIF 元数据查看器</h3>
-      <p>查看和移除图片的元数据信息，保护隐私</p>
+      <h3>{{ $t('tools.exifViewer.ui.title') }}</h3>
+      <p>{{ $t('tools.exifViewer.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -23,8 +23,8 @@
         />
         <div class="upload-content">
           <div class="upload-icon">🔍</div>
-          <p>点击选择或拖拽图片文件</p>
-          <small>支持 JPG、TIFF 等包含 EXIF 数据的格式</small>
+          <p>{{ $t('tools.exifViewer.ui.uploadText') }}</p>
+          <small>{{ $t('tools.exifViewer.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
@@ -35,28 +35,28 @@
           <img :src="imageData.preview" :alt="imageData.name" />
           <div class="image-basic-info">
             <h4>{{ imageData.name }}</h4>
-            <p>文件大小: {{ formatFileSize(imageData.size) }}</p>
-            <p>尺寸: {{ imageData.width }} × {{ imageData.height }}</p>
+            <p>{{ $t('tools.exifViewer.ui.fileSize') }}: {{ formatFileSize(imageData.size) }}</p>
+            <p>{{ $t('tools.exifViewer.ui.dimensions') }}: {{ imageData.width }} × {{ imageData.height }}</p>
           </div>
         </div>
 
         <div class="exif-summary">
-          <h4>元数据概览</h4>
+          <h4>{{ $t('tools.exifViewer.ui.metadataOverview') }}</h4>
           <div class="summary-grid">
             <div class="summary-item" v-if="exifData.DateTime">
-              <span class="label">拍摄时间:</span>
+              <span class="label">{{ $t('tools.exifViewer.ui.shootingTime') }}:</span>
               <span class="value">{{ exifData.DateTime }}</span>
             </div>
             <div class="summary-item" v-if="exifData.Make">
-              <span class="label">相机品牌:</span>
+              <span class="label">{{ $t('tools.exifViewer.ui.cameraBrand') }}:</span>
               <span class="value">{{ exifData.Make }}</span>
             </div>
             <div class="summary-item" v-if="exifData.Model">
-              <span class="label">相机型号:</span>
+              <span class="label">{{ $t('tools.exifViewer.ui.cameraModel') }}:</span>
               <span class="value">{{ exifData.Model }}</span>
             </div>
             <div class="summary-item" v-if="gpsInfo">
-              <span class="label">地理位置:</span>
+              <span class="label">{{ $t('tools.exifViewer.ui.location') }}:</span>
               <span class="value has-location">
                 {{ gpsInfo.latitude }}, {{ gpsInfo.longitude }}
                 <button @click="openInMap" class="map-btn">📍</button>
@@ -67,26 +67,26 @@
 
         <div class="actions-panel">
           <button @click="downloadCleanImage" class="clean-btn">
-            下载无元数据图片
+            {{ $t('tools.exifViewer.ui.downloadCleanImage') }}
           </button>
           <button @click="exportExifData" class="export-btn">
-            导出元数据
+            {{ $t('tools.exifViewer.ui.exportMetadata') }}
           </button>
-          <button @click="reset" class="reset-btn">重新选择</button>
+          <button @click="reset" class="reset-btn">{{ $t('tools.exifViewer.ui.reselect') }}</button>
         </div>
       </div>
 
       <div class="exif-details-panel">
         <div class="details-header">
-          <h4>详细元数据</h4>
+          <h4>{{ $t('tools.exifViewer.ui.detailedMetadata') }}</h4>
           <div class="filter-options">
             <button 
               v-for="category in categories"
-              :key="category"
-              @click="selectedCategory = category"
-              :class="['category-btn', { active: selectedCategory === category }]"
+              :key="category.key"
+              @click="selectedCategory = category.key"
+              :class="['category-btn', { active: selectedCategory === category.key }]"
             >
-              {{ category }}
+              {{ category.name }}
             </button>
           </div>
         </div>
@@ -95,9 +95,9 @@
           <table class="exif-table" v-if="filteredExifData.length > 0">
             <thead>
               <tr>
-                <th>属性</th>
-                <th>值</th>
-                <th>说明</th>
+                <th>{{ $t('tools.exifViewer.ui.attribute') }}</th>
+                <th>{{ $t('tools.exifViewer.ui.value') }}</th>
+                <th>{{ $t('tools.exifViewer.ui.description') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -109,7 +109,7 @@
             </tbody>
           </table>
           <div v-else class="no-data">
-            <p>该分类下没有元数据</p>
+            <p>{{ $t('tools.exifViewer.ui.noDataInCategory') }}</p>
           </div>
         </div>
       </div>
@@ -119,30 +119,30 @@
       <div class="warning-content">
         <div class="warning-icon">⚠️</div>
         <div class="warning-text">
-          <h4>隐私提醒</h4>
-          <p>检测到可能泄露隐私的信息：</p>
+          <h4>{{ $t('tools.exifViewer.ui.privacyWarning') }}</h4>
+          <p>{{ $t('tools.exifViewer.ui.privacyWarningText') }}</p>
           <ul>
-            <li v-if="gpsInfo">地理位置信息</li>
-            <li v-if="exifData.DateTime">拍摄时间</li>
-            <li v-if="exifData.Make || exifData.Model">设备信息</li>
+            <li v-if="gpsInfo">{{ $t('tools.exifViewer.ui.locationInfo') }}</li>
+            <li v-if="exifData.DateTime">{{ $t('tools.exifViewer.ui.shootingTimeInfo') }}</li>
+            <li v-if="exifData.Make || exifData.Model">{{ $t('tools.exifViewer.ui.deviceInfo') }}</li>
           </ul>
-          <p>建议下载无元数据版本以保护隐私。</p>
+          <p>{{ $t('tools.exifViewer.ui.privacySuggestion') }}</p>
         </div>
       </div>
     </div>
 
     <div class="tips-section">
-      <h4>💡 什么是 EXIF 数据？</h4>
+      <h4>💡 {{ $t('tools.exifViewer.ui.whatIsExif') }}</h4>
       <div class="tips-content">
-        <p>EXIF（可交换图像文件格式）是存储在图片文件中的元数据，包含：</p>
+        <p>{{ $t('tools.exifViewer.ui.exifDescription') }}</p>
         <ul>
-          <li><strong>技术信息:</strong> 相机设置、镜头参数、拍摄参数等</li>
-          <li><strong>时间信息:</strong> 拍摄日期和时间</li>
-          <li><strong>地理信息:</strong> GPS 坐标（如果启用）</li>
-          <li><strong>设备信息:</strong> 相机品牌、型号、软件版本等</li>
+          <li><strong>{{ $t('tools.exifViewer.ui.technicalInfo') }}</strong></li>
+          <li><strong>{{ $t('tools.exifViewer.ui.timeInfo') }}</strong></li>
+          <li><strong>{{ $t('tools.exifViewer.ui.geoInfo') }}</strong></li>
+          <li><strong>{{ $t('tools.exifViewer.ui.deviceInfoDesc') }}</strong></li>
         </ul>
         <p class="privacy-note">
-          <strong>隐私提醒:</strong> 分享图片前建议移除 EXIF 数据，特别是包含地理位置的信息。
+          <strong>{{ $t('tools.exifViewer.ui.privacyNote') }}</strong>
         </p>
       </div>
     </div>
@@ -157,43 +157,22 @@ export default {
       imageData: null,
       exifData: {},
       isDragOver: false,
-      selectedCategory: '全部',
-      categories: ['全部', '基本信息', '相机设置', '地理位置', '其他'],
-      exifDescriptions: {
-        'Make': '相机制造商',
-        'Model': '相机型号',
-        'DateTime': '拍摄时间',
-        'DateTimeOriginal': '原始拍摄时间',
-        'DateTimeDigitized': '数字化时间',
-        'ExposureTime': '曝光时间',
-        'FNumber': '光圈值',
-        'ISO': 'ISO 感光度',
-        'Flash': '闪光灯',
-        'FocalLength': '焦距',
-        'WhiteBalance': '白平衡',
-        'ExposureProgram': '曝光程序',
-        'MeteringMode': '测光模式',
-        'ColorSpace': '色彩空间',
-        'GPSLatitude': 'GPS 纬度',
-        'GPSLongitude': 'GPS 经度',
-        'GPSAltitude': 'GPS 海拔',
-        'ImageWidth': '图像宽度',
-        'ImageHeight': '图像高度',
-        'BitsPerSample': '位深度',
-        'Compression': '压缩方式',
-        'PhotometricInterpretation': '光度解释',
-        'Orientation': '方向',
-        'SamplesPerPixel': '每像素采样数',
-        'XResolution': 'X 分辨率',
-        'YResolution': 'Y 分辨率',
-        'ResolutionUnit': '分辨率单位',
-        'Software': '软件',
-        'Artist': '作者',
-        'Copyright': '版权'
-      }
+      selectedCategory: 'all'
     }
   },
   computed: {
+    categories() {
+      return [
+        { key: 'all', name: this.$t('tools.exifViewer.ui.categoryAll') },
+        { key: 'basic', name: this.$t('tools.exifViewer.ui.categoryBasic') },
+        { key: 'camera', name: this.$t('tools.exifViewer.ui.categoryCamera') },
+        { key: 'location', name: this.$t('tools.exifViewer.ui.categoryLocation') },
+        { key: 'other', name: this.$t('tools.exifViewer.ui.categoryOther') }
+      ]
+    },
+    exifDescriptions() {
+      return this.$t('tools.exifViewer.ui.exifDescriptions')
+    },
     gpsInfo() {
       if (this.exifData.GPSLatitude && this.exifData.GPSLongitude) {
         return {
@@ -212,11 +191,11 @@ export default {
       const data = Object.entries(this.exifData).map(([tag, value]) => ({
         tag,
         value: this.formatExifValue(value),
-        description: this.exifDescriptions[tag] || '未知属性',
+        description: this.exifDescriptions[tag] || this.$t('tools.exifViewer.ui.unknownProperty'),
         category: this.getExifCategory(tag)
       }))
       
-      if (this.selectedCategory === '全部') {
+      if (this.selectedCategory === 'all') {
         return data
       }
       
@@ -267,7 +246,7 @@ export default {
         const exifData = await this.readExifFromFile(file)
         this.exifData = exifData
       } catch (error) {
-        console.error('读取 EXIF 数据失败:', error)
+        console.error(this.$t('tools.exifViewer.ui.readExifFailed'), error)
         this.exifData = {}
       }
     },
@@ -340,27 +319,27 @@ export default {
 
     getExifCategory(tag) {
       const categoryMap = {
-        'Make': '基本信息',
-        'Model': '基本信息',
-        'DateTime': '基本信息',
-        'DateTimeOriginal': '基本信息',
-        'DateTimeDigitized': '基本信息',
-        'ImageWidth': '基本信息',
-        'ImageHeight': '基本信息',
-        'ExposureTime': '相机设置',
-        'FNumber': '相机设置',
-        'ISO': '相机设置',
-        'Flash': '相机设置',
-        'FocalLength': '相机设置',
-        'WhiteBalance': '相机设置',
-        'ExposureProgram': '相机设置',
-        'MeteringMode': '相机设置',
-        'GPSLatitude': '地理位置',
-        'GPSLongitude': '地理位置',
-        'GPSAltitude': '地理位置'
+        'Make': this.$t('tools.exifViewer.ui.categoryBasic'),
+        'Model': this.$t('tools.exifViewer.ui.categoryBasic'),
+        'DateTime': this.$t('tools.exifViewer.ui.categoryBasic'),
+        'DateTimeOriginal': this.$t('tools.exifViewer.ui.categoryBasic'),
+        'DateTimeDigitized': this.$t('tools.exifViewer.ui.categoryBasic'),
+        'ImageWidth': this.$t('tools.exifViewer.ui.categoryBasic'),
+        'ImageHeight': this.$t('tools.exifViewer.ui.categoryBasic'),
+        'ExposureTime': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'FNumber': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'ISO': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'Flash': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'FocalLength': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'WhiteBalance': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'ExposureProgram': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'MeteringMode': this.$t('tools.exifViewer.ui.categoryCamera'),
+        'GPSLatitude': this.$t('tools.exifViewer.ui.categoryLocation'),
+        'GPSLongitude': this.$t('tools.exifViewer.ui.categoryLocation'),
+        'GPSAltitude': this.$t('tools.exifViewer.ui.categoryLocation')
       }
       
-      return categoryMap[tag] || '其他'
+      return categoryMap[tag] || this.$t('tools.exifViewer.ui.categoryOther')
     },
 
     formatExifValue(value) {
@@ -433,7 +412,7 @@ export default {
       
       this.imageData = null
       this.exifData = {}
-      this.selectedCategory = '全部'
+      this.selectedCategory = 'all'
     },
 
     formatFileSize(bytes) {

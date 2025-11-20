@@ -1,29 +1,29 @@
 <template>
   <div class="bcrypt-hash-tool">
     <div class="tool-header">
-      <h2><i class="fas fa-shield-alt"></i> Bcrypt Hash Generator</h2>
-      <p>生成和验证Bcrypt哈希值，常用于密码加密存储</p>
+      <h2><i class="fas fa-shield-alt"></i> {{ $t('tools.bcryptHash.ui.title') }}</h2>
+      <p>{{ $t('tools.bcryptHash.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <!-- 哈希生成部分 -->
       <div class="section">
-        <h3><i class="fas fa-lock"></i> 生成Bcrypt哈希</h3>
+        <h3><i class="fas fa-lock"></i> {{ $t('tools.bcryptHash.ui.generateBcrypt') }}</h3>
         <div class="input-group">
-          <label for="passwordInput">输入密码：</label>
+          <label for="passwordInput">{{ $t('tools.bcryptHash.ui.inputPassword') }}</label>
           <div class="password-input-wrapper">
             <input 
               id="passwordInput"
               v-model="password" 
               :type="showPassword ? 'text' : 'password'"
-              placeholder="请输入要加密的密码"
+              :placeholder="$t('tools.bcryptHash.ui.passwordPlaceholder')"
               class="password-input"
               @input="generateHash"
             />
             <button 
               @click="showPassword = !showPassword" 
               class="toggle-password-btn"
-              :title="showPassword ? '隐藏密码' : '显示密码'"
+              :title="showPassword ? $t('tools.bcryptHash.ui.hidePassword') : $t('tools.bcryptHash.ui.showPassword')"
             >
               <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
             </button>
@@ -31,7 +31,7 @@
         </div>
 
         <div class="input-group">
-          <label for="saltRounds">Salt Rounds (4-12)：</label>
+          <label for="saltRounds">{{ $t('tools.bcryptHash.ui.saltRounds') }}</label>
           <input 
             id="saltRounds"
             v-model.number="saltRounds" 
@@ -41,23 +41,23 @@
             class="salt-input"
             @input="generateHash"
           />
-          <small>建议值：10-12（更高更安全，但计算更慢）</small>
+          <small>{{ $t('tools.bcryptHash.ui.saltRoundsHint') }}</small>
         </div>
 
         <div class="result-section">
-          <label>生成的哈希值：</label>
+          <label>{{ $t('tools.bcryptHash.ui.generatedHash') }}</label>
           <div class="hash-result">
             <textarea 
               v-model="hashedPassword" 
               readonly 
-              placeholder="哈希值将在这里显示..."
+              :placeholder="$t('tools.bcryptHash.ui.hashPlaceholder')"
               class="hash-output"
             ></textarea>
             <button 
               @click="copyToClipboard(hashedPassword)" 
               :disabled="!hashedPassword"
               class="copy-btn"
-              title="复制哈希值"
+              :title="$t('tools.bcryptHash.ui.copyHash')"
             >
               <i class="fas fa-copy"></i>
             </button>
@@ -67,16 +67,16 @@
 
       <!-- 示例和说明 -->
       <div class="section">
-        <h3><i class="fas fa-lightbulb"></i> 使用说明</h3>
+        <h3><i class="fas fa-lightbulb"></i> {{ $t('tools.bcryptHash.ui.usageInstructions') }}</h3>
         <div class="example-section">
           <button @click="loadExample" class="example-btn">
-            <i class="fas fa-play"></i> 加载示例
+            <i class="fas fa-play"></i> {{ $t('tools.bcryptHash.ui.loadExample') }}
           </button>
         </div>
 
         <div class="warning-note">
           <i class="fas fa-exclamation-triangle"></i>
-          <strong>注意：</strong>这是客户端模拟实现，实际应用中请使用服务端的bcrypt库以确保安全性。
+          <strong>{{ $t('tools.bcryptHash.ui.warning') }}</strong>{{ $t('tools.bcryptHash.ui.warningNote') }}
         </div>
       </div>
     </div>
@@ -85,10 +85,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'BcryptHash',
   setup() {
+    const { t } = useI18n()
     const password = ref('')
     const saltRounds = ref(10)
     const hashedPassword = ref('')
@@ -105,7 +107,7 @@ export default {
         const hash = simpleHash(password.value + salt, saltRounds.value)
         hashedPassword.value = `$2b$${saltRounds.value.toString().padStart(2, '0')}$${salt}${hash}`
       } catch (error) {
-        console.error('生成哈希失败:', error)
+        console.error(t('tools.bcryptHash.ui.generateFailed'), error)
         hashedPassword.value = ''
       }
     }
@@ -135,7 +137,7 @@ export default {
       try {
         await navigator.clipboard.writeText(text)
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.bcryptHash.ui.copyFailed'), error)
       }
     }
 

@@ -5,8 +5,8 @@
       <div class="header-gradient base64-gradient">
         <div class="header-content">
           <div class="tool-info">
-            <h1><i class="fas fa-image"></i> Base64 Image Preview</h1>
-            <p>Base64图片编码预览与转换工具</p>
+            <h1><i class="fas fa-image"></i> {{ $t('tools.base64Image.ui.title') }}</h1>
+            <p>{{ $t('tools.base64Image.ui.description') }}</p>
           </div>
         </div>
       </div>
@@ -16,7 +16,7 @@
       <!-- 输入区域 -->
       <div class="input-section">
         <div class="section-header">
-          <h3><i class="fas fa-upload"></i> 图片输入</h3>
+          <h3><i class="fas fa-upload"></i> {{ $t('tools.base64Image.ui.imageInput') }}</h3>
         </div>
         
         <!-- 文件上传 -->
@@ -31,14 +31,14 @@
                  style="display: none;">
           <div class="upload-content" @click="$refs.fileInput.click()">
             <i class="fas fa-cloud-upload-alt"></i>
-            <p>点击选择图片或拖拽图片到此处</p>
-            <small>支持 JPG, PNG, GIF, WebP 等格式</small>
+            <p>{{ $t('tools.base64Image.ui.clickOrDrag') }}</p>
+            <small>{{ $t('tools.base64Image.ui.supportedFormats') }}</small>
           </div>
         </div>
 
         <!-- Base64输入 -->
         <div class="input-group">
-          <label>或直接输入Base64编码:</label>
+          <label>{{ $t('tools.base64Image.ui.orInputBase64') }}</label>
           <textarea v-model="base64Input" 
                     @input="processBase64"
                     placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
@@ -48,20 +48,20 @@
         <!-- 从剪贴板粘贴 -->
         <div class="paste-section">
           <button @click="pasteFromClipboard" class="paste-btn">
-            <i class="fas fa-paste"></i> 从剪贴板粘贴
+            <i class="fas fa-paste"></i> {{ $t('tools.base64Image.ui.pasteFromClipboard') }}
           </button>
         </div>
 
         <!-- 示例按钮 -->
         <div class="example-buttons">
           <button @click="loadExample('red-dot')" class="example-btn">
-            <i class="fas fa-circle" style="color: red;"></i> 红点示例
+            <i class="fas fa-circle" style="color: red;"></i> {{ $t('tools.base64Image.ui.redDotExample') }}
           </button>
           <button @click="loadExample('blue-square')" class="example-btn">
-            <i class="fas fa-square" style="color: blue;"></i> 蓝色方块
+            <i class="fas fa-square" style="color: blue;"></i> {{ $t('tools.base64Image.ui.blueSquare') }}
           </button>
           <button @click="loadExample('gradient')" class="example-btn">
-            <i class="fas fa-palette"></i> 渐变示例
+            <i class="fas fa-palette"></i> {{ $t('tools.base64Image.ui.gradientExample') }}
           </button>
         </div>
       </div>
@@ -69,7 +69,7 @@
       <!-- 预览区域 -->
       <div v-if="imageData.isValid" class="preview-section">
         <div class="section-header">
-          <h3><i class="fas fa-eye"></i> 图片预览</h3>
+          <h3><i class="fas fa-eye"></i> {{ $t('tools.base64Image.ui.imagePreview') }}</h3>
           <div class="image-info">
             <span class="info-item">
               <i class="fas fa-file-image"></i> 
@@ -90,7 +90,7 @@
         <div class="image-container">
           <div class="image-wrapper">
             <img :src="imageData.dataUrl" 
-                 :alt="'Base64 Image Preview'"
+                 :alt="$t('tools.base64Image.ui.imagePreview')"
                  :style="{ 
                    width: previewSize + '%',
                    maxWidth: '100%',
@@ -102,7 +102,7 @@
           
           <!-- 缩放控制 -->
           <div class="zoom-controls">
-            <label>预览大小:</label>
+            <label>{{ $t('tools.base64Image.ui.previewSize') }}</label>
             <input type="range" class="modern-slider" 
                    v-model="previewSize" 
                    min="10" 
@@ -115,31 +115,31 @@
         <!-- 图片信息 -->
         <div class="image-details">
           <div class="detail-row">
-            <strong>格式:</strong> {{ imageData.format.toUpperCase() }}
+            <strong>{{ $t('tools.base64Image.ui.format') }}</strong> {{ imageData.format.toUpperCase() }}
           </div>
           <div class="detail-row">
-            <strong>尺寸:</strong> {{ imageData.width }} × {{ imageData.height }} 像素
+            <strong>{{ $t('tools.base64Image.ui.dimensions') }}</strong> {{ imageData.width }} × {{ imageData.height }} {{ $t('tools.base64Image.ui.pixels') }}
           </div>
           <div class="detail-row">
-            <strong>文件大小:</strong> {{ formatFileSize(imageData.size) }}
+            <strong>{{ $t('tools.base64Image.ui.fileSize') }}</strong> {{ formatFileSize(imageData.size) }}
           </div>
           <div class="detail-row">
-            <strong>Base64长度:</strong> {{ imageData.base64Length.toLocaleString() }} 字符
+            <strong>{{ $t('tools.base64Image.ui.base64Length') }}</strong> {{ imageData.base64Length.toLocaleString() }} {{ $t('tools.base64Image.ui.characters') }}
           </div>
           <div class="detail-row">
-            <strong>MIME类型:</strong> {{ imageData.mimeType }}
+            <strong>{{ $t('tools.base64Image.ui.mimeType') }}</strong> {{ imageData.mimeType }}
           </div>
         </div>
 
         <!-- 转换功能 -->
         <div class="conversion-section">
           <div class="section-header">
-            <h3><i class="fas fa-exchange-alt"></i> 格式转换</h3>
+            <h3><i class="fas fa-exchange-alt"></i> {{ $t('tools.base64Image.ui.formatConversion') }}</h3>
           </div>
           
           <div class="conversion-controls">
             <div class="format-options">
-              <label>转换为:</label>
+              <label>{{ $t('tools.base64Image.ui.convertTo') }}</label>
               <select v-model="targetFormat">
                 <option value="jpeg">JPEG</option>
                 <option value="png">PNG</option>
@@ -148,7 +148,7 @@
             </div>
             
             <div v-if="targetFormat === 'jpeg'" class="quality-control">
-              <label>质量:</label>
+              <label>{{ $t('tools.base64Image.ui.quality') }}</label>
               <input type="range" class="modern-slider" 
                      v-model="quality" 
                      min="0.1" 
@@ -158,21 +158,21 @@
             </div>
             
             <button @click="convertImage" class="convert-btn">
-              <i class="fas fa-magic"></i> 转换
+              <i class="fas fa-magic"></i> {{ $t('tools.base64Image.ui.convert') }}
             </button>
           </div>
 
           <div v-if="convertedImage" class="converted-result">
-            <h4>转换结果:</h4>
+            <h4>{{ $t('tools.base64Image.ui.conversionResult') }}</h4>
             <div class="conversion-info">
               <div class="info-item">
-                <strong>原始大小:</strong> {{ formatFileSize(imageData.size) }}
+                <strong>{{ $t('tools.base64Image.ui.originalSize') }}</strong> {{ formatFileSize(imageData.size) }}
               </div>
               <div class="info-item">
-                <strong>转换后:</strong> {{ formatFileSize(convertedImage.size) }}
+                <strong>{{ $t('tools.base64Image.ui.convertedSize') }}</strong> {{ formatFileSize(convertedImage.size) }}
               </div>
               <div class="info-item">
-                <strong>压缩比:</strong> {{ calculateCompressionRatio() }}%
+                <strong>{{ $t('tools.base64Image.ui.compressionRatio') }}</strong> {{ calculateCompressionRatio() }}%
               </div>
             </div>
             <img :src="convertedImage.dataUrl" 
@@ -184,13 +184,13 @@
         <!-- 导出功能 -->
         <div class="export-section">
           <button @click="copyBase64" class="export-btn">
-            <i class="fas fa-copy"></i> 复制Base64
+            <i class="fas fa-copy"></i> {{ $t('tools.base64Image.ui.copyBase64') }}
           </button>
           <button @click="downloadImage" class="export-btn">
-            <i class="fas fa-download"></i> 下载图片
+            <i class="fas fa-download"></i> {{ $t('tools.base64Image.ui.downloadImage') }}
           </button>
           <button v-if="convertedImage" @click="downloadConverted" class="export-btn">
-            <i class="fas fa-download"></i> 下载转换后图片
+            <i class="fas fa-download"></i> {{ $t('tools.base64Image.ui.downloadConverted') }}
           </button>
         </div>
       </div>
@@ -198,15 +198,15 @@
       <!-- 错误状态 -->
       <div v-else-if="errorMessage" class="error-state">
         <i class="fas fa-exclamation-triangle"></i>
-        <h3>解析错误</h3>
+        <h3>{{ $t('tools.base64Image.ui.parseError') }}</h3>
         <p>{{ errorMessage }}</p>
       </div>
 
       <!-- 空状态 -->
       <div v-else class="empty-state">
         <i class="fas fa-image"></i>
-        <h3>没有图片</h3>
-        <p>请上传图片文件或输入Base64编码</p>
+        <h3>{{ $t('tools.base64Image.ui.noImage') }}</h3>
+        <p>{{ $t('tools.base64Image.ui.pleaseUploadOrInput') }}</p>
       </div>
     </div>
   </div>
@@ -214,10 +214,12 @@
 
 <script>
 import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Base64Image',
   setup() {
+    const { t } = useI18n()
     const base64Input = ref('')
     const previewSize = ref(100)
     const targetFormat = ref('jpeg')
@@ -257,7 +259,7 @@ export default {
             imageData.mimeType = `image/${matches[1]}`
             base64Data = matches[2]
           } else {
-            throw new Error('无效的Data URL格式')
+            throw new Error(t('tools.base64Image.ui.invalidDataUrl'))
           }
         } else {
           // 尝试检测图片格式
@@ -310,7 +312,7 @@ export default {
 
     // 图片加载失败
     const onImageError = () => {
-      errorMessage.value = '图片加载失败，请检查Base64编码是否正确'
+      errorMessage.value = t('tools.base64Image.ui.imageLoadFailed')
       resetImageData()
     }
 
@@ -328,7 +330,7 @@ export default {
       if (file && file.type.startsWith('image/')) {
         convertFileToBase64(file)
       } else {
-        errorMessage.value = '请选择有效的图片文件'
+        errorMessage.value = t('tools.base64Image.ui.pleaseSelectValidImage')
       }
     }
 
@@ -339,7 +341,7 @@ export default {
         processBase64()
       }
       reader.onerror = () => {
-        errorMessage.value = '文件读取失败'
+        errorMessage.value = t('tools.base64Image.ui.fileReadFailed')
       }
       reader.readAsDataURL(file)
     }
@@ -352,10 +354,10 @@ export default {
           base64Input.value = text
           processBase64()
         } else {
-          errorMessage.value = '剪贴板中没有有效的Base64图片数据'
+          errorMessage.value = t('tools.base64Image.ui.noValidBase64InClipboard')
         }
       } catch (error) {
-        errorMessage.value = '无法访问剪贴板'
+        errorMessage.value = t('tools.base64Image.ui.cannotAccessClipboard')
       }
     }
 
@@ -422,9 +424,9 @@ export default {
     const copyBase64 = async () => {
       try {
         await navigator.clipboard.writeText(imageData.dataUrl)
-        // 这里可以添加提示
+        // Success message can be shown here if needed
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error('Copy failed:', error)
       }
     }
 
@@ -466,7 +468,8 @@ export default {
       convertImage,
       copyBase64,
       downloadImage,
-      downloadConverted
+      downloadConverted,
+      t
     }
   }
 }

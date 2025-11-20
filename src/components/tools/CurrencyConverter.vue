@@ -3,14 +3,14 @@
     <div class="converter-container">
       <!-- 汇率换算主面板 -->
       <div class="main-converter">
-        <h3><i class="fas fa-coins"></i> 静态汇率换算</h3>
+        <h3><i class="fas fa-coins"></i> {{ $t('tools.currencyConverter.ui.title') }}</h3>
         
         <div class="converter-panel">
           <div class="currency-row">
             <!-- 原币种 -->
             <div class="currency-section">
               <div class="currency-selector">
-                <label>从</label>
+                <label>{{ $t('tools.currencyConverter.ui.from') }}</label>
                 <select v-model="fromCurrency" @change="convert">
                   <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
                     {{ currency.code }} - {{ currency.name }}
@@ -22,7 +22,7 @@
                   v-model="fromAmount" 
                   type="number" 
                   step="0.01"
-                  placeholder="输入金额"
+                  :placeholder="$t('tools.currencyConverter.ui.inputPlaceholder')"
                   @input="convert"
                   class="amount-field">
               </div>
@@ -37,7 +37,7 @@
 
             <!-- 转换按钮 -->
             <div class="converter-arrow">
-              <button @click="swapCurrencies" class="swap-btn" title="交换货币">
+              <button @click="swapCurrencies" class="swap-btn" :title="$t('tools.currencyConverter.ui.swapCurrencies')">
                 <i class="fas fa-exchange-alt"></i>
               </button>
             </div>
@@ -45,7 +45,7 @@
             <!-- 目标币种 -->
             <div class="currency-section">
               <div class="currency-selector">
-                <label>到</label>
+                <label>{{ $t('tools.currencyConverter.ui.to') }}</label>
                 <select v-model="toCurrency" @change="convert">
                   <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
                     {{ currency.code }} - {{ currency.name }}
@@ -58,7 +58,7 @@
                   readonly 
                   class="amount-field result"
                   @click="copyResult">
-                <button @click="copyResult" class="copy-btn" title="复制结果">
+                <button @click="copyResult" class="copy-btn" :title="$t('tools.currencyConverter.ui.copyResult')">
                   <i class="fas fa-copy"></i>
                 </button>
               </div>
@@ -84,7 +84,7 @@
             </div>
             <div class="rate-note">
               <i class="fas fa-info-circle"></i>
-              静态汇率，仅供参考，实际汇率请以银行为准
+              {{ $t('tools.currencyConverter.ui.rateNote') }}
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@
 
       <!-- 快速换算 -->
       <div class="quick-convert">
-        <h4><i class="fas fa-bolt"></i> 快速换算</h4>
+        <h4><i class="fas fa-bolt"></i> {{ $t('tools.currencyConverter.ui.quickConvert') }}</h4>
         <div class="quick-amounts">
           <button 
             v-for="amount in quickAmounts" 
@@ -103,7 +103,7 @@
           </button>
         </div>
         <div class="common-pairs">
-          <h5>常用货币对</h5>
+          <h5>{{ $t('tools.currencyConverter.ui.commonPairs') }}</h5>
           <div class="pairs-grid">
             <button 
               v-for="pair in commonPairs" 
@@ -119,7 +119,7 @@
 
       <!-- 汇率表格 -->
       <div class="rates-table">
-        <h4><i class="fas fa-table"></i> 汇率对照表</h4>
+        <h4><i class="fas fa-table"></i> {{ $t('tools.currencyConverter.ui.ratesTable') }}</h4>
         <div class="table-controls">
           <select v-model="baseCurrency" @change="updateRatesTable" class="base-selector">
             <option v-for="currency in majorCurrencies" :key="currency" :value="currency">
@@ -129,9 +129,9 @@
         </div>
         <div class="rates-grid">
           <div class="rates-header">
-            <span>货币</span>
-            <span>汇率 (基于 {{ baseCurrency }})</span>
-            <span>100 {{ baseCurrency }} =</span>
+            <span>{{ $t('tools.currencyConverter.ui.labelBaseCurrency') }}</span>
+            <span>{{ $t('tools.currencyConverter.ui.labelRate') }} {{ baseCurrency }})</span>
+            <span>{{ $t('tools.currencyConverter.ui.labelAmount') }} {{ baseCurrency }} {{ $t('tools.currencyConverter.ui.labelEquals') }}</span>
           </div>
           <div 
             v-for="rate in ratesTableData" 
@@ -151,13 +151,13 @@
 
       <!-- 历史记录 -->
       <div v-if="history.length > 0" class="history-section">
-        <h4><i class="fas fa-history"></i> 换算历史</h4>
+        <h4><i class="fas fa-history"></i> {{ $t('tools.currencyConverter.ui.conversionHistory') }}</h4>
         <div class="history-list">
           <div v-for="(item, index) in history" :key="index" class="history-item" @click="loadHistory(item)">
             <div class="history-conversion">
               {{ item.fromAmount }} {{ item.fromCurrency }} = {{ item.toAmount }} {{ item.toCurrency }}
             </div>
-            <div class="history-rate">汇率: {{ item.rate }}</div>
+            <div class="history-rate">{{ $t('tools.currencyConverter.ui.labelRateText') }}: {{ item.rate }}</div>
             <div class="history-time">{{ item.time }}</div>
             <button @click.stop="removeHistory(index)" class="remove-btn">
               <i class="fas fa-times"></i>
@@ -165,40 +165,40 @@
           </div>
         </div>
         <button @click="clearHistory" class="clear-btn">
-          <i class="fas fa-trash"></i> 清空历史
+          <i class="fas fa-trash"></i> {{ $t('tools.currencyConverter.ui.clearHistory') }}
         </button>
       </div>
 
       <!-- 货币知识 -->
       <div class="currency-knowledge">
-        <h4><i class="fas fa-graduation-cap"></i> 货币知识</h4>
+        <h4><i class="fas fa-graduation-cap"></i> {{ $t('tools.currencyConverter.ui.currencyKnowledge') }}</h4>
         <div class="knowledge-grid">
           <div class="knowledge-card">
             <i class="fas fa-chart-line"></i>
             <div>
-              <strong>汇率波动</strong>
-              <p>汇率受供需关系、经济政策、政治稳定性等多种因素影响</p>
+              <strong>{{ $t('tools.currencyConverter.ui.knowledgeFluctuation') }}</strong>
+              <p>{{ $t('tools.currencyConverter.ui.knowledgeFluctuationDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-bank"></i>
             <div>
-              <strong>中间价汇率</strong>
-              <p>银行买入价和卖出价的中间值，通常作为汇率参考</p>
+              <strong>{{ $t('tools.currencyConverter.ui.knowledgeMiddle') }}</strong>
+              <p>{{ $t('tools.currencyConverter.ui.knowledgeMiddleDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-globe"></i>
             <div>
-              <strong>储备货币</strong>
-              <p>美元、欧元、日元、英镑等是主要的国际储备货币</p>
+              <strong>{{ $t('tools.currencyConverter.ui.knowledgeReserve') }}</strong>
+              <p>{{ $t('tools.currencyConverter.ui.knowledgeReserveDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-percentage"></i>
             <div>
-              <strong>汇率标价</strong>
-              <p>直接标价法：外币=1，本币=X；间接标价法：本币=1，外币=Y</p>
+              <strong>{{ $t('tools.currencyConverter.ui.knowledgeQuotation') }}</strong>
+              <p>{{ $t('tools.currencyConverter.ui.knowledgeQuotationDesc') }}</p>
             </div>
           </div>
         </div>

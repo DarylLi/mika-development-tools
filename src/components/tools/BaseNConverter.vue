@@ -2,22 +2,22 @@
   <div class="base-n-converter">
     <!-- 基础转换 -->
     <div class="card">
-      <h3><i class="fas fa-code"></i> 进制转换器</h3>
+      <h3><i class="fas fa-code"></i> {{ $t('tools.baseConverter.ui.title') }}</h3>
       <div class="conversion-section">
         <div class="input-section">
           <div class="input-group">
-            <label>输入数值</label>
+            <label>{{ $t('tools.baseConverter.ui.labelInput') }}</label>
             <input 
               v-model="inputValue" 
               type="text" 
-              placeholder="输入要转换的数字"
+              :placeholder="$t('tools.baseConverter.ui.placeholderInput')"
               @input="validateAndConvert"
               :class="{ error: hasError }"
             >
             <div v-if="hasError" class="error-message">{{ errorMessage }}</div>
           </div>
           <div class="base-selector">
-            <label>输入进制</label>
+            <label>{{ $t('tools.baseConverter.ui.labelFromBase') }}</label>
             <select v-model="fromBase" @change="validateAndConvert">
               <option v-for="base in availableBases" :key="base" :value="base">
                 {{ base }}进制{{ getBaseLabel(base) }}
@@ -57,29 +57,29 @@
 
     <!-- 详细转换步骤 -->
     <div class="card" v-if="conversionSteps.length > 0">
-      <h3><i class="fas fa-route"></i> 转换步骤</h3>
+      <h3><i class="fas fa-route"></i> {{ $t('tools.baseConverter.ui.conversionSteps') }}</h3>
       <div class="steps-container">
         <div class="step-section">
-          <h4>步骤1: {{ fromBase }}进制 → 10进制</h4>
+          <h4>{{ $t('tools.baseConverter.ui.step1') }} {{ fromBase }}{{ $t('tools.baseConverter.ui.stepBase') }} → 10{{ $t('tools.baseConverter.ui.stepBase') }}</h4>
           <div class="calculation-steps">
             <div v-for="(step, index) in conversionSteps" :key="index" class="step-item">
               <span class="step-formula">{{ step.formula }}</span>
               <span class="step-result">= {{ step.result }}</span>
             </div>
             <div class="final-decimal">
-              <strong>十进制结果: {{ decimalValue }}</strong>
+              <strong>{{ $t('tools.baseConverter.ui.decimalResult') }} {{ decimalValue }}</strong>
             </div>
           </div>
         </div>
 
         <div class="step-section" v-if="toBase !== 10">
-          <h4>步骤2: 10进制 → {{ toBase }}进制</h4>
+          <h4>{{ $t('tools.baseConverter.ui.step2') }} 10{{ $t('tools.baseConverter.ui.stepBase') }} → {{ toBase }}{{ $t('tools.baseConverter.ui.stepBase') }}</h4>
           <div class="division-steps">
             <div v-for="(step, index) in divisionSteps" :key="index" class="division-item">
-              {{ step.dividend }} ÷ {{ step.divisor }} = {{ step.quotient }} 余 {{ step.remainder }} ({{ step.remainderChar }})
+              {{ step.dividend }} ÷ {{ step.divisor }} = {{ step.quotient }} {{ $t('tools.baseConverter.ui.remainder') }} {{ step.remainder }} ({{ step.remainderChar }})
             </div>
             <div class="final-result">
-              <strong>{{ toBase }}进制结果: {{ results[toBase] }}</strong>
+              <strong>{{ toBase }}{{ $t('tools.baseConverter.ui.baseResult') }} {{ results[toBase] }}</strong>
             </div>
           </div>
         </div>
@@ -88,10 +88,10 @@
 
     <!-- 批量转换 -->
     <div class="card">
-      <h3><i class="fas fa-list"></i> 批量转换</h3>
+      <h3><i class="fas fa-list"></i> {{ $t('tools.baseConverter.ui.batchConvert') }}</h3>
       <div class="batch-controls">
         <div class="input-group">
-          <label>批量输入 (每行一个数字)</label>
+          <label>{{ $t('tools.baseConverter.ui.labelBatchInput') }}</label>
           <textarea 
             v-model="batchInput" 
             placeholder="123&#10;456&#10;789"
@@ -100,7 +100,7 @@
         </div>
         <div class="batch-settings">
           <div class="input-group">
-            <label>输入进制</label>
+            <label>{{ $t('tools.baseConverter.ui.labelFromBase') }}</label>
             <select v-model="batchFromBase">
               <option v-for="base in availableBases" :key="base" :value="base">
                 {{ base }}进制
@@ -108,7 +108,7 @@
             </select>
           </div>
           <div class="input-group">
-            <label>输出进制</label>
+            <label>{{ $t('tools.baseConverter.ui.labelToBase') }}</label>
             <select v-model="batchToBase">
               <option v-for="base in availableBases" :key="base" :value="base">
                 {{ base }}进制
@@ -117,22 +117,22 @@
           </div>
         </div>
         <button @click="processBatch" class="btn-primary">
-          <i class="fas fa-play"></i> 批量转换
+          <i class="fas fa-play"></i> {{ $t('tools.baseConverter.ui.batchConvertBtn') }}
         </button>
       </div>
 
       <div v-if="batchResults.length > 0" class="batch-results">
         <div class="result-header">
-          <span>转换结果 ({{ batchResults.length }}条)</span>
+          <span>{{ $t('tools.baseConverter.ui.resultCount') }}{{ batchResults.length }}{{ $t('tools.baseConverter.ui.resultCountEnd') }}</span>
           <button @click="exportBatchResults" class="btn-secondary">
-            <i class="fas fa-download"></i> 导出CSV
+            <i class="fas fa-download"></i> {{ $t('tools.baseConverter.ui.exportCSV') }}
           </button>
         </div>
         <div class="results-table">
           <div class="table-header">
-            <span>原始值 ({{ batchFromBase }}进制)</span>
-            <span>转换值 ({{ batchToBase }}进制)</span>
-            <span>十进制</span>
+            <span>{{ $t('tools.baseConverter.ui.labelOriginal') }}{{ batchFromBase }}{{ $t('tools.baseConverter.ui.stepBase') }})</span>
+            <span>{{ $t('tools.baseConverter.ui.labelConverted') }}{{ batchToBase }}{{ $t('tools.baseConverter.ui.stepBase') }})</span>
+            <span>{{ $t('tools.baseConverter.ui.labelDecimal') }}</span>
           </div>
           <div v-for="(result, index) in batchResults" :key="index" class="table-row">
             <span>{{ result.original }}</span>
@@ -145,27 +145,27 @@
 
     <!-- 常用对照表 -->
     <div class="card">
-      <h3><i class="fas fa-table"></i> 常用数值对照表</h3>
+      <h3><i class="fas fa-table"></i> {{ $t('tools.baseConverter.ui.referenceTable') }}</h3>
       <div class="reference-controls">
         <button @click="showPowersOf2 = !showPowersOf2" 
                 :class="['btn-toggle', { active: showPowersOf2 }]">
-          2的幂次对照表
+          {{ $t('tools.baseConverter.ui.togglePowersOf2') }}
         </button>
         <button @click="showDecimalRange = !showDecimalRange" 
                 :class="['btn-toggle', { active: showDecimalRange }]">
-          十进制0-255对照表
+          {{ $t('tools.baseConverter.ui.toggleDecimalRange') }}
         </button>
       </div>
 
       <div v-if="showPowersOf2" class="reference-table">
-        <h4>2的幂次对照表</h4>
+        <h4>{{ $t('tools.baseConverter.ui.togglePowersOf2') }}</h4>
         <div class="powers-grid">
           <div class="table-header">
-            <span>2^n</span>
-            <span>十进制</span>
-            <span>二进制</span>
-            <span>八进制</span>
-            <span>十六进制</span>
+            <span>{{ $t('tools.baseConverter.ui.labelPower') }}</span>
+            <span>{{ $t('tools.baseConverter.ui.labelDecimal') }}</span>
+            <span>{{ $t('tools.baseConverter.ui.labelBinary') }}</span>
+            <span>{{ $t('tools.baseConverter.ui.labelOctal') }}</span>
+            <span>{{ $t('tools.baseConverter.ui.labelHex') }}</span>
           </div>
           <div v-for="n in 16" :key="n" class="table-row">
             <span>2^{{ n-1 }}</span>
@@ -178,7 +178,7 @@
       </div>
 
       <div v-if="showDecimalRange" class="reference-table">
-        <h4>十进制0-255对照表</h4>
+        <h4>{{ $t('tools.baseConverter.ui.toggleDecimalRange') }}</h4>
         <div class="range-grid">
           <div class="table-header">
             <span>十进制</span>
@@ -195,7 +195,7 @@
             </div>
           </div>
           <div v-if="rangeLimit < 256" class="show-more">
-            <button @click="rangeLimit += 50" class="btn-secondary">显示更多</button>
+            <button @click="rangeLimit += 50" class="btn-secondary">{{ $t('tools.baseConverter.ui.showMore') }}</button>
           </div>
         </div>
       </div>
@@ -203,32 +203,32 @@
 
     <!-- 知识科普 -->
     <div class="card info-card">
-      <h3><i class="fas fa-info-circle"></i> 进制转换知识</h3>
+      <h3><i class="fas fa-info-circle"></i> {{ $t('tools.baseConverter.ui.knowledgeTitle') }}</h3>
       <div class="info-content">
         <div class="info-section">
-          <h4>常用进制</h4>
+          <h4>{{ $t('tools.baseConverter.ui.knowledgeCommon') }}</h4>
           <ul>
-            <li><strong>二进制 (Binary)</strong>：计算机内部数据表示，只使用0和1</li>
-            <li><strong>八进制 (Octal)</strong>：使用0-7，常用于Unix文件权限</li>
-            <li><strong>十进制 (Decimal)</strong>：日常使用的进制，使用0-9</li>
-            <li><strong>十六进制 (Hexadecimal)</strong>：使用0-9和A-F，程序设计中常用</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeCommon1') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeCommon2') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeCommon3') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeCommon4') }}</li>
           </ul>
         </div>
         <div class="info-section">
-          <h4>转换原理</h4>
+          <h4>{{ $t('tools.baseConverter.ui.knowledgePrinciple') }}</h4>
           <ul>
-            <li><strong>权值法</strong>：每位数字乘以对应的权值(进制的幂次)再相加</li>
-            <li><strong>除基取余法</strong>：用目标进制连续相除，取余数的逆序</li>
-            <li><strong>分组法</strong>：二进制与八进制(3位一组)、十六进制(4位一组)的快速转换</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgePrinciple1') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgePrinciple2') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgePrinciple3') }}</li>
           </ul>
         </div>
         <div class="info-section">
-          <h4>应用场景</h4>
+          <h4>{{ $t('tools.baseConverter.ui.knowledgeApplication') }}</h4>
           <ul>
-            <li>计算机科学：内存地址、颜色值、编码</li>
-            <li>网络编程：IP地址、MAC地址</li>
-            <li>密码学：哈希值、密钥表示</li>
-            <li>嵌入式开发：寄存器操作、位运算</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeApp1') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeApp2') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeApp3') }}</li>
+            <li>{{ $t('tools.baseConverter.ui.knowledgeApp4') }}</li>
           </ul>
         </div>
       </div>
@@ -238,10 +238,12 @@
 
 <script>
 import { ref, computed, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'BaseNConverter',
   setup() {
+    const { t } = useI18n()
     const inputValue = ref('')
     const fromBase = ref(10)
     const toBase = ref(16)
@@ -270,10 +272,10 @@ export default {
 
     const getBaseLabel = (base) => {
       const labels = {
-        2: '(二进制)',
-        8: '(八进制)', 
-        10: '(十进制)',
-        16: '(十六进制)'
+        2: `(${t('tools.baseConverter.ui.labelBinary')})`,
+        8: `(${t('tools.baseConverter.ui.labelOctal')})`, 
+        10: `(${t('tools.baseConverter.ui.labelDecimal')})`,
+        16: `(${t('tools.baseConverter.ui.labelHex')})`
       }
       return labels[base] || ''
     }
@@ -381,7 +383,7 @@ export default {
       
       if (!isValidNumber(inputValue.value, fromBase.value)) {
         hasError.value = true
-        errorMessage.value = `输入值包含不符合${fromBase.value}进制的字符`
+        errorMessage.value = `${t('tools.baseConverter.ui.errorInvalidChar')}${fromBase.value}${t('tools.baseConverter.ui.stepBase')}${t('tools.baseConverter.ui.errorInvalidCharEnd')}`
         Object.keys(results).forEach(key => results[key] = '')
         return
       }
@@ -398,7 +400,7 @@ export default {
         })
       } catch (error) {
         hasError.value = true
-        errorMessage.value = '转换过程中出现错误'
+        errorMessage.value = t('tools.baseConverter.ui.errorConversion')
       }
     }
 
@@ -671,7 +673,6 @@ export default {
 
 .btn-secondary {
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;

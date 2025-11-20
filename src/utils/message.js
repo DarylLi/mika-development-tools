@@ -1,6 +1,16 @@
 import { createApp } from "vue";
 import Message from "../components/Message.vue";
 import ConfirmDialog from "../components/ConfirmDialog.vue";
+import i18n from "../i18n.js";
+
+// 获取翻译的辅助函数
+const t = (key, defaultValue = "") => {
+  try {
+    return i18n.global.t(key) || defaultValue;
+  } catch {
+    return defaultValue;
+  }
+};
 
 class MessageService {
   constructor() {
@@ -28,42 +38,42 @@ class MessageService {
     this.container.appendChild(instance.$el);
   }
 
-  success(message, title = "成功") {
+  success(message, title = null) {
     this.show({
       type: "success",
-      title,
+      title: title || t("common.success"),
       message,
     });
   }
 
-  error(message, title = "错误") {
+  error(message, title = null) {
     this.show({
       type: "error",
-      title,
+      title: title || t("common.error"),
       message,
     });
   }
 
-  warning(message, title = "警告") {
+  warning(message, title = null) {
     this.show({
       type: "warning",
-      title,
+      title: title || t("common.warning"),
       message,
     });
   }
 
-  info(message, title = "提示") {
+  info(message, title = null) {
     this.show({
       type: "info",
-      title,
+      title: title || t("common.info"),
       message,
     });
   }
 
-  confirm(message, title = "确认") {
+  confirm(message, title = null) {
     return new Promise((resolve) => {
       const app = createApp(ConfirmDialog, {
-        title,
+        title: title || t("common.confirm"),
         message,
         onConfirm: () => {
           app.unmount();
@@ -89,10 +99,10 @@ const messageService = new MessageService();
 // 全局方法
 export const showMessage = (message, type = "info", title = "") => {
   const titles = {
-    success: "成功",
-    error: "错误",
-    warning: "警告",
-    info: "提示",
+    success: t("common.success"),
+    error: t("common.error"),
+    warning: t("common.warning"),
+    info: t("common.info"),
   };
 
   messageService.show({
@@ -102,23 +112,23 @@ export const showMessage = (message, type = "info", title = "") => {
   });
 };
 
-export const showSuccess = (message, title = "成功") => {
+export const showSuccess = (message, title = null) => {
   messageService.success(message, title);
 };
 
-export const showError = (message, title = "错误") => {
+export const showError = (message, title = null) => {
   messageService.error(message, title);
 };
 
-export const showWarning = (message, title = "警告") => {
+export const showWarning = (message, title = null) => {
   messageService.warning(message, title);
 };
 
-export const showInfo = (message, title = "提示") => {
+export const showInfo = (message, title = null) => {
   messageService.info(message, title);
 };
 
-export const showConfirm = (message, title = "确认") => {
+export const showConfirm = (message, title = null) => {
   return messageService.confirm(message, title);
 };
 

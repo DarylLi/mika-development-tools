@@ -1,42 +1,42 @@
 <template>
   <div class="uuid-namespace-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-fingerprint"></i> UUID v5 生成器</h3>
-      <p>基于命名空间和名称生成确定性 UUID</p>
+      <h3><i class="fas fa-fingerprint"></i> {{ $t('tools.uuidNamespace.ui.title') }}</h3>
+      <p>{{ $t('tools.uuidNamespace.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
         <div class="input-group">
-          <label>命名空间 UUID</label>
+          <label>{{ $t('tools.uuidNamespace.ui.namespaceUuid') }}</label>
           <select v-model="namespaceUuid" class="namespace-select">
-            <option value="6ba7b810-9dad-11d1-80b4-00c04fd430c8">DNS 命名空间</option>
-            <option value="6ba7b811-9dad-11d1-80b4-00c04fd430c8">URL 命名空间</option>
-            <option value="6ba7b812-9dad-11d1-80b4-00c04fd430c8">ISO OID 命名空间</option>
-            <option value="6ba7b814-9dad-11d1-80b4-00c04fd430c8">X.500 DN 命名空间</option>
-            <option value="custom">自定义命名空间</option>
+            <option value="6ba7b810-9dad-11d1-80b4-00c04fd430c8">{{ $t('tools.uuidNamespace.ui.dnsNamespace') }}</option>
+            <option value="6ba7b811-9dad-11d1-80b4-00c04fd430c8">{{ $t('tools.uuidNamespace.ui.urlNamespace') }}</option>
+            <option value="6ba7b812-9dad-11d1-80b4-00c04fd430c8">{{ $t('tools.uuidNamespace.ui.isoOidNamespace') }}</option>
+            <option value="6ba7b814-9dad-11d1-80b4-00c04fd430c8">{{ $t('tools.uuidNamespace.ui.x500DnNamespace') }}</option>
+            <option value="custom">{{ $t('tools.uuidNamespace.ui.customNamespace') }}</option>
           </select>
         </div>
         
         <div v-if="namespaceUuid === 'custom'" class="input-group">
-          <label>自定义命名空间 UUID</label>
-          <input v-model="customNamespace" type="text" class="uuid-input" placeholder="输入有效的 UUID" />
+          <label>{{ $t('tools.uuidNamespace.ui.customNamespaceUuid') }}</label>
+          <input v-model="customNamespace" type="text" class="uuid-input" :placeholder="$t('tools.uuidNamespace.ui.customNamespacePlaceholder')" />
         </div>
 
         <div class="input-group">
-          <label>名称</label>
-          <input v-model="name" type="text" class="name-input" placeholder="输入要生成 UUID 的名称" />
+          <label>{{ $t('tools.uuidNamespace.ui.name') }}</label>
+          <input v-model="name" type="text" class="name-input" :placeholder="$t('tools.uuidNamespace.ui.namePlaceholder')" />
         </div>
 
         <div class="actions">
           <button @click="generateUUID" class="action-btn primary" :disabled="!canGenerate">
-            <i class="fas fa-cog"></i> 生成 UUID
+            <i class="fas fa-cog"></i> {{ $t('tools.uuidNamespace.ui.generateUUID') }}
           </button>
           <button @click="loadExample" class="action-btn">
-            <i class="fas fa-lightbulb"></i> 示例
+            <i class="fas fa-lightbulb"></i> {{ $t('tools.uuidNamespace.ui.example') }}
           </button>
           <button @click="clearAll" class="action-btn">
-            <i class="fas fa-eraser"></i> 清空
+            <i class="fas fa-eraser"></i> {{ $t('tools.uuidNamespace.ui.clear') }}
           </button>
         </div>
       </div>
@@ -44,9 +44,9 @@
       <div v-if="generatedUuid" class="output-section">
         <div class="result-card">
           <div class="result-header">
-            <h4>生成的 UUID v5</h4>
+            <h4>{{ $t('tools.uuidNamespace.ui.generatedUuid') }}</h4>
             <button @click="copyUuid" class="copy-btn">
-              <i class="fas fa-copy"></i> 复制
+              <i class="fas fa-copy"></i> {{ $t('tools.uuidNamespace.ui.copy') }}
             </button>
           </div>
           <div class="uuid-result">
@@ -55,22 +55,22 @@
         </div>
 
         <div class="info-card">
-          <h4><i class="fas fa-info-circle"></i> 生成信息</h4>
+          <h4><i class="fas fa-info-circle"></i> {{ $t('tools.uuidNamespace.ui.generationInfo') }}</h4>
           <div class="info-item">
-            <span class="label">命名空间:</span>
+            <span class="label">{{ $t('tools.uuidNamespace.ui.namespace') }}</span>
             <span class="value">{{ getCurrentNamespace() }}</span>
           </div>
           <div class="info-item">
-            <span class="label">名称:</span>
+            <span class="label">{{ $t('tools.uuidNamespace.ui.nameLabel') }}</span>
             <span class="value">{{ name }}</span>
           </div>
           <div class="info-item">
-            <span class="label">算法:</span>
-            <span class="value">SHA-1 + UUID v5</span>
+            <span class="label">{{ $t('tools.uuidNamespace.ui.algorithm') }}</span>
+            <span class="value">{{ $t('tools.uuidNamespace.ui.algorithmValue') }}</span>
           </div>
           <div class="info-item">
-            <span class="label">确定性:</span>
-            <span class="value">相同输入始终产生相同结果</span>
+            <span class="label">{{ $t('tools.uuidNamespace.ui.deterministic') }}</span>
+            <span class="value">{{ $t('tools.uuidNamespace.ui.deterministicValue') }}</span>
           </div>
         </div>
       </div>
@@ -80,11 +80,13 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import CryptoJS from 'crypto-js'
 
 export default {
   name: 'UuidNamespace',
   setup() {
+    const { t } = useI18n()
     const namespaceUuid = ref('6ba7b810-9dad-11d1-80b4-00c04fd430c8')
     const customNamespace = ref('')
     const name = ref('')
@@ -98,10 +100,10 @@ export default {
     })
 
     const namespaceNames = {
-      '6ba7b810-9dad-11d1-80b4-00c04fd430c8': 'DNS 命名空间',
-      '6ba7b811-9dad-11d1-80b4-00c04fd430c8': 'URL 命名空间',
-      '6ba7b812-9dad-11d1-80b4-00c04fd430c8': 'ISO OID 命名空间',
-      '6ba7b814-9dad-11d1-80b4-00c04fd430c8': 'X.500 DN 命名空间'
+      '6ba7b810-9dad-11d1-80b4-00c04fd430c8': t('tools.uuidNamespace.ui.dnsNamespace'),
+      '6ba7b811-9dad-11d1-80b4-00c04fd430c8': t('tools.uuidNamespace.ui.urlNamespace'),
+      '6ba7b812-9dad-11d1-80b4-00c04fd430c8': t('tools.uuidNamespace.ui.isoOidNamespace'),
+      '6ba7b814-9dad-11d1-80b4-00c04fd430c8': t('tools.uuidNamespace.ui.x500DnNamespace')
     }
 
     function isValidUuid(uuid) {
@@ -136,7 +138,7 @@ export default {
         // 格式化为 UUID 字符串
         generatedUuid.value = formatAsUuid(hashBytes)
       } catch (error) {
-        console.error('UUID 生成失败:', error)
+        console.error(t('tools.uuidNamespace.ui.generateFailed') + ':', error)
       }
     }
 
@@ -186,7 +188,7 @@ export default {
 
     function getCurrentNamespace() {
       if (namespaceUuid.value === 'custom') {
-        return `自定义: ${customNamespace.value}`
+        return `${t('tools.uuidNamespace.ui.customPrefix')} ${customNamespace.value}`
       }
       return namespaceNames[namespaceUuid.value] || namespaceUuid.value
     }
@@ -196,7 +198,7 @@ export default {
       try {
         await navigator.clipboard.writeText(generatedUuid.value)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.uuidNamespace.ui.copyFailed') + ':', err)
       }
     }
 

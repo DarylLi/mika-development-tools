@@ -1,8 +1,8 @@
 <template>
   <div class="image-compress-container">
     <div class="tool-header">
-      <h3>图片压缩器</h3>
-      <p>客户端压缩 JPG/PNG/WebP，保护隐私，无需上传</p>
+      <h3>{{ $t('tools.imageCompress.ui.title') }}</h3>
+      <p>{{ $t('tools.imageCompress.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -24,15 +24,15 @@
         />
         <div class="upload-content">
           <div class="upload-icon">📁</div>
-          <p>点击选择或拖拽图片文件</p>
-          <small>支持 JPG、PNG、WebP 格式</small>
+          <p>{{ $t('tools.imageCompress.ui.uploadText') }}</p>
+          <small>{{ $t('tools.imageCompress.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
 
     <div class="settings-section" v-if="images.length > 0">
       <div class="setting-group">
-        <label>压缩质量</label>
+        <label>{{ $t('tools.imageCompress.ui.qualityLabel') }}</label>
         <div class="quality-control">
           <input 
             type="range" 
@@ -47,7 +47,7 @@
       </div>
 
       <div class="setting-group">
-        <label>输出格式</label>
+        <label>{{ $t('tools.imageCompress.ui.outputFormatLabel') }}</label>
         <div class="format-options">
           <button 
             v-for="format in outputFormats"
@@ -61,37 +61,37 @@
       </div>
 
       <div class="setting-group">
-        <label>最大尺寸</label>
+        <label>{{ $t('tools.imageCompress.ui.maxSizeLabel') }}</label>
         <div class="size-control">
           <input 
             type="number" 
             v-model="maxWidth" 
-            placeholder="宽度"
+            :placeholder="$t('tools.imageCompress.ui.widthPlaceholder')"
             class="size-input"
           />
           <span>×</span>
           <input 
             type="number" 
             v-model="maxHeight" 
-            placeholder="高度"
+            :placeholder="$t('tools.imageCompress.ui.heightPlaceholder')"
             class="size-input"
           />
-          <button @click="resetSize" class="reset-btn">重置</button>
+          <button @click="resetSize" class="reset-btn">{{ $t('tools.imageCompress.ui.reset') }}</button>
         </div>
       </div>
     </div>
 
     <div class="images-section" v-if="images.length > 0">
       <div class="section-header">
-        <h4>图片列表 ({{ images.length }})</h4>
+        <h4>{{ $t('tools.imageCompress.ui.imageList') }} ({{ images.length }})</h4>
         <div class="batch-actions">
           <button @click="compressAll" class="compress-all-btn" :disabled="processing">
-            {{ processing ? '处理中...' : '批量压缩' }}
+            {{ processing ? $t('tools.imageCompress.ui.processing') : $t('tools.imageCompress.ui.batchCompress') }}
           </button>
           <button @click="downloadAll" class="download-all-btn" v-if="compressedImages.length > 0">
-            下载全部
+            {{ $t('tools.imageCompress.ui.downloadAll') }}
           </button>
-          <button @click="clearAll" class="clear-btn">清空</button>
+          <button @click="clearAll" class="clear-btn">{{ $t('tools.imageCompress.ui.clear') }}</button>
         </div>
       </div>
 
@@ -109,55 +109,55 @@
                 <span></span>
                 <span></span>
               </div>
-              <div class="loading-text">压缩中...</div>
-            </div>
+            <div class="loading-text">{{ $t('tools.imageCompress.ui.compressing') }}</div>
           </div>
-          
-          <div class="image-info">
-            <h5>{{ image.name }}</h5>
-            <div class="size-info">
-              <span>原始: {{ formatFileSize(image.originalSize) }}</span>
-              <span v-if="image.compressedSize">
-                压缩后: {{ formatFileSize(image.compressedSize) }}
-              </span>
-            </div>
-            <div class="dimensions">
-              {{ image.width }} × {{ image.height }}
-            </div>
-            <div class="compression-ratio" v-if="image.compressedSize">
-              压缩率: {{ calculateCompressionRatio(image.originalSize, image.compressedSize) }}%
-            </div>
+        </div>
+        
+        <div class="image-info">
+          <h5>{{ image.name }}</h5>
+          <div class="size-info">
+            <span>{{ $t('tools.imageCompress.ui.original') }}: {{ formatFileSize(image.originalSize) }}</span>
+            <span v-if="image.compressedSize">
+              {{ $t('tools.imageCompress.ui.compressed') }}: {{ formatFileSize(image.compressedSize) }}
+            </span>
           </div>
+          <div class="dimensions">
+            {{ image.width }} × {{ image.height }}
+          </div>
+          <div class="compression-ratio" v-if="image.compressedSize">
+            {{ $t('tools.imageCompress.ui.compressionRatio') }}: {{ calculateCompressionRatio(image.originalSize, image.compressedSize) }}%
+          </div>
+        </div>
 
-          <div class="image-actions">
-            <button 
-              @click="compressImage(index)" 
-              class="compress-btn"
-              :disabled="image.processing"
-            >
-              {{ image.processing ? '处理中' : '压缩' }}
-            </button>
-            <button 
-              @click="downloadImage(index)" 
-              class="download-btn"
-              v-if="image.compressed"
-            >
-              下载
-            </button>
-            <button @click="removeImage(index)" class="remove-btn">删除</button>
-          </div>
+        <div class="image-actions">
+          <button 
+            @click="compressImage(index)" 
+            class="compress-btn"
+            :disabled="image.processing"
+          >
+            {{ image.processing ? $t('tools.imageCompress.ui.processingBtn') : $t('tools.imageCompress.ui.compressBtn') }}
+          </button>
+          <button 
+            @click="downloadImage(index)" 
+            class="download-btn"
+            v-if="image.compressed"
+          >
+            {{ $t('tools.imageCompress.ui.downloadBtn') }}
+          </button>
+          <button @click="removeImage(index)" class="remove-btn">{{ $t('tools.imageCompress.ui.removeBtn') }}</button>
+        </div>
         </div>
       </div>
     </div>
 
     <div class="tips-section">
-      <h4>💡 使用提示</h4>
+      <h4>💡 {{ $t('tools.imageCompress.ui.tipsTitle') }}</h4>
       <ul>
-        <li>所有处理都在本地完成，不会上传到服务器</li>
-        <li>建议质量设置：照片 70-80%，图标 90-95%</li>
-        <li>WebP 格式通常有更好的压缩效果</li>
-        <li>设置最大尺寸可进一步减小文件大小</li>
-        <li>支持批量处理多个文件</li>
+        <li>{{ $t('tools.imageCompress.ui.tip1') }}</li>
+        <li>{{ $t('tools.imageCompress.ui.tip2') }}</li>
+        <li>{{ $t('tools.imageCompress.ui.tip3') }}</li>
+        <li>{{ $t('tools.imageCompress.ui.tip4') }}</li>
+        <li>{{ $t('tools.imageCompress.ui.tip5') }}</li>
       </ul>
     </div>
   </div>
@@ -241,8 +241,8 @@ export default {
           blob: compressedBlob
         })
       } catch (error) {
-        console.error('压缩失败:', error)
-        this.$message.success('压缩失败: ' + error.message)
+        console.error(this.$t('tools.imageCompress.ui.compressFailed'), error)
+        this.$message.success(this.$t('tools.imageCompress.ui.compressFailed') + ': ' + error.message)
       } finally {
         image.processing = false
       }
@@ -270,7 +270,7 @@ export default {
               if (blob) {
                 resolve(blob)
               } else {
-                reject(new Error('压缩失败'))
+                reject(new Error(this.$t('tools.imageCompress.ui.compressFailed')))
               }
             }, `image/${this.outputFormat}`, this.quality)
           } catch (error) {
@@ -278,7 +278,7 @@ export default {
           }
         }
 
-        img.onerror = () => reject(new Error('图片加载失败'))
+        img.onerror = () => reject(new Error(this.$t('tools.imageCompress.ui.imageLoadFailed')))
         img.src = URL.createObjectURL(file)
       })
     },
@@ -361,7 +361,7 @@ export default {
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
       } catch (error) {
-        this.$message.success('批量下载失败，请逐个下载')
+        this.$message.success(this.$t('tools.imageCompress.ui.batchDownloadFailed'))
       }
     },
 

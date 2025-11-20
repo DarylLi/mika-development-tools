@@ -1,44 +1,44 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-exchange-alt"></i> YAML ↔ JSON Converter</h2>
+    <h2><i class="fas fa-exchange-alt"></i> {{ $t('tools.yamlToJson.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.yamlToJson.ui.loadExample') }}
       </button>
     </div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 500px;">
       <div style="display: flex; flex-direction: column;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <h3>YAML 输入</h3>
-          <button @click="convertToJson" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">YAML → JSON</button>
+          <h3>{{ $t('tools.yamlToJson.ui.yamlInput') }}</h3>
+          <button @click="convertToJson" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">{{ $t('tools.yamlToJson.ui.yamlToJson') }}</button>
         </div>
         <textarea 
           v-model="yamlInput" 
-          placeholder="请输入 YAML 格式数据..."
+          :placeholder="$t('tools.yamlToJson.ui.yamlPlaceholder')"
           style="flex: 1; resize: none; font-family: 'Courier New', monospace;"
         ></textarea>
       </div>
       
       <div style="display: flex; flex-direction: column;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-          <h3>JSON 输出</h3>
-          <button @click="convertToYaml" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">JSON → YAML</button>
+          <h3>{{ $t('tools.yamlToJson.ui.jsonOutput') }}</h3>
+          <button @click="convertToYaml" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">{{ $t('tools.yamlToJson.ui.jsonToYaml') }}</button>
         </div>
         <textarea 
           v-model="jsonOutput" 
-          placeholder="JSON 输出将显示在这里..."
+          :placeholder="$t('tools.yamlToJson.ui.jsonPlaceholder')"
           style="flex: 1; resize: none; font-family: 'Courier New', monospace;"
         ></textarea>
       </div>
     </div>
     
-    <div style="margin-top: 1rem;">
-      <button @click="formatJson">格式化 JSON</button>
-      <button @click="minifyJson">压缩 JSON</button>
-      <button @click="copyYaml">复制 YAML</button>
-      <button @click="copyJson">复制 JSON</button>
+    <div style="margin-top: 1rem;display: flex;justify-content: space-between;width: 50%;">
+      <button @click="formatJson">{{ $t('tools.yamlToJson.ui.formatJson') }}</button>
+      <button @click="minifyJson">{{ $t('tools.yamlToJson.ui.minifyJson') }}</button>
+      <button @click="copyYaml">{{ $t('tools.yamlToJson.ui.copyYaml') }}</button>
+      <button @click="copyJson">{{ $t('tools.yamlToJson.ui.copyJson') }}</button>
     </div>
     
     <div v-if="errorMessage" class="error-message" style="margin-top: 1rem; padding: 0.5rem; background: #ffe6e6; border: 1px solid #ff9999; border-radius: 4px; color: #cc0000;">
@@ -48,7 +48,9 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'YamlToJson',
@@ -56,7 +58,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const yamlInput = ref('')
     const jsonOutput = ref('')
     const errorMessage = ref('')
@@ -231,14 +233,14 @@ active: true`
     const copyYaml = () => {
       if (yamlInput.value) {
         navigator.clipboard.writeText(yamlInput.value)
-        instance.proxy.$message.success('YAML 已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       }
     }
 
     const copyJson = () => {
       if (jsonOutput.value) {
         navigator.clipboard.writeText(jsonOutput.value)
-        instance.proxy.$message.success('JSON 已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       }
     }
 

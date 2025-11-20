@@ -2,19 +2,19 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">🌐</div>
-      <h2>HTML 实时预览</h2>
-      <p>编写HTML代码并实时预览效果，支持完整的HTML/CSS/JavaScript</p>
+      <h2>{{ $t('tools.htmlPreview.ui.title') }}</h2>
+      <p>{{ $t('tools.htmlPreview.ui.description') }}</p>
       
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.htmlPreview.ui.quickStart') }}</span>
         <button @click="loadExample('basic')" class="example-btn">
-          <i class="fas fa-code"></i> 基础HTML
+          <i class="fas fa-code"></i> {{ $t('tools.htmlPreview.ui.basicHtml') }}
         </button>
         <button @click="loadExample('css')" class="example-btn">
-          <i class="fas fa-paint-brush"></i> CSS样式
+          <i class="fas fa-paint-brush"></i> {{ $t('tools.htmlPreview.ui.cssStyle') }}
         </button>
         <button @click="loadExample('js')" class="example-btn">
-          <i class="fab fa-js-square"></i> JavaScript
+          <i class="fab fa-js-square"></i> {{ $t('tools.htmlPreview.ui.javascript') }}
         </button>
       </div>
     </div>
@@ -22,16 +22,16 @@
     <div class="editor-layout">
       <div class="editor-card">
         <div class="card-header">
-          <h3><i class="fas fa-code"></i> HTML 编辑器</h3>
+          <h3><i class="fas fa-code"></i> {{ $t('tools.htmlPreview.ui.htmlEditor') }}</h3>
           <div class="editor-actions">
             <button @click="formatCode" class="action-btn">
-              <i class="fas fa-magic"></i> 格式化
+              <i class="fas fa-magic"></i> {{ $t('tools.htmlPreview.ui.format') }}
             </button>
             <button @click="clearCode" class="action-btn">
-              <i class="fas fa-trash"></i> 清空
+              <i class="fas fa-trash"></i> {{ $t('tools.htmlPreview.ui.clear') }}
             </button>
             <button @click="downloadHtml" class="action-btn">
-              <i class="fas fa-download"></i> 下载
+              <i class="fas fa-download"></i> {{ $t('tools.htmlPreview.ui.download') }}
             </button>
           </div>
         </div>
@@ -53,7 +53,7 @@
             v-model="htmlCode"
             v-show="activeTab === 'html'"
             class="code-editor"
-            placeholder="输入HTML代码..."
+            :placeholder="$t('tools.htmlPreview.ui.htmlPlaceholder')"
             @input="debouncedUpdate"
           ></textarea>
 
@@ -61,7 +61,7 @@
             v-model="cssCode"
             v-show="activeTab === 'css'"
             class="code-editor"
-            placeholder="输入CSS样式..."
+            :placeholder="$t('tools.htmlPreview.ui.cssPlaceholder')"
             @input="debouncedUpdate"
           ></textarea>
 
@@ -69,21 +69,21 @@
             v-model="jsCode"
             v-show="activeTab === 'js'"
             class="code-editor"
-            placeholder="输入JavaScript代码..."
+            :placeholder="$t('tools.htmlPreview.ui.jsPlaceholder')"
             @input="debouncedUpdate"
           ></textarea>
 
           <div class="editor-info">
             <div class="code-stats">
               <span>{{ activeTabName }}:</span>
-              <span>{{ currentCodeLength }} 字符</span>
-              <span>{{ currentCodeLines }} 行</span>
+              <span>{{ currentCodeLength }} {{ $t('tools.htmlPreview.ui.characters') }}</span>
+              <span>{{ currentCodeLines }} {{ $t('tools.htmlPreview.ui.lines') }}</span>
             </div>
             <div class="auto-update-toggle">
               <label class="toggle-label">
                 <input type="checkbox" v-model="autoUpdate" />
                 <span class="toggle-slider"></span>
-                自动更新
+                {{ $t('tools.htmlPreview.ui.autoUpdate') }}
               </label>
             </div>
           </div>
@@ -92,16 +92,16 @@
 
       <div class="preview-card">
         <div class="card-header">
-          <h3><i class="fas fa-eye"></i> 实时预览</h3>
+          <h3><i class="fas fa-eye"></i> {{ $t('tools.htmlPreview.ui.realtimePreview') }}</h3>
           <div class="preview-controls">
             <button @click="refreshPreview" class="action-btn">
-              <i class="fas fa-sync"></i> 刷新
+              <i class="fas fa-sync"></i> {{ $t('tools.htmlPreview.ui.refresh') }}
             </button>
             <button @click="openInNewWindow" class="action-btn">
-              <i class="fas fa-external-link-alt"></i> 新窗口
+              <i class="fas fa-external-link-alt"></i> {{ $t('tools.htmlPreview.ui.newWindow') }}
             </button>
             <button @click="toggleFullscreen" class="action-btn">
-              <i class="fas fa-expand"></i> 全屏
+              <i class="fas fa-expand"></i> {{ $t('tools.htmlPreview.ui.fullscreen') }}
             </button>
           </div>
         </div>
@@ -151,10 +151,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'HtmlPreview',
   setup() {
+    const { t } = useI18n()
     const htmlCode = ref('')
     const cssCode = ref('')
     const jsCode = ref('')
@@ -170,11 +172,11 @@ export default {
       { key: 'js', name: 'JS', icon: 'fab fa-js-square' }
     ]
 
-    const devices = [
-      { key: 'desktop', name: '🖥️ 桌面 (100%)', width: '100%' },
-      { key: 'tablet', name: '📱 平板 (768px)', width: '768px' },
-      { key: 'mobile', name: '📱 手机 (375px)', width: '375px' }
-    ]
+    const devices = computed(() => [
+      { key: 'desktop', name: '🖥️ ' + t('tools.htmlPreview.ui.desktop'), width: '100%' },
+      { key: 'tablet', name: '📱 ' + t('tools.htmlPreview.ui.tablet'), width: '768px' },
+      { key: 'mobile', name: '📱 ' + t('tools.htmlPreview.ui.mobile'), width: '375px' }
+    ])
 
     const activeTabName = computed(() => {
       const tab = tabs.find(t => t.key === activeTab.value)
@@ -194,7 +196,7 @@ export default {
     const currentCodeLines = computed(() => currentCode.value.split('\n').length)
 
     const selectedDeviceWidth = computed(() => {
-      const device = devices.find(d => d.key === selectedDevice.value)
+      const device = devices.value.find(d => d.key === selectedDevice.value)
       return device ? device.width : '100%'
     })
 
@@ -529,7 +531,7 @@ function addTodo() {
       if (iframe) {
         iframe.src = iframe.src
       }
-      success.value = '预览已刷新'
+      success.value = t('tools.htmlPreview.ui.previewRefreshed')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -542,7 +544,7 @@ function addTodo() {
       a.click()
       URL.revokeObjectURL(url)
       
-      success.value = 'HTML文件已下载'
+      success.value = t('tools.htmlPreview.ui.htmlFileDownloaded')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -584,7 +586,8 @@ function addTodo() {
       downloadHtml,
       openInNewWindow,
       toggleFullscreen,
-      exitFullscreen
+      exitFullscreen,
+      t
     }
   }
 }

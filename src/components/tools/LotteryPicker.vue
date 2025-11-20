@@ -1,8 +1,8 @@
 <template>
   <div class="lottery-picker-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-gift"></i> 抽奖器工具</h3>
-      <p>公平的随机抽奖工具，支持多种抽奖模式和权重设置</p>
+      <h3><i class="fas fa-gift"></i> {{ $t('tools.lotteryPicker.ui.title') }}</h3>
+      <p>{{ $t('tools.lotteryPicker.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
@@ -13,32 +13,32 @@
             :class="{ active: activeTab === 'simple' }"
             class="tab-btn"
           >
-            简单抽奖
+            {{ $t('tools.lotteryPicker.ui.simpleLottery') }}
           </button>
           <button 
             @click="activeTab = 'weighted'" 
             :class="{ active: activeTab === 'weighted' }"
             class="tab-btn"
           >
-            权重抽奖
+            {{ $t('tools.lotteryPicker.ui.weightedLottery') }}
           </button>
           <button 
             @click="activeTab = 'multiple'" 
             :class="{ active: activeTab === 'multiple' }"
             class="tab-btn"
           >
-            多次抽奖
+            {{ $t('tools.lotteryPicker.ui.multipleLottery') }}
           </button>
         </div>
 
         <div v-if="activeTab === 'simple'" class="simple-setup">
-          <h4>简单抽奖</h4>
+          <h4>{{ $t('tools.lotteryPicker.ui.simpleLottery') }}</h4>
           <div class="participants-input">
-            <label for="participantsList">参与者列表 (每行一个)</label>
+            <label for="participantsList">{{ $t('tools.lotteryPicker.ui.participantsList') }}</label>
             <textarea 
               id="participantsList"
               v-model="participantsList" 
-              placeholder="张三&#10;李四&#10;王五&#10;赵六"
+              :placeholder="$t('tools.lotteryPicker.ui.participantsPlaceholder')"
               rows="8"
               class="participants-textarea"
             ></textarea>
@@ -47,18 +47,18 @@
             <input 
               type="text" 
               v-model="newParticipant" 
-              placeholder="快速添加参与者"
+              :placeholder="$t('tools.lotteryPicker.ui.quickAddParticipant')"
               @keyup.enter="addParticipant"
               class="quick-input"
             />
             <button @click="addParticipant" class="btn-secondary">
-              <i class="fas fa-plus"></i> 添加
+              <i class="fas fa-plus"></i> {{ $t('tools.lotteryPicker.ui.add') }}
             </button>
           </div>
         </div>
 
         <div v-if="activeTab === 'weighted'" class="weighted-setup">
-          <h4>权重抽奖</h4>
+          <h4>{{ $t('tools.lotteryPicker.ui.weightedLottery') }}</h4>
           <div class="weighted-participants">
             <div 
               v-for="(participant, index) in weightedParticipants" 
@@ -68,7 +68,7 @@
               <input 
                 type="text" 
                 v-model="participant.name" 
-                placeholder="参与者姓名"
+                :placeholder="$t('tools.lotteryPicker.ui.participantName')"
                 class="name-input"
               />
               <input 
@@ -76,7 +76,7 @@
                 v-model.number="participant.weight" 
                 min="1" 
                 max="100"
-                placeholder="权重"
+                :placeholder="$t('tools.lotteryPicker.ui.weight')"
                 class="weight-input"
               />
               <button @click="removeWeightedParticipant(index)" class="btn-icon remove-btn">
@@ -85,28 +85,28 @@
             </div>
           </div>
           <button @click="addWeightedParticipant" class="btn-secondary">
-            <i class="fas fa-plus"></i> 添加参与者
+            <i class="fas fa-plus"></i> {{ $t('tools.lotteryPicker.ui.addParticipant') }}
           </button>
         </div>
 
         <div v-if="activeTab === 'multiple'" class="multiple-setup">
-          <h4>多次抽奖</h4>
+          <h4>{{ $t('tools.lotteryPicker.ui.multipleLottery') }}</h4>
           <div class="multiple-controls">
             <div class="control-group">
-              <label for="drawCount">抽奖次数</label>
+              <label for="drawCount">{{ $t('tools.lotteryPicker.ui.drawCount') }}</label>
               <input type="number" id="drawCount" v-model.number="drawCount" min="1" max="100" />
             </div>
             <div class="control-group">
-              <label for="allowDuplicates">允许重复中奖</label>
+              <label for="allowDuplicates">{{ $t('tools.lotteryPicker.ui.allowDuplicates') }}</label>
               <input type="checkbox" id="allowDuplicates" v-model="allowDuplicates" />
             </div>
           </div>
           <div class="participants-input">
-            <label for="multipleParticipantsList">参与者列表</label>
+            <label for="multipleParticipantsList">{{ $t('tools.lotteryPicker.ui.participantsList') }}</label>
             <textarea 
               id="multipleParticipantsList"
               v-model="multipleParticipantsList" 
-              placeholder="张三&#10;李四&#10;王五&#10;赵六"
+              :placeholder="$t('tools.lotteryPicker.ui.participantsPlaceholder')"
               rows="6"
               class="participants-textarea"
             ></textarea>
@@ -117,21 +117,21 @@
       <div class="lottery-controls">
         <div class="control-options">
           <div class="option-group">
-            <label for="animationSpeed">动画速度</label>
+            <label for="animationSpeed">{{ $t('tools.lotteryPicker.ui.animationSpeed') }}</label>
             <select id="animationSpeed" v-model="animationSpeed">
-              <option value="fast">快速</option>
-              <option value="normal">正常</option>
-              <option value="slow">缓慢</option>
+              <option value="fast">{{ $t('tools.lotteryPicker.ui.fast') }}</option>
+              <option value="normal">{{ $t('tools.lotteryPicker.ui.normal') }}</option>
+              <option value="slow">{{ $t('tools.lotteryPicker.ui.slow') }}</option>
             </select>
           </div>
           <div class="option-group">
-            <label for="soundEnabled">音效</label>
+            <label for="soundEnabled">{{ $t('tools.lotteryPicker.ui.soundEnabled') }}</label>
             <input type="checkbox" id="soundEnabled" v-model="soundEnabled" />
           </div>
         </div>
         
         <button @click="startLottery" :disabled="!canStartLottery" class="btn-primary lottery-btn">
-          <i class="fas fa-play"></i> 开始抽奖
+          <i class="fas fa-play"></i> {{ $t('tools.lotteryPicker.ui.startLottery') }}
         </button>
       </div>
 
@@ -140,13 +140,13 @@
           <div class="spinning-wheel">
             <div class="wheel-content">
               <div class="current-name">{{ currentDrawName }}</div>
-              <div class="draw-progress">抽奖中...</div>
+              <div class="draw-progress">{{ $t('tools.lotteryPicker.ui.drawing') }}</div>
             </div>
           </div>
         </div>
 
         <div class="results-display" v-if="lastResults.length && !isDrawing">
-          <h4>🎉 抽奖结果 🎉</h4>
+          <h4>{{ $t('tools.lotteryPicker.ui.lotteryResults') }}</h4>
           <div class="results-list">
             <div 
               v-for="(result, index) in lastResults" 
@@ -154,34 +154,34 @@
               class="result-item"
               :class="{ 'result-highlight': index === 0 }"
             >
-              <div class="result-rank">第{{ index + 1 }}名</div>
+              <div class="result-rank">{{ $t('tools.lotteryPicker.ui.rank', { rank: index + 1 }) }}</div>
               <div class="result-name">{{ result.name }}</div>
-              <div class="result-weight" v-if="result.weight">权重: {{ result.weight }}</div>
+              <div class="result-weight" v-if="result.weight">{{ $t('tools.lotteryPicker.ui.weightLabel') }} {{ result.weight }}</div>
             </div>
           </div>
           
           <div class="result-actions">
             <button @click="redraw" class="btn-secondary">
-              <i class="fas fa-redo"></i> 重新抽奖
+              <i class="fas fa-redo"></i> {{ $t('tools.lotteryPicker.ui.reroll') }}
             </button>
             <button @click="saveResults" class="btn-secondary">
-              <i class="fas fa-save"></i> 保存结果
+              <i class="fas fa-save"></i> {{ $t('tools.lotteryPicker.ui.saveResults') }}
             </button>
             <button @click="shareResults" class="btn-secondary">
-              <i class="fas fa-share"></i> 分享结果
+              <i class="fas fa-share"></i> {{ $t('tools.lotteryPicker.ui.shareResults') }}
             </button>
           </div>
         </div>
       </div>
 
       <div class="lottery-history" v-if="lotteryHistory.length">
-        <h4>抽奖历史</h4>
+        <h4>{{ $t('tools.lotteryPicker.ui.lotteryHistory') }}</h4>
         <div class="history-controls">
           <button @click="clearHistory" class="btn-secondary">
-            <i class="fas fa-trash"></i> 清空历史
+            <i class="fas fa-trash"></i> {{ $t('tools.lotteryPicker.ui.clearHistory') }}
           </button>
           <button @click="exportHistory" class="btn-secondary">
-            <i class="fas fa-download"></i> 导出历史
+            <i class="fas fa-download"></i> {{ $t('tools.lotteryPicker.ui.exportHistory') }}
           </button>
         </div>
         
@@ -204,10 +204,10 @@
                 {{ result.name }}
               </span>
               <span v-if="record.results.length > 3" class="more-winners">
-                +{{ record.results.length - 3 }}人
+                {{ $t('tools.lotteryPicker.ui.moreParticipants', { count: record.results.length - 3 }) }}
               </span>
             </div>
-            <button @click="repeatLottery(record)" class="btn-icon repeat-btn" title="重复此抽奖">
+            <button @click="repeatLottery(record)" class="btn-icon repeat-btn" :title="$t('tools.lotteryPicker.ui.repeatLottery')">
               <i class="fas fa-redo"></i>
             </button>
           </div>
@@ -215,23 +215,23 @@
       </div>
 
       <div class="lottery-statistics" v-if="lotteryHistory.length > 3">
-        <h4>统计信息</h4>
+        <h4>{{ $t('tools.lotteryPicker.ui.statistics') }}</h4>
         <div class="stats-grid">
           <div class="stat-item">
             <div class="stat-value">{{ totalDraws }}</div>
-            <div class="stat-label">总抽奖次数</div>
+            <div class="stat-label">{{ $t('tools.lotteryPicker.ui.totalDraws') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ uniqueWinners }}</div>
-            <div class="stat-label">不同中奖者</div>
+            <div class="stat-label">{{ $t('tools.lotteryPicker.ui.uniqueWinners') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ averageParticipants.toFixed(1) }}</div>
-            <div class="stat-label">平均参与人数</div>
+            <div class="stat-label">{{ $t('tools.lotteryPicker.ui.averageParticipants') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ luckyWinner }}</div>
-            <div class="stat-label">最幸运者</div>
+            <div class="stat-label">{{ $t('tools.lotteryPicker.ui.luckyWinner') }}</div>
           </div>
         </div>
       </div>
@@ -240,12 +240,14 @@
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'LotteryPicker',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const activeTab = ref('simple')
     const participantsList = ref('')
     const newParticipant = ref('')
@@ -434,7 +436,7 @@ export default {
       ).join('\n')
       
       navigator.clipboard.writeText(resultText).then(() => {
-        instance.proxy.$message.success('抽奖结果已复制到剪贴板')
+        messageService.success(t('common.copied'))
       })
     }
 
@@ -451,7 +453,7 @@ export default {
         })
       } else {
         navigator.clipboard.writeText(resultText).then(() => {
-          instance.proxy.$message.success('抽奖结果已复制到剪贴板，可以分享给他人')
+          messageService.success(t('common.copied'))
         })
       }
     }
@@ -467,7 +469,7 @@ export default {
 
     // 清空历史
     const clearHistory = async () => {
-      if (await instance.proxy.$message.confirm('确定要清空抽奖历史吗？')) {
+      if (await messageService.confirm(t('common.confirm'))) {
         lotteryHistory.value = []
       }
     }

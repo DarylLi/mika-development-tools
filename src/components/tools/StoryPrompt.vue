@@ -1,8 +1,8 @@
 <template>
   <div class="story-prompt-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-feather-alt"></i> 写作灵感生成器</h3>
-      <p>激发创作灵感的写作提示工具，帮助作家突破创作瓶颈</p>
+      <h3><i class="fas fa-feather-alt"></i> {{ $t('tools.storyPrompt.ui.title') }}</h3>
+      <p>{{ $t('tools.storyPrompt.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
@@ -13,102 +13,102 @@
             :class="{ active: activeMode === 'story' }"
             class="tab-btn"
           >
-            故事情节
+            {{ $t('tools.storyPrompt.ui.storyPlot') }}
           </button>
           <button 
             @click="activeMode = 'character'" 
             :class="{ active: activeMode === 'character' }"
             class="tab-btn"
           >
-            角色设定
+            {{ $t('tools.storyPrompt.ui.characterSetting') }}
           </button>
           <button 
             @click="activeMode = 'world'" 
             :class="{ active: activeMode === 'world' }"
             class="tab-btn"
           >
-            世界构建
+            {{ $t('tools.storyPrompt.ui.worldBuilding') }}
           </button>
           <button 
             @click="activeMode = 'dialogue'" 
             :class="{ active: activeMode === 'dialogue' }"
             class="tab-btn"
           >
-            对话场景
+            {{ $t('tools.storyPrompt.ui.dialogueScene') }}
           </button>
           <button 
             @click="activeMode = 'mixed'" 
             :class="{ active: activeMode === 'mixed' }"
             class="tab-btn"
           >
-            综合提示
+            {{ $t('tools.storyPrompt.ui.mixedPrompt') }}
           </button>
         </div>
 
         <div class="generation-settings">
           <div class="setting-group">
-            <label for="genre">文学类型</label>
+            <label for="genre">{{ $t('tools.storyPrompt.ui.genre') }}</label>
             <select id="genre" v-model="selectedGenre">
-              <option value="all">全部类型</option>
-              <option value="fantasy">奇幻</option>
-              <option value="scifi">科幻</option>
-              <option value="romance">言情</option>
-              <option value="mystery">悬疑</option>
-              <option value="horror">恐怖</option>
-              <option value="adventure">冒险</option>
-              <option value="drama">剧情</option>
-              <option value="comedy">喜剧</option>
-              <option value="historical">历史</option>
-              <option value="modern">现代</option>
+              <option value="all">{{ $t('tools.storyPrompt.ui.genreAll') }}</option>
+              <option value="fantasy">{{ $t('tools.storyPrompt.ui.genreFantasy') }}</option>
+              <option value="scifi">{{ $t('tools.storyPrompt.ui.genreScifi') }}</option>
+              <option value="romance">{{ $t('tools.storyPrompt.ui.genreRomance') }}</option>
+              <option value="mystery">{{ $t('tools.storyPrompt.ui.genreMystery') }}</option>
+              <option value="horror">{{ $t('tools.storyPrompt.ui.genreHorror') }}</option>
+              <option value="adventure">{{ $t('tools.storyPrompt.ui.genreAdventure') }}</option>
+              <option value="drama">{{ $t('tools.storyPrompt.ui.genreDrama') }}</option>
+              <option value="comedy">{{ $t('tools.storyPrompt.ui.genreComedy') }}</option>
+              <option value="historical">{{ $t('tools.storyPrompt.ui.genreHistorical') }}</option>
+              <option value="modern">{{ $t('tools.storyPrompt.ui.genreModern') }}</option>
             </select>
           </div>
           
           <div class="setting-group">
-            <label for="complexity">复杂程度</label>
+            <label for="complexity">{{ $t('tools.storyPrompt.ui.complexity') }}</label>
             <select id="complexity" v-model="complexity">
-              <option value="simple">简单</option>
-              <option value="medium">中等</option>
-              <option value="complex">复杂</option>
+              <option value="simple">{{ $t('tools.storyPrompt.ui.complexitySimple') }}</option>
+              <option value="medium">{{ $t('tools.storyPrompt.ui.complexityMedium') }}</option>
+              <option value="complex">{{ $t('tools.storyPrompt.ui.complexityComplex') }}</option>
             </select>
           </div>
           
           <div class="setting-group">
-            <label for="promptCount">生成数量</label>
+            <label for="promptCount">{{ $t('tools.storyPrompt.ui.promptCount') }}</label>
             <input type="number" id="promptCount" v-model.number="promptCount" min="1" max="10" />
           </div>
           
           <div class="setting-group">
-            <label for="includeKeywords">关键词约束</label>
+            <label for="includeKeywords">{{ $t('tools.storyPrompt.ui.includeKeywords') }}</label>
             <input type="checkbox" id="includeKeywords" v-model="includeKeywords" />
           </div>
         </div>
 
         <div class="keyword-input" v-if="includeKeywords">
-          <label for="keywords">关键词 (逗号分隔)</label>
+          <label for="keywords">{{ $t('tools.storyPrompt.ui.keywords') }}</label>
           <input 
             type="text" 
             id="keywords" 
             v-model="keywords" 
-            placeholder="魔法, 城堡, 龙, 公主"
+            :placeholder="$t('tools.storyPrompt.ui.keywordsPlaceholder')"
             class="keywords-field"
           />
         </div>
 
         <div class="generate-actions">
           <button @click="generatePrompts" class="btn-primary generate-btn">
-            <i class="fas fa-magic"></i> 生成灵感
+            <i class="fas fa-magic"></i> {{ $t('tools.storyPrompt.ui.generateInspiration') }}
           </button>
           <button @click="generateRandomPrompt" class="btn-secondary">
-            <i class="fas fa-dice"></i> 随机一个
+            <i class="fas fa-dice"></i> {{ $t('tools.storyPrompt.ui.randomOne') }}
           </button>
           <button @click="loadPresetPrompts" class="btn-secondary">
-            <i class="fas fa-star"></i> 经典模板
+            <i class="fas fa-star"></i> {{ $t('tools.storyPrompt.ui.classicTemplate') }}
           </button>
         </div>
       </div>
 
       <div class="prompt-display" v-if="generatedPrompts.length">
-        <h4>📝 创作灵感</h4>
+        <h4>{{ $t('tools.storyPrompt.ui.creativeInspiration') }}</h4>
         
         <div class="prompts-list">
           <div 
@@ -134,7 +134,7 @@
               </div>
               
               <div class="prompt-keywords" v-if="prompt.keywords">
-                <span class="keyword-label">关键词:</span>
+                <span class="keyword-label">{{ $t('tools.storyPrompt.ui.keywordLabel') }}</span>
                 <span 
                   v-for="keyword in prompt.keywords" 
                   :key="keyword"
@@ -149,16 +149,16 @@
               <button @click="togglePromptExpansion(prompt)" class="btn-icon expand-btn">
                 <i :class="prompt.expanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
               </button>
-              <button @click="copyPrompt(prompt)" class="btn-icon copy-btn" title="复制">
+              <button @click="copyPrompt(prompt)" class="btn-icon copy-btn" :title="$t('tools.storyPrompt.ui.copy')">
                 <i class="fas fa-copy"></i>
               </button>
-              <button @click="savePrompt(prompt)" class="btn-icon save-btn" title="收藏">
+              <button @click="savePrompt(prompt)" class="btn-icon save-btn" :title="$t('tools.storyPrompt.ui.save')">
                 <i class="fas fa-heart"></i>
               </button>
-              <button @click="extendPrompt(prompt)" class="btn-icon extend-btn" title="扩展">
+              <button @click="extendPrompt(prompt)" class="btn-icon extend-btn" :title="$t('tools.storyPrompt.ui.extend')">
                 <i class="fas fa-plus"></i>
               </button>
-              <button @click="removePrompt(index)" class="btn-icon remove-btn" title="删除">
+              <button @click="removePrompt(index)" class="btn-icon remove-btn" :title="$t('tools.storyPrompt.ui.delete')">
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -167,19 +167,19 @@
         
         <div class="prompt-batch-actions">
           <button @click="copyAllPrompts" class="btn-secondary">
-            <i class="fas fa-copy"></i> 复制全部
+            <i class="fas fa-copy"></i> {{ $t('tools.storyPrompt.ui.copyAll') }}
           </button>
           <button @click="exportPrompts" class="btn-secondary">
-            <i class="fas fa-download"></i> 导出文档
+            <i class="fas fa-download"></i> {{ $t('tools.storyPrompt.ui.exportDocument') }}
           </button>
           <button @click="clearPrompts" class="btn-secondary">
-            <i class="fas fa-trash"></i> 清空列表
+            <i class="fas fa-trash"></i> {{ $t('tools.storyPrompt.ui.clearList') }}
           </button>
         </div>
       </div>
 
       <div class="saved-prompts" v-if="savedPrompts.length">
-        <h4>💖 收藏的灵感</h4>
+        <h4>{{ $t('tools.storyPrompt.ui.savedInspiration') }}</h4>
         <div class="saved-list">
           <div 
             v-for="(prompt, index) in savedPrompts.slice(-5)" 
@@ -195,10 +195,10 @@
               </div>
             </div>
             <div class="saved-actions">
-              <button @click="loadSavedPrompt(prompt)" class="btn-icon load-btn" title="加载">
+              <button @click="loadSavedPrompt(prompt)" class="btn-icon load-btn" :title="$t('tools.storyPrompt.ui.load')">
                 <i class="fas fa-upload"></i>
               </button>
-              <button @click="removeSavedPrompt(index)" class="btn-icon remove-btn" title="删除">
+              <button @click="removeSavedPrompt(index)" class="btn-icon remove-btn" :title="$t('tools.storyPrompt.ui.delete')">
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -207,69 +207,69 @@
         
         <div class="saved-controls">
           <button @click="showAllSaved" class="btn-secondary">
-            <i class="fas fa-list"></i> 查看全部
+            <i class="fas fa-list"></i> {{ $t('tools.storyPrompt.ui.viewAll') }}
           </button>
           <button @click="clearSavedPrompts" class="btn-secondary">
-            <i class="fas fa-trash"></i> 清空收藏
+            <i class="fas fa-trash"></i> {{ $t('tools.storyPrompt.ui.clearSaved') }}
           </button>
         </div>
       </div>
 
       <div class="writing-tools">
-        <h4>🛠️ 辅助工具</h4>
+        <h4>{{ $t('tools.storyPrompt.ui.auxiliaryTools') }}</h4>
         <div class="tools-grid">
           <div class="tool-card">
-            <h5>情节生成器</h5>
-            <p>生成完整的故事大纲和情节转折</p>
+            <h5>{{ $t('tools.storyPrompt.ui.plotGenerator') }}</h5>
+            <p>{{ $t('tools.storyPrompt.ui.plotGeneratorDesc') }}</p>
             <button @click="generatePlotOutline" class="btn-secondary tool-btn">
-              <i class="fas fa-sitemap"></i> 生成大纲
+              <i class="fas fa-sitemap"></i> {{ $t('tools.storyPrompt.ui.generateOutline') }}
             </button>
           </div>
           
           <div class="tool-card">
-            <h5>冲突制造器</h5>
-            <p>创建故事冲突和戏剧张力</p>
+            <h5>{{ $t('tools.storyPrompt.ui.conflictMaker') }}</h5>
+            <p>{{ $t('tools.storyPrompt.ui.conflictMakerDesc') }}</p>
             <button @click="generateConflict" class="btn-secondary tool-btn">
-              <i class="fas fa-bolt"></i> 制造冲突
+              <i class="fas fa-bolt"></i> {{ $t('tools.storyPrompt.ui.generateConflict') }}
             </button>
           </div>
           
           <div class="tool-card">
-            <h5>转折点生成</h5>
-            <p>为故事添加意想不到的转折</p>
+            <h5>{{ $t('tools.storyPrompt.ui.twistGenerator') }}</h5>
+            <p>{{ $t('tools.storyPrompt.ui.twistGeneratorDesc') }}</p>
             <button @click="generateTwist" class="btn-secondary tool-btn">
-              <i class="fas fa-surprise"></i> 生成转折
+              <i class="fas fa-surprise"></i> {{ $t('tools.storyPrompt.ui.generateTwist') }}
             </button>
           </div>
           
           <div class="tool-card">
-            <h5>环境描述</h5>
-            <p>生成丰富的场景和环境描述</p>
+            <h5>{{ $t('tools.storyPrompt.ui.environmentGenerator') }}</h5>
+            <p>{{ $t('tools.storyPrompt.ui.environmentGeneratorDesc') }}</p>
             <button @click="generateEnvironment" class="btn-secondary tool-btn">
-              <i class="fas fa-tree"></i> 描述场景
+              <i class="fas fa-tree"></i> {{ $t('tools.storyPrompt.ui.describeScene') }}
             </button>
           </div>
         </div>
       </div>
 
       <div class="writing-statistics" v-if="generatedPrompts.length > 5">
-        <h4>📊 创作统计</h4>
+        <h4>{{ $t('tools.storyPrompt.ui.writingStatistics') }}</h4>
         <div class="stats-grid">
           <div class="stat-item">
             <div class="stat-value">{{ totalPrompts }}</div>
-            <div class="stat-label">总生成数</div>
+            <div class="stat-label">{{ $t('tools.storyPrompt.ui.totalGenerated') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ favoriteGenre }}</div>
-            <div class="stat-label">偏好类型</div>
+            <div class="stat-label">{{ $t('tools.storyPrompt.ui.favoriteGenre') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ savedPrompts.length }}</div>
-            <div class="stat-label">收藏数量</div>
+            <div class="stat-label">{{ $t('tools.storyPrompt.ui.savedCount') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ averageComplexity }}</div>
-            <div class="stat-label">平均复杂度</div>
+            <div class="stat-label">{{ $t('tools.storyPrompt.ui.averageComplexity') }}</div>
           </div>
         </div>
       </div>
@@ -278,12 +278,14 @@
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'StoryPrompt',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const activeMode = ref('story')
     const selectedGenre = ref('all')
     const complexity = ref('medium')
@@ -517,13 +519,13 @@ export default {
 
     // 复制提示
     const copyPrompt = async (prompt) => {
-      const text = `${prompt.title}\n\n${prompt.text}\n\n类型: ${getPromptTypeLabel(prompt.type)}\n类别: ${getGenreLabel(prompt.genre)}`
+      const text = `${prompt.title}\n\n${prompt.text}\n\n${t('tools.storyPrompt.ui.typeLabel')} ${getPromptTypeLabel(prompt.type)}\n${t('tools.storyPrompt.ui.categoryLabel')} ${getGenreLabel(prompt.genre)}`
       
       try {
         await navigator.clipboard.writeText(text)
-        instance.proxy.$message.success('提示已复制到剪贴板')
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.storyPrompt.ui.copyFailed') + ':', error)
       }
     }
 
@@ -535,7 +537,7 @@ export default {
       }
       
       savedPrompts.value.push(savedPrompt)
-      instance.proxy.$message.success('提示已保存到收藏')
+      messageService.success(t('common.completed'))
     }
 
     // 扩展提示
@@ -565,9 +567,9 @@ export default {
       
       try {
         await navigator.clipboard.writeText(allText)
-        instance.proxy.$message.success('所有提示已复制到剪贴板')
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.storyPrompt.ui.copyFailed') + ':', error)
       }
     }
 
@@ -594,7 +596,7 @@ export default {
 
     // 清空提示
     const clearPrompts = async () => {
-      if (await instance.proxy.$message.confirm('确定要清空所有提示吗？')) {
+      if (await messageService.confirm(t('common.confirm'))) {
         generatedPrompts.value = []
       }
     }
@@ -611,12 +613,12 @@ export default {
 
     // 显示所有保存的提示
     const showAllSaved = async () => {
-      instance.proxy.$message.success(`共有 ${savedPrompts.value.length} 个收藏的提示`)
+      messageService.info(`${t('common.info')}: ${savedPrompts.value.length}`)
     }
 
     // 清空收藏
     const clearSavedPrompts = async () => {
-      if (await instance.proxy.$message.confirm('确定要清空所有收藏吗？')) {
+      if (await messageService.confirm(t('common.confirm'))) {
         savedPrompts.value = []
       }
     }
@@ -699,44 +701,44 @@ export default {
     // 获取标签函数
     const getPromptTypeLabel = (type) => {
       const labels = {
-        story: '故事情节',
-        character: '角色设定',
-        world: '世界构建',
-        dialogue: '对话场景'
+        story: t('tools.storyPrompt.ui.storyPlot'),
+        character: t('tools.storyPrompt.ui.characterSetting'),
+        world: t('tools.storyPrompt.ui.worldBuilding'),
+        dialogue: t('tools.storyPrompt.ui.dialogueScene')
       }
       return labels[type] || type
     }
 
     const getGenreLabel = (genre) => {
       const labels = {
-        fantasy: '奇幻',
-        scifi: '科幻',
-        romance: '言情',
-        mystery: '悬疑',
-        horror: '恐怖',
-        adventure: '冒险',
-        drama: '剧情',
-        comedy: '喜剧',
-        historical: '历史',
-        modern: '现代'
+        fantasy: t('tools.storyPrompt.ui.genreFantasy'),
+        scifi: t('tools.storyPrompt.ui.genreScifi'),
+        romance: t('tools.storyPrompt.ui.genreRomance'),
+        mystery: t('tools.storyPrompt.ui.genreMystery'),
+        horror: t('tools.storyPrompt.ui.genreHorror'),
+        adventure: t('tools.storyPrompt.ui.genreAdventure'),
+        drama: t('tools.storyPrompt.ui.genreDrama'),
+        comedy: t('tools.storyPrompt.ui.genreComedy'),
+        historical: t('tools.storyPrompt.ui.genreHistorical'),
+        modern: t('tools.storyPrompt.ui.genreModern')
       }
       return labels[genre] || genre
     }
 
     const getDetailLabel = (key) => {
       const labels = {
-        setting: '背景设定',
-        mood: '氛围基调',
-        theme: '主题思想',
-        background: '人物背景',
-        motivation: '行动动机',
-        conflict: '内在冲突',
-        rules: '世界规则',
-        society: '社会结构',
-        threat: '威胁因素',
-        context: '对话语境',
-        emotion: '情感色彩',
-        subtext: '潜在含义'
+        setting: t('tools.storyPrompt.ui.detailSetting'),
+        mood: t('tools.storyPrompt.ui.detailMood'),
+        theme: t('tools.storyPrompt.ui.detailTheme'),
+        background: t('tools.storyPrompt.ui.detailBackground'),
+        motivation: t('tools.storyPrompt.ui.detailMotivation'),
+        conflict: t('tools.storyPrompt.ui.detailConflict'),
+        rules: t('tools.storyPrompt.ui.detailRules'),
+        society: t('tools.storyPrompt.ui.detailSociety'),
+        threat: t('tools.storyPrompt.ui.detailThreat'),
+        context: t('tools.storyPrompt.ui.detailContext'),
+        emotion: t('tools.storyPrompt.ui.detailEmotion'),
+        subtext: t('tools.storyPrompt.ui.detailSubtext')
       }
       return labels[key] || key
     }
@@ -753,7 +755,7 @@ export default {
       })
       
       let maxCount = 0
-      let favorite = '暂无'
+      let favorite = t('tools.storyPrompt.ui.none')
       for (const [genre, count] of Object.entries(genreCounts)) {
         if (count > maxCount) {
           maxCount = count
@@ -767,7 +769,12 @@ export default {
     const averageComplexity = computed(() => {
       const complexityMap = { simple: 1, medium: 2, complex: 3 }
       const avg = complexityMap[complexity.value]
-      return ['简单', '中等', '复杂'][avg - 1] || '中等'
+      const labels = [
+        t('tools.storyPrompt.ui.simple'),
+        t('tools.storyPrompt.ui.medium'),
+        t('tools.storyPrompt.ui.complex')
+      ]
+      return labels[avg - 1] || t('tools.storyPrompt.ui.medium')
     })
 
     return {

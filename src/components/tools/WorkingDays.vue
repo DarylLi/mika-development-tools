@@ -1,15 +1,15 @@
 <template>
   <div class="working-days-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-briefcase"></i> 工作日计算器</h3>
-      <p>计算两个日期之间的工作日数量，排除周末和节假日</p>
+      <h3><i class="fas fa-briefcase"></i> {{ $t('tools.workingDays.ui.title') }}</h3>
+      <p>{{ $t('tools.workingDays.ui.description') }}</p>
     </div>
 
     <!-- 主要计算区域 -->
     <div class="main-calc-section">
       <div class="date-inputs">
         <div class="input-group">
-          <label>开始日期</label>
+          <label>{{ $t('tools.workingDays.ui.startDate') }}</label>
           <input 
             type="date" 
             v-model="startDate" 
@@ -17,7 +17,7 @@
           >
         </div>
         <div class="input-group">
-          <label>结束日期</label>
+          <label>{{ $t('tools.workingDays.ui.endDate') }}</label>
           <input 
             type="date" 
             v-model="endDate" 
@@ -25,18 +25,18 @@
           >
         </div>
         <div class="input-group">
-          <label>工作制度</label>
+          <label>{{ $t('tools.workingDays.ui.workSystem') }}</label>
           <select v-model="workSchedule" class="schedule-select">
-            <option value="5">五天工作制</option>
-            <option value="6">六天工作制</option>
-            <option value="custom">自定义</option>
+            <option value="5">{{ $t('tools.workingDays.ui.fiveDay') }}</option>
+            <option value="6">{{ $t('tools.workingDays.ui.sixDay') }}</option>
+            <option value="custom">{{ $t('tools.workingDays.ui.custom') }}</option>
           </select>
         </div>
       </div>
 
       <!-- 自定义工作日设置 -->
       <div v-if="workSchedule === 'custom'" class="custom-schedule">
-        <label>选择工作日:</label>
+        <label>{{ $t('tools.workingDays.ui.selectWorkdays') }}</label>
         <div class="weekdays-selector">
           <label v-for="(day, index) in weekdays" :key="index" class="weekday-label">
             <input type="checkbox" v-model="workingDays[index]">
@@ -50,10 +50,10 @@
         <div class="holidays-header">
           <label>
             <input type="checkbox" v-model="excludeHolidays">
-            <span>排除中国法定节假日</span>
+            <span>{{ $t('tools.workingDays.ui.excludeHolidays') }}</span>
           </label>
           <button @click="showCustomHolidays = !showCustomHolidays" class="toggle-btn">
-            自定义节假日
+            {{ $t('tools.workingDays.ui.customHolidays') }}
           </button>
         </div>
         
@@ -62,10 +62,10 @@
             <input 
               type="date" 
               v-model="newHoliday" 
-              placeholder="添加节假日"
+              :placeholder="$t('tools.workingDays.ui.addHoliday')"
               class="holiday-date-input"
             >
-            <button @click="addHoliday" class="add-btn">添加</button>
+            <button @click="addHoliday" class="add-btn">{{ $t('tools.workingDays.ui.add') }}</button>
           </div>
           <div class="holidays-list">
             <span 
@@ -81,32 +81,32 @@
       </div>
 
       <div class="quick-actions">
-        <button @click="setThisMonth" class="action-btn">本月</button>
-        <button @click="setThisQuarter" class="action-btn">本季度</button>
-        <button @click="setThisYear" class="action-btn">本年</button>
-        <button @click="setNext30Days" class="action-btn">未来30天</button>
+        <button @click="setThisMonth" class="action-btn">{{ $t('tools.workingDays.ui.thisMonth') }}</button>
+        <button @click="setThisQuarter" class="action-btn">{{ $t('tools.workingDays.ui.thisQuarter') }}</button>
+        <button @click="setThisYear" class="action-btn">{{ $t('tools.workingDays.ui.thisYear') }}</button>
+        <button @click="setNext30Days" class="action-btn">{{ $t('tools.workingDays.ui.next30Days') }}</button>
       </div>
     </div>
 
     <!-- 计算结果 -->
     <div class="result-section" v-if="calculationResult">
-      <h4><i class="fas fa-chart-line"></i> 计算结果</h4>
+      <h4><i class="fas fa-chart-line"></i> {{ $t('tools.workingDays.ui.calculationResult') }}</h4>
       <div class="result-grid">
         <div class="result-card main">
           <div class="result-number">{{ calculationResult.workingDays }}</div>
-          <div class="result-label">工作日</div>
+          <div class="result-label">{{ $t('tools.workingDays.ui.workdays') }}</div>
         </div>
         <div class="result-card">
           <div class="result-number">{{ calculationResult.totalDays }}</div>
-          <div class="result-label">总天数</div>
+          <div class="result-label">{{ $t('tools.workingDays.ui.totalDays') }}</div>
         </div>
         <div class="result-card">
           <div class="result-number">{{ calculationResult.weekends }}</div>
-          <div class="result-label">周末</div>
+          <div class="result-label">{{ $t('tools.workingDays.ui.weekends') }}</div>
         </div>
         <div class="result-card">
           <div class="result-number">{{ calculationResult.holidays }}</div>
-          <div class="result-label">节假日</div>
+          <div class="result-label">{{ $t('tools.workingDays.ui.holidays') }}</div>
         </div>
       </div>
 
@@ -116,15 +116,15 @@
           <div class="progress-fill weekend" :style="{ width: weekendPercentage + '%' }"></div>
         </div>
         <div class="progress-legend">
-          <span class="legend-item working">工作日 {{ workingDaysPercentage.toFixed(1) }}%</span>
-          <span class="legend-item weekend">非工作日 {{ (100 - workingDaysPercentage).toFixed(1) }}%</span>
+          <span class="legend-item working">{{ $t('tools.workingDays.ui.workingDaysPercent') }} {{ workingDaysPercentage.toFixed(1) }}%</span>
+          <span class="legend-item weekend">{{ $t('tools.workingDays.ui.nonWorkingDaysPercent') }} {{ (100 - workingDaysPercentage).toFixed(1) }}%</span>
         </div>
       </div>
     </div>
 
     <!-- 详细分析 -->
     <div class="analysis-section" v-if="monthlyBreakdown.length > 0">
-      <h4><i class="fas fa-calendar-alt"></i> 月度分析</h4>
+      <h4><i class="fas fa-calendar-alt"></i> {{ $t('tools.workingDays.ui.monthlyAnalysis') }}</h4>
       <div class="monthly-grid">
         <div 
           v-for="month in monthlyBreakdown" 
@@ -134,11 +134,11 @@
           <div class="month-header">{{ month.month }}</div>
           <div class="month-stats">
             <div class="stat-item">
-              <span class="stat-label">工作日:</span>
+              <span class="stat-label">{{ $t('tools.workingDays.ui.workdaysLabel') }}</span>
               <span class="stat-value">{{ month.workingDays }}</span>
             </div>
             <div class="stat-item">
-              <span class="stat-label">总天数:</span>
+              <span class="stat-label">{{ $t('tools.workingDays.ui.totalDaysLabel') }}</span>
               <span class="stat-value">{{ month.totalDays }}</span>
             </div>
           </div>
@@ -148,27 +148,27 @@
 
     <!-- 工作日提醒 -->
     <div class="tips-section">
-      <h4><i class="fas fa-lightbulb"></i> 实用提醒</h4>
+      <h4><i class="fas fa-lightbulb"></i> {{ $t('tools.workingDays.ui.practicalTips') }}</h4>
       <div class="tips-grid">
         <div class="tip-card">
           <i class="fas fa-clock"></i>
           <div class="tip-content">
-            <h5>工作时间计算</h5>
-            <p>按每天8小时计算，总工作时间约 {{ totalWorkingHours }} 小时</p>
+            <h5>{{ $t('tools.workingDays.ui.workTimeCalculation') }}</h5>
+            <p>{{ $t('tools.workingDays.ui.workTimeDesc') }} {{ totalWorkingHours }} {{ $t('tools.workingDays.ui.hours') }}</p>
           </div>
         </div>
         <div class="tip-card">
           <i class="fas fa-money-bill-wave"></i>
           <div class="tip-content">
-            <h5>薪资周期</h5>
-            <p>如果按月薪计算，平均每个工作日价值约为月薪的 1/22</p>
+            <h5>{{ $t('tools.workingDays.ui.salaryCycle') }}</h5>
+            <p>{{ $t('tools.workingDays.ui.salaryDesc') }}</p>
           </div>
         </div>
         <div class="tip-card">
           <i class="fas fa-calendar-week"></i>
           <div class="tip-content">
-            <h5>工作周数</h5>
-            <p>约包含 {{ Math.ceil((calculationResult?.workingDays || 0) / 5) }} 个完整工作周</p>
+            <h5>{{ $t('tools.workingDays.ui.workWeeks') }}</h5>
+            <p>{{ $t('tools.workingDays.ui.workWeeksDesc') }} {{ Math.ceil((calculationResult?.workingDays || 0) / 5) }} {{ $t('tools.workingDays.ui.workWeeksUnit') }}</p>
           </div>
         </div>
       </div>
@@ -189,7 +189,7 @@ export default {
       showCustomHolidays: false,
       newHoliday: '',
       customHolidays: [],
-      weekdays: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+      weekdays: this.$t ? this.$t('tools.workingDays.ui.weekdays') : ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
       // 2024年中国法定节假日（示例）
       chineseHolidays: [
         '2024-01-01', // 元旦

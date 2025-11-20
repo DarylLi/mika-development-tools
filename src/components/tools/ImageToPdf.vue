@@ -1,13 +1,13 @@
 <template>
   <div class="tool-container">
     <div class="tool-header">
-      <h2><i class="fas fa-images"></i> 图片转 PDF</h2>
-      <p>将多张图片合并为一个PDF文档</p>
+      <h2><i class="fas fa-images"></i> {{ $t('tools.imageToPdf.ui.title') }}</h2>
+      <p>{{ $t('tools.imageToPdf.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
-        <h3><i class="fas fa-upload"></i> 选择图片</h3>
+        <h3><i class="fas fa-upload"></i> {{ $t('tools.imageToPdf.ui.selectImages') }}</h3>
         <div class="file-upload-area">
           <input
             type="file"
@@ -18,12 +18,12 @@
             style="display: none"
           />
           <button @click="$refs.fileInput.click()" class="upload-btn">
-            <i class="fas fa-cloud-upload-alt"></i> 选择图片文件
+            <i class="fas fa-cloud-upload-alt"></i> {{ $t('tools.imageToPdf.ui.selectImageFiles') }}
           </button>
         </div>
 
         <div class="image-list" v-if="images.length > 0">
-          <h4>已选择的图片 ({{ images.length }} 张):</h4>
+          <h4>{{ $t('tools.imageToPdf.ui.selectedImages', { count: images.length }) }}</h4>
           <div class="image-item" v-for="(image, index) in images" :key="index">
             <div class="image-preview">
               <img :src="image.preview" :alt="image.name" />
@@ -48,18 +48,18 @@
 
         <div class="options-row" v-if="images.length > 0">
           <div class="option-group">
-            <label>页面方向:</label>
+            <label>{{ $t('tools.imageToPdf.ui.pageOrientation') }}</label>
             <select v-model="orientation">
-              <option value="portrait">竖向</option>
-              <option value="landscape">横向</option>
+              <option value="portrait">{{ $t('tools.imageToPdf.ui.portrait') }}</option>
+              <option value="landscape">{{ $t('tools.imageToPdf.ui.landscape') }}</option>
             </select>
           </div>
           <div class="option-group">
-            <label>图片适配:</label>
+            <label>{{ $t('tools.imageToPdf.ui.imageFit') }}</label>
             <select v-model="fitMode">
-              <option value="fit">适应页面</option>
-              <option value="fill">填充页面</option>
-              <option value="original">原始尺寸</option>
+              <option value="fit">{{ $t('tools.imageToPdf.ui.fitPage') }}</option>
+              <option value="fill">{{ $t('tools.imageToPdf.ui.fillPage') }}</option>
+              <option value="original">{{ $t('tools.imageToPdf.ui.originalSize') }}</option>
             </select>
           </div>
         </div>
@@ -68,10 +68,10 @@
       <div class="action-section">
         <button @click="generatePdf" class="generate-btn" :disabled="images.length === 0 || isGenerating">
           <i :class="isGenerating ? 'fas fa-spinner fa-spin' : 'fas fa-file-pdf'"></i>
-          {{ isGenerating ? '生成中...' : '生成 PDF' }}
+          {{ isGenerating ? $t('tools.imageToPdf.ui.generating') : $t('tools.imageToPdf.ui.generatePdf') }}
         </button>
         <button @click="clearAll" class="clear-btn">
-          <i class="fas fa-trash"></i> 清空
+          <i class="fas fa-trash"></i> {{ $t('tools.imageToPdf.ui.clear') }}
         </button>
       </div>
 
@@ -84,12 +84,12 @@
       </div>
 
       <div class="note-section">
-        <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.imageToPdf.ui.usageInstructions') }}</h4>
         <ul>
-          <li>支持JPG、PNG、GIF等常见图片格式</li>
-          <li>可以选择多张图片，按顺序生成PDF</li>
-          <li>通过箭头按钮调整图片顺序</li>
-          <li>处理过程在浏览器本地完成，保护隐私</li>
+          <li>{{ $t('tools.imageToPdf.ui.instruction1') }}</li>
+          <li>{{ $t('tools.imageToPdf.ui.instruction2') }}</li>
+          <li>{{ $t('tools.imageToPdf.ui.instruction3') }}</li>
+          <li>{{ $t('tools.imageToPdf.ui.instruction4') }}</li>
         </ul>
       </div>
     </div>
@@ -98,10 +98,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ImageToPdf',
   setup() {
+    const { t } = useI18n()
     const images = ref([])
     const orientation = ref('portrait')
     const fitMode = ref('fit')
@@ -207,11 +209,11 @@ export default {
           printWindow.close()
         }, 250)
 
-        success.value = 'PDF生成成功！请在打印对话框中选择"保存为PDF"'
+        success.value = t('tools.imageToPdf.ui.pdfGenerated')
         setTimeout(() => success.value = '', 5000)
 
       } catch (err) {
-        error.value = 'PDF生成失败: ' + err.message
+        error.value = t('tools.imageToPdf.ui.pdfFailed') + ' ' + err.message
       } finally {
         isGenerating.value = false
       }

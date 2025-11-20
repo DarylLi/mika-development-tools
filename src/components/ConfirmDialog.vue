@@ -22,14 +22,15 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'ConfirmDialog',
   props: {
     title: {
       type: String,
-      default: '确认'
+      default: ''
     },
     message: {
       type: String,
@@ -37,15 +38,22 @@ export default {
     },
     confirmText: {
       type: String,
-      default: '确定'
+      default: ''
     },
     cancelText: {
       type: String,
-      default: '取消'
+      default: ''
     }
   },
   emits: ['confirm', 'cancel', 'close'],
   setup(props, { emit }) {
+    const { t } = useI18n()
+    
+    // 使用计算属性获取默认翻译文本
+    const title = computed(() => props.title || t('common.confirm'))
+    const confirmText = computed(() => props.confirmText || t('common.confirmBtn'))
+    const cancelText = computed(() => props.cancelText || t('common.cancelBtn'))
+    
     const visible = ref(false);
 
     const handleConfirm = () => {
@@ -76,6 +84,9 @@ export default {
 
     return {
       visible,
+      title,
+      confirmText,
+      cancelText,
       handleConfirm,
       handleCancel,
       handleOverlayClick

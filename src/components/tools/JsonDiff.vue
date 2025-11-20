@@ -1,8 +1,8 @@
 <template>
   <div class="json-diff-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-code-branch"></i> JSON 差异查看器</h3>
-      <p>比较两个 JSON 对象的差异</p>
+      <h3><i class="fas fa-code-branch"></i> {{ $t('tools.jsonDiff.ui.title') }}</h3>
+      <p>{{ $t('tools.jsonDiff.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
@@ -10,13 +10,13 @@
         <div class="json-inputs">
           <div class="input-group">
             <div class="input-header">
-              <label>原始 JSON (A)</label>
+              <label>{{ $t('tools.jsonDiff.ui.originalJson') }}</label>
               <div class="input-actions">
                 <button @click="formatJson('original')" class="action-btn">
-                  <i class="fas fa-code"></i> 格式化
+                  <i class="fas fa-code"></i> {{ $t('tools.jsonDiff.ui.format') }}
                 </button>
                 <button @click="clearJson('original')" class="action-btn">
-                  <i class="fas fa-eraser"></i> 清空
+                  <i class="fas fa-eraser"></i> {{ $t('tools.jsonDiff.ui.clear') }}
                 </button>
               </div>
             </div>
@@ -24,19 +24,19 @@
               v-model="originalJson"
               @input="compareJson"
               class="json-textarea"
-              placeholder="在此输入或粘贴第一个 JSON..."
+              :placeholder="$t('tools.jsonDiff.ui.originalPlaceholder')"
             ></textarea>
           </div>
 
           <div class="input-group">
             <div class="input-header">
-              <label>修改后 JSON (B)</label>
+              <label>{{ $t('tools.jsonDiff.ui.modifiedJson') }}</label>
               <div class="input-actions">
                 <button @click="formatJson('modified')" class="action-btn">
-                  <i class="fas fa-code"></i> 格式化
+                  <i class="fas fa-code"></i> {{ $t('tools.jsonDiff.ui.format') }}
                 </button>
                 <button @click="clearJson('modified')" class="action-btn">
-                  <i class="fas fa-eraser"></i> 清空
+                  <i class="fas fa-eraser"></i> {{ $t('tools.jsonDiff.ui.clear') }}
                 </button>
               </div>
             </div>
@@ -44,29 +44,29 @@
               v-model="modifiedJson"
               @input="compareJson"
               class="json-textarea"
-              placeholder="在此输入或粘贴第二个 JSON..."
+              :placeholder="$t('tools.jsonDiff.ui.modifiedPlaceholder')"
             ></textarea>
           </div>
         </div>
 
         <div class="main-actions">
           <button @click="compareJson" class="action-btn primary">
-            <i class="fas fa-search"></i> 比较差异
+            <i class="fas fa-search"></i> {{ $t('tools.jsonDiff.ui.compareDiff') }}
           </button>
           <button @click="loadExample" class="action-btn">
-            <i class="fas fa-lightbulb"></i> 示例
+            <i class="fas fa-lightbulb"></i> {{ $t('tools.jsonDiff.ui.example') }}
           </button>
           <button @click="swapJson" class="action-btn">
-            <i class="fas fa-exchange-alt"></i> 交换
+            <i class="fas fa-exchange-alt"></i> {{ $t('tools.jsonDiff.ui.swap') }}
           </button>
         </div>
       </div>
 
       <div v-if="differences.length > 0" class="results-section">
         <div class="results-header">
-          <h4><i class="fas fa-list-ul"></i> 发现 {{ differences.length }} 个差异</h4>
+          <h4><i class="fas fa-list-ul"></i> {{ $t('tools.jsonDiff.ui.foundDifferences') }} {{ differences.length }} {{ $t('tools.jsonDiff.ui.differences') }}</h4>
           <button @click="exportDiff" class="export-btn">
-            <i class="fas fa-download"></i> 导出报告
+            <i class="fas fa-download"></i> {{ $t('tools.jsonDiff.ui.exportReport') }}
           </button>
         </div>
 
@@ -82,25 +82,25 @@
                 <i :class="getDiffIcon(diff.type)"></i>
                 {{ getDiffTypeName(diff.type) }}
               </div>
-              <div class="diff-path">{{ diff.path || '根级别' }}</div>
+              <div class="diff-path">{{ diff.path || $t('tools.jsonDiff.ui.rootLevel') }}</div>
             </div>
             <div class="diff-content">
               <div v-if="diff.type === 'modified'" class="diff-values">
                 <div class="old-value">
-                  <span class="value-label">原值:</span>
+                  <span class="value-label">{{ $t('tools.jsonDiff.ui.oldValue') }}</span>
                   <code>{{ formatValue(diff.oldValue) }}</code>
                 </div>
                 <div class="new-value">
-                  <span class="value-label">新值:</span>
+                  <span class="value-label">{{ $t('tools.jsonDiff.ui.newValue') }}</span>
                   <code>{{ formatValue(diff.newValue) }}</code>
                 </div>
               </div>
               <div v-else-if="diff.type === 'added'" class="added-value">
-                <span class="value-label">新增:</span>
+                <span class="value-label">{{ $t('tools.jsonDiff.ui.added') }}</span>
                 <code>{{ formatValue(diff.value) }}</code>
               </div>
               <div v-else-if="diff.type === 'deleted'" class="deleted-value">
-                <span class="value-label">删除:</span>
+                <span class="value-label">{{ $t('tools.jsonDiff.ui.deleted') }}</span>
                 <code>{{ formatValue(diff.value) }}</code>
               </div>
             </div>
@@ -110,7 +110,7 @@
 
       <div v-else-if="originalJson && modifiedJson && !error" class="no-diff">
         <i class="fas fa-check-circle"></i>
-        <p>两个 JSON 对象完全相同</p>
+        <p>{{ $t('tools.jsonDiff.ui.noDifference') }}</p>
       </div>
 
       <div v-if="error" class="error-section">
@@ -123,10 +123,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'JsonDiff',
   setup() {
+    const { t } = useI18n()
     const originalJson = ref('')
     const modifiedJson = ref('')
     const differences = ref([])
@@ -145,7 +147,7 @@ export default {
         const obj2 = JSON.parse(modifiedJson.value)
         differences.value = findDifferences(obj1, obj2)
       } catch (e) {
-        error.value = 'JSON 格式错误: ' + e.message
+        error.value = t('tools.jsonDiff.ui.jsonFormatError') + ': ' + e.message
       }
     }
 
@@ -205,7 +207,7 @@ export default {
         }
         compareJson()
       } catch (e) {
-        error.value = 'JSON 格式错误: ' + e.message
+        error.value = t('tools.jsonDiff.ui.jsonFormatError') + ': ' + e.message
       }
     }
 
@@ -265,9 +267,9 @@ export default {
 
     function getDiffTypeName(type) {
       const names = {
-        added: '新增',
-        deleted: '删除',
-        modified: '修改'
+        added: t('tools.jsonDiff.ui.diffTypeAdded'),
+        deleted: t('tools.jsonDiff.ui.diffTypeDeleted'),
+        modified: t('tools.jsonDiff.ui.diffTypeModified')
       }
       return names[type] || type
     }
@@ -281,13 +283,13 @@ export default {
 
     function exportDiff() {
       const report = differences.value.map(diff => {
-        let line = `${getDiffTypeName(diff.type)}: ${diff.path || '根级别'}`
+        let line = `${getDiffTypeName(diff.type)}: ${diff.path || t('tools.jsonDiff.ui.rootLevel')}`
         if (diff.type === 'modified') {
-          line += ` | 原值: ${formatValue(diff.oldValue)} -> 新值: ${formatValue(diff.newValue)}`
+          line += ` | ${t('tools.jsonDiff.ui.oldValue')} ${formatValue(diff.oldValue)} -> ${t('tools.jsonDiff.ui.newValue')} ${formatValue(diff.newValue)}`
         } else if (diff.type === 'added') {
-          line += ` | 新增: ${formatValue(diff.value)}`
+          line += ` | ${t('tools.jsonDiff.ui.added')} ${formatValue(diff.value)}`
         } else if (diff.type === 'deleted') {
-          line += ` | 删除: ${formatValue(diff.value)}`
+          line += ` | ${t('tools.jsonDiff.ui.deleted')} ${formatValue(diff.value)}`
         }
         return line
       }).join('\n')

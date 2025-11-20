@@ -1,75 +1,75 @@
 <template>
   <div class="name-generator-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-user-tag"></i> 名字生成器</h3>
-      <p>生成各种类型的姓名，支持多种文化和风格</p>
+      <h3><i class="fas fa-user-tag"></i> {{ $t('tools.nameGenerator.ui.title') }}</h3>
+      <p>{{ $t('tools.nameGenerator.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="generation-controls">
         <div class="control-group">
-          <label for="culture">文化背景</label>
+          <label for="culture">{{ $t('tools.nameGenerator.ui.culture') }}</label>
           <select id="culture" v-model="culture">
-            <option value="chinese">中文姓名</option>
-            <option value="english">英文姓名</option>
-            <option value="japanese">日文姓名</option>
-            <option value="korean">韩文姓名</option>
-            <option value="russian">俄文姓名</option>
-            <option value="arabic">阿拉伯姓名</option>
-            <option value="fantasy">奇幻姓名</option>
+            <option value="chinese">{{ $t('tools.nameGenerator.ui.cultureChinese') }}</option>
+            <option value="english">{{ $t('tools.nameGenerator.ui.cultureEnglish') }}</option>
+            <option value="japanese">{{ $t('tools.nameGenerator.ui.cultureJapanese') }}</option>
+            <option value="korean">{{ $t('tools.nameGenerator.ui.cultureKorean') }}</option>
+            <option value="russian">{{ $t('tools.nameGenerator.ui.cultureRussian') }}</option>
+            <option value="arabic">{{ $t('tools.nameGenerator.ui.cultureArabic') }}</option>
+            <option value="fantasy">{{ $t('tools.nameGenerator.ui.cultureFantasy') }}</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="gender">性别</label>
+          <label for="gender">{{ $t('tools.nameGenerator.ui.gender') }}</label>
           <select id="gender" v-model="gender">
-            <option value="random">随机</option>
-            <option value="male">男性</option>
-            <option value="female">女性</option>
-            <option value="unisex">中性</option>
+            <option value="random">{{ $t('tools.nameGenerator.ui.genderRandom') }}</option>
+            <option value="male">{{ $t('tools.nameGenerator.ui.genderMale') }}</option>
+            <option value="female">{{ $t('tools.nameGenerator.ui.genderFemale') }}</option>
+            <option value="unisex">{{ $t('tools.nameGenerator.ui.genderUnisex') }}</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="style">风格</label>
+          <label for="style">{{ $t('tools.nameGenerator.ui.style') }}</label>
           <select id="style" v-model="style">
-            <option value="common">常见</option>
-            <option value="unique">独特</option>
-            <option value="traditional">传统</option>
-            <option value="modern">现代</option>
-            <option value="royal">高贵</option>
-            <option value="creative">创意</option>
+            <option value="common">{{ $t('tools.nameGenerator.ui.styleCommon') }}</option>
+            <option value="unique">{{ $t('tools.nameGenerator.ui.styleUnique') }}</option>
+            <option value="traditional">{{ $t('tools.nameGenerator.ui.styleTraditional') }}</option>
+            <option value="modern">{{ $t('tools.nameGenerator.ui.styleModern') }}</option>
+            <option value="royal">{{ $t('tools.nameGenerator.ui.styleRoyal') }}</option>
+            <option value="creative">{{ $t('tools.nameGenerator.ui.styleCreative') }}</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="count">生成数量</label>
+          <label for="count">{{ $t('tools.nameGenerator.ui.count') }}</label>
           <input type="number" id="count" v-model.number="count" min="1" max="50" />
         </div>
         
         <div class="control-group">
-          <label for="includeMeaning">包含含义</label>
+          <label for="includeMeaning">{{ $t('tools.nameGenerator.ui.includeMeaning') }}</label>
           <input type="checkbox" id="includeMeaning" v-model="includeMeaning" />
         </div>
       </div>
 
       <div class="actions">
         <button @click="generateNames" class="btn-primary">
-          <i class="fas fa-user-plus"></i> 生成姓名
+          <i class="fas fa-user-plus"></i> {{ $t('tools.nameGenerator.ui.generateNames') }}
         </button>
         <button @click="exportNames" class="btn-secondary" :disabled="!names.length">
-          <i class="fas fa-download"></i> 导出列表
+          <i class="fas fa-download"></i> {{ $t('tools.nameGenerator.ui.exportList') }}
         </button>
         <button @click="copyAllNames" class="btn-secondary" :disabled="!names.length">
-          <i class="fas fa-copy"></i> 复制全部
+          <i class="fas fa-copy"></i> {{ $t('tools.nameGenerator.ui.copyAll') }}
         </button>
         <button @click="clearHistory" class="btn-secondary" :disabled="!favoriteNames.length">
-          <i class="fas fa-trash"></i> 清空收藏
+          <i class="fas fa-trash"></i> {{ $t('tools.nameGenerator.ui.clearFavorites') }}
         </button>
       </div>
 
       <div class="names-display" v-if="names.length">
-        <h4>生成的姓名 ({{ names.length }})</h4>
+        <h4>{{ $t('tools.nameGenerator.ui.generatedNames') }} ({{ names.length }})</h4>
         <div class="names-grid">
           <div v-for="(name, index) in names" :key="index" class="name-card">
             <div class="name-header">
@@ -114,12 +114,12 @@
       </div>
 
       <div class="favorites-section" v-if="favoriteNames.length">
-        <h4>收藏的姓名 ({{ favoriteNames.length }})</h4>
+        <h4>{{ $t('tools.nameGenerator.ui.favoriteNames') }} ({{ favoriteNames.length }})</h4>
         <div class="favorites-list">
           <div v-for="(name, index) in favoriteNames" :key="index" class="favorite-item">
             <span class="favorite-name">{{ name.fullName }}</span>
             <span class="favorite-culture">{{ getCultureText(name.culture) }}</span>
-            <button @click="removeFromFavorites(index)" class="remove-btn" title="移除">
+            <button @click="removeFromFavorites(index)" class="remove-btn" :title="$t('tools.nameGenerator.ui.remove')">
               <i class="fas fa-times"></i>
             </button>
           </div>
@@ -130,12 +130,14 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'NameGenerator',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const culture = ref('chinese')
     const gender = ref('random')
     const style = ref('common')
@@ -258,7 +260,7 @@ export default {
           }, 150)
         }
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.nameGenerator.ui.copyFailed') + ':', error)
       }
     }
 
@@ -266,9 +268,9 @@ export default {
       const nameList = names.value.map(name => name.fullName).join('\n')
       try {
         await navigator.clipboard.writeText(nameList)
-        instance.proxy.$message.success('所有姓名已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.nameGenerator.ui.copyFailed') + ':', error)
       }
     }
 
@@ -311,29 +313,29 @@ export default {
     }
 
     const clearHistory = async () => {
-      if (await instance.proxy.$message.confirm('确定要清空所有收藏的姓名吗？')) {
+      if (await messageService.confirm(t('common.confirm'))) {
         favoriteNames.value = []
       }
     }
 
     const getGenderText = (genderValue) => {
       const genderMap = {
-        male: '男性',
-        female: '女性',
-        unisex: '中性'
+        male: t('tools.nameGenerator.ui.genderMale'),
+        female: t('tools.nameGenerator.ui.genderFemale'),
+        unisex: t('tools.nameGenerator.ui.genderUnisex')
       }
-      return genderMap[genderValue] || '未知'
+      return genderMap[genderValue] || t('tools.nameGenerator.ui.genderUnknown')
     }
 
     const getCultureText = (cultureValue) => {
       const cultureMap = {
-        chinese: '中文',
-        english: '英文', 
-        japanese: '日文',
-        korean: '韩文',
-        russian: '俄文',
-        arabic: '阿拉伯',
-        fantasy: '奇幻'
+        chinese: t('tools.nameGenerator.ui.cultureChinese'),
+        english: t('tools.nameGenerator.ui.cultureEnglish'), 
+        japanese: t('tools.nameGenerator.ui.cultureJapanese'),
+        korean: t('tools.nameGenerator.ui.cultureKorean'),
+        russian: t('tools.nameGenerator.ui.cultureRussian'),
+        arabic: t('tools.nameGenerator.ui.cultureArabic'),
+        fantasy: t('tools.nameGenerator.ui.cultureFantasy')
       }
       return cultureMap[cultureValue] || cultureValue
     }

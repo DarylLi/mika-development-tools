@@ -1,23 +1,23 @@
 <template>
   <div class="json-to-ts-tool">
     <div class="tool-header">
-      <h3><i class="fab fa-js-square"></i> JSON 转 TypeScript 接口</h3>
-      <p>将 JSON 数据转换为 TypeScript 接口定义</p>
+      <h3><i class="fab fa-js-square"></i> {{ $t('tools.jsonToTs.ui.title') }}</h3>
+      <p>{{ $t('tools.jsonToTs.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
         <div class="section-header">
-          <label for="json-input">JSON 数据</label>
+          <label for="json-input">{{ $t('tools.jsonToTs.ui.jsonData') }}</label>
           <div class="header-actions">
             <button @click="loadExample" class="action-btn">
-              <i class="fas fa-lightbulb"></i> 示例
+              <i class="fas fa-lightbulb"></i> {{ $t('tools.jsonToTs.ui.example') }}
             </button>
             <button @click="clearInput" class="action-btn">
-              <i class="fas fa-eraser"></i> 清空
+              <i class="fas fa-eraser"></i> {{ $t('tools.jsonToTs.ui.clear') }}
             </button>
             <button @click="formatJson" class="action-btn">
-              <i class="fas fa-code"></i> 格式化
+              <i class="fas fa-code"></i> {{ $t('tools.jsonToTs.ui.format') }}
             </button>
           </div>
         </div>
@@ -25,17 +25,17 @@
           id="json-input"
           v-model="jsonInput"
           @input="convertToTS"
-          placeholder="在此输入或粘贴 JSON 数据..."
+          :placeholder="$t('tools.jsonToTs.ui.placeholder')"
           class="code-input"
         ></textarea>
       </div>
 
       <div class="output-section">
         <div class="section-header">
-          <label>TypeScript 接口</label>
+          <label>{{ $t('tools.jsonToTs.ui.typescriptInterface') }}</label>
           <div class="header-actions">
             <button @click="copyResult" class="action-btn" :disabled="!tsOutput">
-              <i class="fas fa-copy"></i> 复制
+              <i class="fas fa-copy"></i> {{ $t('tools.jsonToTs.ui.copy') }}
             </button>
           </div>
         </div>
@@ -46,41 +46,41 @@
             {{ error }}
           </div>
           <div v-else class="placeholder">
-            转换后的 TypeScript 接口将在此显示...
+            {{ $t('tools.jsonToTs.ui.outputPlaceholder') }}
           </div>
         </div>
       </div>
 
       <div class="options-section">
-        <h4><i class="fas fa-cog"></i> 转换选项</h4>
+        <h4><i class="fas fa-cog"></i> {{ $t('tools.jsonToTs.ui.conversionOptions') }}</h4>
         <div class="options-grid">
           <label class="option-item">
             <input type="text" v-model="interfaceName" placeholder="RootInterface" />
-            <span>接口名称</span>
+            <span>{{ $t('tools.jsonToTs.ui.interfaceName') }}</span>
           </label>
           <label class="option-item">
             <input type="checkbox" v-model="useOptional" @change="convertToTS" />
-            <span>可选属性 (?)</span>
+            <span>{{ $t('tools.jsonToTs.ui.optionalProperties') }}</span>
           </label>
           <label class="option-item">
             <input type="checkbox" v-model="useExport" @change="convertToTS" />
-            <span>导出接口</span>
+            <span>{{ $t('tools.jsonToTs.ui.exportInterface') }}</span>
           </label>
           <label class="option-item">
             <input type="checkbox" v-model="useReadonly" @change="convertToTS" />
-            <span>只读属性</span>
+            <span>{{ $t('tools.jsonToTs.ui.readonlyProperties') }}</span>
           </label>
         </div>
       </div>
 
       <div class="info-section">
-        <h4><i class="fas fa-info-circle"></i> 转换说明</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.jsonToTs.ui.conversionInfo') }}</h4>
         <ul>
-          <li>支持嵌套对象和数组类型推断</li>
-          <li>自动处理联合类型 (string | number)</li>
-          <li>识别 null 和 undefined 值</li>
-          <li>支持可选属性和只读修饰符</li>
-          <li>生成符合 TypeScript 规范的接口</li>
+          <li>{{ $t('tools.jsonToTs.ui.supportNested') }}</li>
+          <li>{{ $t('tools.jsonToTs.ui.autoUnion') }}</li>
+          <li>{{ $t('tools.jsonToTs.ui.recognizeNull') }}</li>
+          <li>{{ $t('tools.jsonToTs.ui.supportModifiers') }}</li>
+          <li>{{ $t('tools.jsonToTs.ui.generateCompliant') }}</li>
         </ul>
       </div>
     </div>
@@ -89,10 +89,12 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'JsonToTs',
   setup() {
+    const { t } = useI18n()
     const jsonInput = ref('')
     const tsOutput = ref('')
     const error = ref('')
@@ -141,7 +143,7 @@ export default {
         jsonInput.value = JSON.stringify(parsed, null, 2)
         convertToTS()
       } catch (e) {
-        error.value = 'JSON 格式错误'
+        error.value = t('tools.jsonToTs.ui.jsonFormatError')
       }
     }
 
@@ -193,13 +195,13 @@ export default {
         error.value = ''
         
         if (typeof data !== 'object' || data === null) {
-          error.value = '请输入有效的 JSON 对象'
+          error.value = t('tools.jsonToTs.ui.invalidJsonObject')
           return
         }
 
         tsOutput.value = convertObjectToInterface(data, interfaceName.value)
       } catch (e) {
-        error.value = 'JSON 格式错误: ' + e.message
+        error.value = t('tools.jsonToTs.ui.jsonFormatError') + ': ' + e.message
         tsOutput.value = ''
       }
     }
@@ -210,7 +212,7 @@ export default {
         await navigator.clipboard.writeText(tsOutput.value)
         // 这里可以添加一个简单的提示
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.jsonToTs.ui.copyFailed') + ':', err)
       }
     }
 

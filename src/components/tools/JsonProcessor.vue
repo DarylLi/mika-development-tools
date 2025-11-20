@@ -1,37 +1,37 @@
 <template>
   <div class="single-tool">
     <div class="tool-header">
-      <h2><i class="fas fa-code"></i> JSON处理器</h2>
-      <p>强大的JSON处理工具，支持格式化、压缩、验证和树形可视化展示</p>
+      <h2><i class="fas fa-code"></i> {{ $t('tools.jsonProcessor.ui.title') }}</h2>
+      <p>{{ $t('tools.jsonProcessor.ui.description') }}</p>
     </div>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.jsonProcessor.ui.loadExample') }}
       </button>
     </div>
     
     <div class="input-section">
-      <h3><i class="fas fa-edit"></i> JSON 输入</h3>
+      <h3><i class="fas fa-edit"></i> {{ $t('tools.jsonProcessor.ui.jsonInput') }}</h3>
       <textarea 
         v-model="jsonInput" 
-        placeholder="请输入JSON数据..."
+        :placeholder="$t('tools.jsonProcessor.ui.placeholder')"
         class="json-input"
         @input="handleInput"
       ></textarea>
       
       <div class="control-panel">
         <button @click="formatJson" :disabled="!isValidJson" class="btn-format">
-          <i class="fas fa-magic"></i> 格式化
+          <i class="fas fa-magic"></i> {{ $t('tools.jsonProcessor.ui.format') }}
         </button>
         <button @click="compressJson" :disabled="!isValidJson" class="btn-compress">
-          <i class="fas fa-compress"></i> 压缩
+          <i class="fas fa-compress"></i> {{ $t('tools.jsonProcessor.ui.compress') }}
         </button>
         <button @click="validateJson" class="btn-validate">
-          <i class="fas fa-check"></i> 验证
+          <i class="fas fa-check"></i> {{ $t('tools.jsonProcessor.ui.validate') }}
         </button>
         <button @click="clearAll" class="btn-clear">
-          <i class="fas fa-trash"></i> 清空
+          <i class="fas fa-trash"></i> {{ $t('tools.jsonProcessor.ui.clear') }}
         </button>
       </div>
     </div>
@@ -45,20 +45,20 @@
     <!-- 输出区域 -->
     <div v-if="processedData || showTreeView" class="output-section">
       <div class="output-header">
-        <h3><i class="fas fa-code"></i> 处理结果</h3>
+        <h3><i class="fas fa-code"></i> {{ $t('tools.jsonProcessor.ui.processResult') }}</h3>
         <div class="view-toggles">
           <button 
             @click="setView('tree')" 
             :class="['view-btn', { active: currentView === 'tree' }]"
             :disabled="!isValidJson"
           >
-            <i class="fas fa-sitemap"></i> 树形视图
+            <i class="fas fa-sitemap"></i> {{ $t('tools.jsonProcessor.ui.treeView') }}
           </button>
           <button 
             @click="setView('text')" 
             :class="['view-btn', { active: currentView === 'text' }]"
           >
-            <i class="fas fa-file-code"></i> 文本视图
+            <i class="fas fa-file-code"></i> {{ $t('tools.jsonProcessor.ui.textView') }}
           </button>
         </div>
       </div>
@@ -67,12 +67,12 @@
       <div v-if="currentView === 'tree' && showTreeView" class="tree-view">
         <div class="tree-controls">
           <button @click="expandAll" class="tree-control-btn">
-            <i class="fas fa-expand-arrows-alt"></i> 展开全部
+            <i class="fas fa-expand-arrows-alt"></i> {{ $t('tools.jsonProcessor.ui.expandAll') }}
           </button>
           <button @click="collapseAll" class="tree-control-btn">
-            <i class="fas fa-compress-arrows-alt"></i> 折叠全部
+            <i class="fas fa-compress-arrows-alt"></i> {{ $t('tools.jsonProcessor.ui.collapseAll') }}
           </button>
-          <span class="node-count">节点数量: {{ nodeCount }}</span>
+          <span class="node-count">{{ $t('tools.jsonProcessor.ui.nodeCount') }}: {{ nodeCount }}</span>
         </div>
         <div class="json-tree">
           <JsonTreeNode 
@@ -93,7 +93,7 @@
             <i class="fas fa-copy"></i> {{ copyText }}
           </button>
           <button @click="downloadJson" class="control-btn">
-            <i class="fas fa-download"></i> 下载
+            <i class="fas fa-download"></i> {{ $t('tools.jsonProcessor.ui.download') }}
           </button>
         </div>
         <pre class="json-output">{{ processedData }}</pre>
@@ -104,6 +104,7 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import JsonTreeNode from './JsonTreeNode.vue'
 
 export default {
@@ -115,10 +116,11 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const jsonInput = ref('')
     const processedData = ref('')
     const jsonStatus = ref(null)
-    const copyText = ref('复制')
+    const copyText = ref(t('tools.jsonProcessor.ui.copy'))
     const currentView = ref('tree')
     const expandedNodes = ref(new Set(['root']))
     const parsedJsonData = ref(null)
@@ -249,7 +251,7 @@ export default {
         jsonStatus.value = {
           type: 'valid',
           icon: 'fas fa-check-circle',
-          message: `✓ 有效JSON (${JSON.stringify(parsed).length} 字符)`
+          message: `✓ ${t('tools.jsonProcessor.ui.validJson')} (${JSON.stringify(parsed).length} ${t('tools.textStats.ui.chars')})`
         }
       } catch (error) {
         parsedJsonData.value = null
@@ -257,7 +259,7 @@ export default {
         jsonStatus.value = {
           type: 'invalid',
           icon: 'fas fa-exclamation-circle',
-          message: `✗ 错误: ${error.message}`
+          message: `✗ ${t('tools.jsonProcessor.ui.jsonError')}: ${error.message}`
         }
       }
     }
@@ -271,13 +273,13 @@ export default {
         jsonStatus.value = {
           type: 'valid',
           icon: 'fas fa-check-circle',
-          message: `✓ 已格式化 (${processedData.value.length} 字符，含换行和缩进)`
+          message: `✓ ${t('tools.jsonProcessor.ui.format')} ${t('common.completed')} (${processedData.value.length} ${t('tools.textStats.ui.chars')})`
         }
       } catch (error) {
         jsonStatus.value = {
           type: 'invalid',
           icon: 'fas fa-exclamation-circle',
-          message: `✗ 格式化失败: ${error.message}`
+          message: `✗ ${t('tools.jsonProcessor.ui.format')} ${t('common.failed')}: ${error.message}`
         }
       }
     }
@@ -290,13 +292,13 @@ export default {
         jsonStatus.value = {
           type: 'valid',
           icon: 'fas fa-check-circle',
-          message: `✓ 已压缩 (${processedData.value.length} 字符)`
+          message: `✓ ${t('tools.jsonProcessor.ui.compress')} ${t('common.completed')} (${processedData.value.length} ${t('tools.textStats.ui.chars')})`
         }
       } catch (error) {
         jsonStatus.value = {
           type: 'invalid',
           icon: 'fas fa-exclamation-circle',
-          message: `✗ 压缩失败: ${error.message}`
+          message: `✗ ${t('tools.jsonProcessor.ui.compress')} ${t('common.failed')}: ${error.message}`
         }
       }
     }
@@ -307,14 +309,14 @@ export default {
       jsonStatus.value = null
       parsedJsonData.value = null
       expandedNodes.value = new Set(['root'])
-      copyText.value = '复制'
+      copyText.value = t('tools.jsonProcessor.ui.copy')
     }
 
     const copyResult = () => {
       if (processedData.value) {
         navigator.clipboard.writeText(processedData.value).then(() => {
-          copyText.value = '已复制!'
-          setTimeout(() => copyText.value = '复制', 2000)
+          copyText.value = t('common.copied')
+          setTimeout(() => copyText.value = t('tools.jsonProcessor.ui.copy'), 2000)
         })
       }
     }

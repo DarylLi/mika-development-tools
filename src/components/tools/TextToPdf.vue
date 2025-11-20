@@ -2,27 +2,27 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">📄</div>
-      <h2>文本转PDF</h2>
-      <p>将文本内容转换为PDF格式文档，支持自定义格式和样式</p>
+      <h2>{{ $t('tools.textToPdf.ui.title') }}</h2>
+      <p>{{ $t('tools.textToPdf.ui.description') }}</p>
     </div>
 
     <div class="input-card">
       <div class="card-header">
-        <h3><i class="fas fa-edit"></i> 输入文本内容</h3>
+        <h3><i class="fas fa-edit"></i> {{ $t('tools.textToPdf.ui.inputText') }}</h3>
       </div>
       
       <div class="input-section">
         <textarea
           v-model="textContent"
-          placeholder="请输入要转换为PDF的文本内容..."
+          :placeholder="$t('tools.textToPdf.ui.textPlaceholder')"
           class="text-input"
           @input="updateStats"
         ></textarea>
         
         <div class="stats">
-          <span>字符数: {{ charCount }}</span>
-          <span>单词数: {{ wordCount }}</span>
-          <span>行数: {{ lineCount }}</span>
+          <span>{{ $t('tools.textToPdf.ui.charCount') }} {{ charCount }}</span>
+          <span>{{ $t('tools.textToPdf.ui.wordCount') }} {{ wordCount }}</span>
+          <span>{{ $t('tools.textToPdf.ui.lineCount') }} {{ lineCount }}</span>
         </div>
       </div>
 
@@ -35,24 +35,24 @@
           style="display: none"
         />
         <button @click="$refs.fileInput.click()" class="secondary-btn">
-          <i class="fas fa-upload"></i> 上传文本文件
+          <i class="fas fa-upload"></i> {{ $t('tools.textToPdf.ui.uploadTextFile') }}
         </button>
       </div>
     </div>
 
     <div class="config-card">
       <div class="card-header">
-        <h3><i class="fas fa-cog"></i> 配置选项</h3>
+        <h3><i class="fas fa-cog"></i> {{ $t('tools.textToPdf.ui.configOptions') }}</h3>
       </div>
       
       <div class="options-grid">
         <div class="option-item">
-          <label>文件名</label>
-          <input v-model="fileName" type="text" placeholder="PDF文档" class="text-input" />
+          <label>{{ $t('tools.textToPdf.ui.fileName') }}</label>
+          <input v-model="fileName" type="text" :placeholder="$t('tools.textToPdf.ui.fileNamePlaceholder')" class="text-input" />
         </div>
         
         <div class="option-item">
-          <label>字体大小</label>
+          <label>{{ $t('tools.textToPdf.ui.fontSize') }}</label>
           <select v-model="fontSize" class="styled-select">
             <option value="10">10pt</option>
             <option value="12">12pt</option>
@@ -63,20 +63,20 @@
         </div>
 
         <div class="option-item">
-          <label>页面方向</label>
+          <label>{{ $t('tools.textToPdf.ui.pageOrientation') }}</label>
           <select v-model="pageOrientation" class="styled-select">
-            <option value="portrait">纵向</option>
-            <option value="landscape">横向</option>
+            <option value="portrait">{{ $t('tools.textToPdf.ui.portrait') }}</option>
+            <option value="landscape">{{ $t('tools.textToPdf.ui.landscape') }}</option>
           </select>
         </div>
 
         <div class="option-item">
-          <label>字体家族</label>
+          <label>{{ $t('tools.textToPdf.ui.fontFamily') }}</label>
           <select v-model="fontFamily" class="styled-select">
             <option value="Arial">Arial</option>
             <option value="Times New Roman">Times New Roman</option>
-            <option value="SimSun">宋体</option>
-            <option value="Microsoft YaHei">微软雅黑</option>
+            <option value="SimSun">{{ $t('tools.textToPdf.ui.fontSimSun') }}</option>
+            <option value="Microsoft YaHei">{{ $t('tools.textToPdf.ui.fontYaHei') }}</option>
           </select>
         </div>
       </div>
@@ -85,19 +85,19 @@
         <label class="checkbox-label">
           <input type="checkbox" v-model="addPageNumbers" />
           <span class="checkmark"></span>
-          添加页码
+          {{ $t('tools.textToPdf.ui.addPageNumbers') }}
         </label>
         
         <label class="checkbox-label">
           <input type="checkbox" v-model="addTimestamp" />
           <span class="checkmark"></span>
-          添加时间戳
+          {{ $t('tools.textToPdf.ui.addTimestamp') }}
         </label>
         
         <label class="checkbox-label">
           <input type="checkbox" v-model="preserveLineBreaks" />
           <span class="checkmark"></span>
-          保持换行
+          {{ $t('tools.textToPdf.ui.preserveLineBreaks') }}
         </label>
       </div>
     </div>
@@ -105,15 +105,15 @@
     <div class="action-section">
       <button @click="generatePdf" class="primary-btn" :disabled="!textContent.trim() || isGenerating">
         <i :class="isGenerating ? 'fas fa-spinner fa-spin' : 'fas fa-file-pdf'"></i>
-        {{ isGenerating ? '生成中...' : '生成PDF' }}
+        {{ isGenerating ? $t('tools.textToPdf.ui.generating') : $t('tools.textToPdf.ui.generatePdf') }}
       </button>
       
       <button @click="previewContent" class="secondary-btn" :disabled="!textContent.trim()">
-        <i class="fas fa-eye"></i> 预览
+        <i class="fas fa-eye"></i> {{ $t('tools.textToPdf.ui.preview') }}
       </button>
       
       <button @click="clearAll" class="danger-btn">
-        <i class="fas fa-trash"></i> 清空
+        <i class="fas fa-trash"></i> {{ $t('tools.textToPdf.ui.clear') }}
       </button>
     </div>
 
@@ -127,7 +127,7 @@
 
     <div v-if="showPreview" class="preview-card">
       <div class="card-header">
-        <h3><i class="fas fa-eye"></i> 预览</h3>
+        <h3><i class="fas fa-eye"></i> {{ $t('tools.textToPdf.ui.previewTitle') }}</h3>
         <button @click="showPreview = false" class="close-btn">
           <i class="fas fa-times"></i>
         </button>
@@ -135,20 +135,20 @@
       
       <div class="preview-content" :style="previewStyle">
         <div v-if="addTimestamp" class="preview-timestamp">
-          生成时间: {{ currentTimestamp }}
+          {{ $t('tools.textToPdf.ui.generateTime') }} {{ currentTimestamp }}
         </div>
         <div class="preview-text">{{ formattedText }}</div>
       </div>
     </div>
 
     <div class="help-card">
-      <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.textToPdf.ui.usageInstructions') }}</h4>
       <ul>
-        <li>输入或上传文本内容</li>
-        <li>配置PDF格式选项</li>
-        <li>点击"生成PDF"按钮</li>
-        <li>在弹出的打印对话框中选择"保存为PDF"</li>
-        <li>支持.txt和.md文件上传</li>
+        <li>{{ $t('tools.textToPdf.ui.instruction1') }}</li>
+        <li>{{ $t('tools.textToPdf.ui.instruction2') }}</li>
+        <li>{{ $t('tools.textToPdf.ui.instruction3') }}</li>
+        <li>{{ $t('tools.textToPdf.ui.instruction4') }}</li>
+        <li>{{ $t('tools.textToPdf.ui.instruction5') }}</li>
       </ul>
     </div>
   </div>
@@ -156,10 +156,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'TextToPdf',
   setup() {
+    const { t } = useI18n()
     const textContent = ref('')
     const fileName = ref('')
     const fontSize = ref('14')
@@ -233,7 +235,7 @@ export default {
         htmlParts.push('<!DOCTYPE html>')
         htmlParts.push('<html><head>')
         htmlParts.push('<meta charset="UTF-8">')
-        htmlParts.push('<title>' + (fileName.value || 'PDF文档') + '</title>')
+        htmlParts.push('<title>' + (fileName.value || t('tools.textToPdf.ui.fileNamePlaceholder')) + '</title>')
         
         // 添加样式
         htmlParts.push('<style>')
@@ -249,7 +251,7 @@ export default {
         htmlParts.push('</head><body>')
         
         if (addTimestamp.value) {
-          htmlParts.push('<div class="header">生成时间: ' + currentTimestamp.value + '</div>')
+          htmlParts.push('<div class="header">' + t('tools.textToPdf.ui.generateTime') + ' ' + currentTimestamp.value + '</div>')
         }
         
         htmlParts.push('<div class="content">' + formattedText.value.replace(/\n/g, '<br>') + '</div>')
@@ -264,11 +266,11 @@ export default {
         printWindow.document.close()
         printWindow.focus()
 
-        success.value = 'PDF生成成功！请在打印对话框中选择"保存为PDF"'
+        success.value = t('tools.textToPdf.ui.pdfGenerated')
         setTimeout(() => success.value = '', 5000)
 
       } catch (err) {
-        error.value = 'PDF生成失败: ' + err.message
+        error.value = t('tools.textToPdf.ui.pdfFailed') + ' ' + err.message
       } finally {
         isGenerating.value = false
       }

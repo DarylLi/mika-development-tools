@@ -5,8 +5,8 @@
       <div class="header-gradient card-gradient">
         <div class="header-content">
           <div class="tool-info">
-            <h1><i class="fas fa-credit-card"></i> Luhn Validator</h1>
-            <p>信用卡号码验证与分析工具</p>
+            <h1><i class="fas fa-credit-card"></i> {{ $t('tools.creditCardCheck.ui.title') }}</h1>
+            <p>{{ $t('tools.creditCardCheck.ui.description') }}</p>
           </div>
         </div>
       </div>
@@ -16,31 +16,31 @@
       <!-- 输入区域 -->
       <div class="input-section">
         <div class="section-header">
-          <h3><i class="fas fa-keyboard"></i> 号码输入</h3>
+          <h3><i class="fas fa-keyboard"></i> {{ $t('tools.creditCardCheck.ui.numberInput') }}</h3>
         </div>
         
         <!-- 单个号码验证 -->
         <div class="input-group">
-          <label>信用卡号码:</label>
+          <label>{{ $t('tools.creditCardCheck.ui.creditCardNumber') }}</label>
           <input type="text" 
                  v-model="cardNumber" 
                  @input="validateCard"
-                 placeholder="4532 1234 5678 9012"
+                 :placeholder="$t('tools.creditCardCheck.ui.cardNumberPlaceholder')"
                  maxlength="19"
                  class="card-input">
-          <small>支持空格分隔，自动格式化</small>
+          <small>{{ $t('tools.creditCardCheck.ui.supportSpaces') }}</small>
         </div>
 
         <!-- 示例按钮 -->
         <div class="example-buttons">
           <button @click="loadExample('visa')" class="example-btn">
-            <i class="fab fa-cc-visa"></i> Visa示例
+            <i class="fab fa-cc-visa"></i> {{ $t('tools.creditCardCheck.ui.visaExample') }}
           </button>
           <button @click="loadExample('mastercard')" class="example-btn">
-            <i class="fab fa-cc-mastercard"></i> MasterCard示例
+            <i class="fab fa-cc-mastercard"></i> {{ $t('tools.creditCardCheck.ui.mastercardExample') }}
           </button>
           <button @click="loadExample('amex')" class="example-btn">
-            <i class="fab fa-cc-amex"></i> American Express
+            <i class="fab fa-cc-amex"></i> {{ $t('tools.creditCardCheck.ui.amexExample') }}
           </button>
         </div>
       </div>
@@ -48,33 +48,33 @@
       <!-- 单个验证结果 -->
       <div v-if="cardNumber.replace(/\s/g, '').length > 0" class="validation-section">
         <div class="section-header">
-          <h3><i class="fas fa-check-circle"></i> 验证结果</h3>
+          <h3><i class="fas fa-check-circle"></i> {{ $t('tools.creditCardCheck.ui.validationResult') }}</h3>
         </div>
         
         <div class="validation-card">
           <div class="validation-status" :class="{ 'valid': validationResult.isValid, 'invalid': !validationResult.isValid }">
             <i :class="validationResult.isValid ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
-            <span>{{ validationResult.isValid ? '有效' : '无效' }}</span>
+            <span>{{ validationResult.isValid ? $t('tools.creditCardCheck.ui.valid') : $t('tools.creditCardCheck.ui.invalid') }}</span>
           </div>
           
           <div class="card-details">
             <div class="detail-row">
-              <strong>原始号码:</strong> {{ cardNumber }}
+              <strong>{{ $t('tools.creditCardCheck.ui.originalNumber') }}</strong> {{ cardNumber }}
             </div>
             <div class="detail-row">
-              <strong>纯数字:</strong> {{ validationResult.cleanNumber }}
+              <strong>{{ $t('tools.creditCardCheck.ui.cleanNumber') }}</strong> {{ validationResult.cleanNumber }}
             </div>
             <div class="detail-row">
-              <strong>卡片类型:</strong> 
+              <strong>{{ $t('tools.creditCardCheck.ui.cardType') }}</strong> 
               <span class="card-type">
                 <i :class="getCardIcon(validationResult.type)"></i>
                 {{ validationResult.type }}
               </span>
             </div>
             <div class="detail-row">
-              <strong>Luhn校验:</strong> 
+              <strong>{{ $t('tools.creditCardCheck.ui.luhnCheck') }}</strong> 
               <span :class="{ 'valid': validationResult.luhnValid, 'invalid': !validationResult.luhnValid }">
-                {{ validationResult.luhnValid ? '通过' : '失败' }}
+                {{ validationResult.luhnValid ? $t('tools.creditCardCheck.ui.passed') : $t('tools.creditCardCheck.ui.failed') }}
               </span>
             </div>
           </div>
@@ -84,8 +84,8 @@
       <!-- 空状态 -->
       <div v-else class="empty-state">
         <i class="fas fa-credit-card"></i>
-        <h3>信用卡号码验证</h3>
-        <p>输入信用卡号码进行Luhn算法验证</p>
+        <h3>{{ $t('tools.creditCardCheck.ui.emptyStateTitle') }}</h3>
+        <p>{{ $t('tools.creditCardCheck.ui.emptyStateDescription') }}</p>
       </div>
     </div>
   </div>
@@ -93,10 +93,12 @@
 
 <script>
 import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'CreditCardCheck',
   setup() {
+    const { t } = useI18n()
     const cardNumber = ref('')
     
     const validationResult = reactive({
@@ -189,7 +191,8 @@ export default {
       validationResult,
       validateCard,
       getCardIcon,
-      loadExample
+      loadExample,
+      t
     }
   }
 }

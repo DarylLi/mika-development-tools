@@ -1,15 +1,15 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-palette"></i> 颜色转换</h2>
+    <h2><i class="fas fa-palette"></i> {{ $t('tools.colorConverter.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.colorConverter.ui.loadExample') }}
       </button>
     </div>
     
-    <input v-model="colorInput" placeholder="输入颜色值 (如: #ff0000, rgb(255,0,0))">
-    <button @click="convertColor">转换颜色</button>
+    <input v-model="colorInput" :placeholder="$t('tools.colorConverter.ui.inputPlaceholder')">
+    <button @click="convertColor">{{ $t('tools.colorConverter.ui.convertColor') }}</button>
     
     <div class="result-display">
       {{ result }}
@@ -22,6 +22,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ColorConverter',
@@ -29,6 +30,7 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const colorInput = ref('')
     const result = ref('')
     const colorPreview = ref('')
@@ -45,7 +47,7 @@ export default {
       const color = colorInput.value.trim()
       
       if (!color) {
-        result.value = '请输入颜色值'
+        result.value = t('tools.colorConverter.ui.enterColorValue')
         return
       }
       
@@ -82,7 +84,7 @@ HSL: hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
         colorPreview.value = color
       }
       else {
-        resultText = '不支持的颜色格式\n支持格式: #RRGGBB, rgb(r,g,b)'
+        resultText = t('tools.colorConverter.ui.unsupportedFormat') + '\n' + t('tools.colorConverter.ui.supportedFormats')
       }
       
       result.value = resultText

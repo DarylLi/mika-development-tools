@@ -2,32 +2,32 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">📈</div>
-      <h2>JSON 数据图表</h2>
-      <p>将JSON数据转换为可视化图表，支持折线图、柱状图、饼图等多种图表类型</p>
+      <h2>{{ $t('tools.jsonPlot.ui.title') }}</h2>
+      <p>{{ $t('tools.jsonPlot.ui.description') }}</p>
       
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.jsonPlot.ui.quickStart') }}</span>
         <button @click="loadExample('line')" class="example-btn">
-          <i class="fas fa-chart-line"></i> 折线图示例
+          <i class="fas fa-chart-line"></i> {{ $t('tools.jsonPlot.ui.lineChartExample') }}
         </button>
         <button @click="loadExample('bar')" class="example-btn">
-          <i class="fas fa-chart-bar"></i> 柱状图示例
+          <i class="fas fa-chart-bar"></i> {{ $t('tools.jsonPlot.ui.barChartExample') }}
         </button>
         <button @click="loadExample('pie')" class="example-btn">
-          <i class="fas fa-chart-pie"></i> 饼图示例
+          <i class="fas fa-chart-pie"></i> {{ $t('tools.jsonPlot.ui.pieChartExample') }}
         </button>
       </div>
     </div>
 
     <div class="input-card">
       <div class="card-header">
-        <h3><i class="fas fa-code"></i> JSON 数据输入</h3>
+        <h3><i class="fas fa-code"></i> {{ $t('tools.jsonPlot.ui.jsonDataInput') }}</h3>
       </div>
       
       <div class="input-section">
         <textarea
           v-model="jsonInput"
-          placeholder="请输入JSON数据..."
+          :placeholder="$t('tools.jsonPlot.ui.jsonPlaceholder')"
           class="json-input"
           @input="validateJson"
         ></textarea>
@@ -35,10 +35,10 @@
         <div class="input-info">
           <div class="json-status" :class="{ valid: isValidJson, invalid: !isValidJson && jsonInput.trim() }">
             <i :class="isValidJson ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
-            {{ isValidJson ? '有效的JSON格式' : (!jsonInput.trim() ? '请输入JSON数据' : '无效的JSON格式') }}
+            {{ isValidJson ? $t('tools.jsonPlot.ui.validJsonFormat') : (!jsonInput.trim() ? $t('tools.jsonPlot.ui.pleaseInputJson') : $t('tools.jsonPlot.ui.invalidJsonFormat')) }}
           </div>
           <div class="data-info" v-if="parsedData">
-            数据量: {{ Array.isArray(parsedData) ? parsedData.length : Object.keys(parsedData).length }} 项
+            {{ $t('tools.jsonPlot.ui.dataCount') }} {{ Array.isArray(parsedData) ? parsedData.length : Object.keys(parsedData).length }} {{ $t('tools.jsonPlot.ui.items') }}
           </div>
         </div>
       </div>
@@ -46,44 +46,44 @@
 
     <div class="config-card" v-if="isValidJson && parsedData">
       <div class="card-header">
-        <h3><i class="fas fa-cog"></i> 图表配置</h3>
+        <h3><i class="fas fa-cog"></i> {{ $t('tools.jsonPlot.ui.chartConfig') }}</h3>
       </div>
       
       <div class="config-grid">
         <div class="config-item">
-          <label>图表类型</label>
+          <label>{{ $t('tools.jsonPlot.ui.chartType') }}</label>
           <select v-model="chartType" class="styled-select" @change="updateChart">
-            <option value="line">折线图</option>
-            <option value="bar">柱状图</option>
-            <option value="pie">饼图</option>
-            <option value="doughnut">环形图</option>
-            <option value="radar">雷达图</option>
-            <option value="polarArea">极地面积图</option>
+            <option value="line">{{ $t('tools.jsonPlot.ui.lineChart') }}</option>
+            <option value="bar">{{ $t('tools.jsonPlot.ui.barChart') }}</option>
+            <option value="pie">{{ $t('tools.jsonPlot.ui.pieChart') }}</option>
+            <option value="doughnut">{{ $t('tools.jsonPlot.ui.doughnutChart') }}</option>
+            <option value="radar">{{ $t('tools.jsonPlot.ui.radarChart') }}</option>
+            <option value="polarArea">{{ $t('tools.jsonPlot.ui.polarAreaChart') }}</option>
           </select>
         </div>
         
         <div class="config-item" v-if="dataKeys.length > 0">
-          <label>X轴字段</label>
+          <label>{{ $t('tools.jsonPlot.ui.xAxisField') }}</label>
           <select v-model="xAxisField" class="styled-select" @change="updateChart">
             <option v-for="key in dataKeys" :key="key" :value="key">{{ key }}</option>
           </select>
         </div>
         
         <div class="config-item" v-if="dataKeys.length > 0">
-          <label>Y轴字段</label>
+          <label>{{ $t('tools.jsonPlot.ui.yAxisField') }}</label>
           <select v-model="yAxisField" class="styled-select" @change="updateChart">
             <option v-for="key in numericKeys" :key="key" :value="key">{{ key }}</option>
           </select>
         </div>
         
         <div class="config-item">
-          <label>图表标题</label>
-          <input v-model="chartTitle" type="text" class="styled-input" @input="updateChart" placeholder="输入图表标题">
+          <label>{{ $t('tools.jsonPlot.ui.chartTitle') }}</label>
+          <input v-model="chartTitle" type="text" class="styled-input" @input="updateChart" :placeholder="$t('tools.jsonPlot.ui.chartTitlePlaceholder')">
         </div>
       </div>
 
       <div class="color-options">
-        <label>配色方案</label>
+        <label>{{ $t('tools.jsonPlot.ui.colorScheme') }}</label>
         <div class="color-schemes">
           <div v-for="(scheme, index) in colorSchemes" :key="index" 
                @click="selectedScheme = index; updateChart()" 
@@ -102,13 +102,13 @@
 
     <div class="chart-card" v-if="isValidJson && parsedData">
       <div class="card-header">
-        <h3><i class="fas fa-chart-area"></i> 图表预览</h3>
+        <h3><i class="fas fa-chart-area"></i> {{ $t('tools.jsonPlot.ui.chartPreview') }}</h3>
         <div class="chart-actions">
           <button @click="downloadChart" class="action-btn">
-            <i class="fas fa-download"></i> 下载图片
+            <i class="fas fa-download"></i> {{ $t('tools.jsonPlot.ui.downloadImage') }}
           </button>
           <button @click="copyChartConfig" class="action-btn">
-            <i class="fas fa-code"></i> 复制配置
+            <i class="fas fa-code"></i> {{ $t('tools.jsonPlot.ui.copyConfig') }}
           </button>
         </div>
       </div>
@@ -127,17 +127,17 @@
     </div>
 
     <div class="help-card">
-      <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.jsonPlot.ui.usageInstructions') }}</h4>
       <ul>
-        <li>输入有效的JSON数据（数组或对象格式）</li>
-        <li>选择适合的图表类型和数据字段</li>
-        <li>自定义图表标题和配色方案</li>
-        <li>支持下载图表为PNG图片</li>
-        <li>可复制Chart.js配置代码</li>
+        <li>{{ $t('tools.jsonPlot.ui.instruction1') }}</li>
+        <li>{{ $t('tools.jsonPlot.ui.instruction2') }}</li>
+        <li>{{ $t('tools.jsonPlot.ui.instruction3') }}</li>
+        <li>{{ $t('tools.jsonPlot.ui.instruction4') }}</li>
+        <li>{{ $t('tools.jsonPlot.ui.instruction5') }}</li>
       </ul>
       
       <div class="example-format">
-        <h5>数据格式示例：</h5>
+        <h5>{{ $t('tools.jsonPlot.ui.dataFormatExample') }}</h5>
         <pre><code>[
   {"name": "产品A", "sales": 120, "profit": 30},
   {"name": "产品B", "sales": 150, "profit": 45},
@@ -150,10 +150,12 @@
 
 <script>
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'JsonPlot',
   setup() {
+    const { t } = useI18n()
     const jsonInput = ref('')
     const chartType = ref('bar')
     const xAxisField = ref('')
@@ -175,7 +177,13 @@ export default {
       ['#2d3436', '#636e72', '#74b9ff', '#0984e3', '#00cec9']
     ]
 
-    const schemeNames = ['默认', '暖色调', '自然', '梦幻', '商务']
+    const schemeNames = computed(() => [
+      t('tools.jsonPlot.ui.defaultScheme'),
+      t('tools.jsonPlot.ui.warmTones'),
+      t('tools.jsonPlot.ui.natural'),
+      t('tools.jsonPlot.ui.dreamy'),
+      t('tools.jsonPlot.ui.business')
+    ])
 
     const dataKeys = computed(() => {
       if (!parsedData.value) return []
@@ -458,7 +466,7 @@ export default {
       link.href = chartCanvas.value.toDataURL()
       link.click()
       
-      success.value = '图表已下载为PNG图片'
+      success.value = t('tools.jsonPlot.ui.chartDownloaded')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -476,7 +484,7 @@ export default {
       }
       
       navigator.clipboard.writeText(JSON.stringify(config, null, 2))
-      success.value = '图表配置已复制到剪贴板'
+      success.value = t('tools.jsonPlot.ui.configCopied')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -505,7 +513,8 @@ export default {
       loadExample,
       updateChart,
       downloadChart,
-      copyChartConfig
+      copyChartConfig,
+      t
     }
   }
 }

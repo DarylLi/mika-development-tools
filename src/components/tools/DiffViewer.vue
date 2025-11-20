@@ -1,29 +1,29 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-code-branch"></i> Text Diff Viewer</h2>
+    <h2><i class="fas fa-code-branch"></i> {{ $t('tools.diffViewer.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.diffViewer.ui.loadExample') }}
       </button>
     </div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 400px; margin-bottom: 1rem;">
       <div style="display: flex; flex-direction: column;">
-        <h3>原始文本 (A)</h3>
+        <h3>{{ $t('tools.diffViewer.ui.originalText') }}</h3>
         <textarea 
           v-model="textA" 
-          placeholder="输入原始文本..."
+          :placeholder="$t('tools.diffViewer.ui.originalPlaceholder')"
           style="flex: 1; resize: none; font-family: 'Courier New', monospace;"
           @input="calculateDiff"
         ></textarea>
       </div>
       
       <div style="display: flex; flex-direction: column;">
-        <h3>对比文本 (B)</h3>
+        <h3>{{ $t('tools.diffViewer.ui.compareText') }}</h3>
         <textarea 
           v-model="textB" 
-          placeholder="输入对比文本..."
+          :placeholder="$t('tools.diffViewer.ui.comparePlaceholder')"
           style="flex: 1; resize: none; font-family: 'Courier New', monospace;"
           @input="calculateDiff"
         ></textarea>
@@ -34,15 +34,15 @@
       <div class="checkbox-group-horizontal">
         <label class="custom-checkbox-label">
           <input type="checkbox" v-model="ignoreWhitespace" @change="calculateDiff" class="custom-checkbox">
-          <span class="checkbox-text">忽略空白字符</span>
+          <span class="checkbox-text">{{ $t('tools.diffViewer.ui.ignoreWhitespace') }}</span>
         </label>
         <label class="custom-checkbox-label">
           <input type="checkbox" v-model="ignoreCase" @change="calculateDiff" class="custom-checkbox">
-          <span class="checkbox-text">忽略大小写</span>
+          <span class="checkbox-text">{{ $t('tools.diffViewer.ui.ignoreCase') }}</span>
         </label>
         <label class="custom-checkbox-label">
           <input type="checkbox" v-model="showLineNumbers" @change="calculateDiff" class="custom-checkbox">
-          <span class="checkbox-text">显示行号</span>
+          <span class="checkbox-text">{{ $t('tools.diffViewer.ui.showLineNumbers') }}</span>
         </label>
       </div>
     </div>
@@ -50,30 +50,30 @@
     <div class="stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; text-align: center; margin-bottom: 1rem; padding: 1rem; background: var(--bg-surface); border-radius: 4px;">
       <div>
         <div style="font-weight: bold; color: #22c55e;">{{ addedLines }}</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">新增行数</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.diffViewer.ui.addedLines') }}</div>
       </div>
       <div>
         <div style="font-weight: bold; color: #ef4444;">{{ deletedLines }}</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">删除行数</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.diffViewer.ui.deletedLines') }}</div>
       </div>
       <div>
         <div style="font-weight: bold; color: #3b82f6;">{{ modifiedLines }}</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">修改行数</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.diffViewer.ui.modifiedLines') }}</div>
       </div>
       <div>
         <div style="font-weight: bold; color: var(--text-accent);">{{ totalChanges }}</div>
-        <div style="font-size: 0.8rem; color: var(--text-muted);">总变化数</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.diffViewer.ui.totalChanges') }}</div>
       </div>
     </div>
     
     <div style="margin-bottom: 1rem;">
-      <h3>差异对比结果</h3>
+      <h3>{{ $t('tools.diffViewer.ui.diffResult') }}</h3>
       <div 
         class="diff-display" 
         style="border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-surface); max-height: 600px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; line-height: 1.4;"
       >
         <div v-if="diffResult.length === 0" style="padding: 2rem; text-align: center; color: var(--text-muted);">
-          请输入文本进行对比
+          {{ $t('tools.diffViewer.ui.noDiff') }}
         </div>
         <div v-else>
           <div 
@@ -98,16 +98,18 @@
     </div>
     
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-      <button @click="copyDiff">复制差异结果</button>
-      <button @click="exportPatch">导出 Patch</button>
-      <button @click="swapTexts">交换文本</button>
-      <button @click="clearAll">清空</button>
+      <button @click="copyDiff">{{ $t('tools.diffViewer.ui.copyDiff') }}</button>
+      <button @click="exportPatch">{{ $t('tools.diffViewer.ui.exportPatch') }}</button>
+      <button @click="swapTexts">{{ $t('tools.diffViewer.ui.swapTexts') }}</button>
+      <button @click="clearAll">{{ $t('tools.diffViewer.ui.clear') }}</button>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'DiffViewer',
@@ -115,7 +117,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const textA = ref('')
     const textB = ref('')
     const ignoreWhitespace = ref(false)
@@ -335,7 +337,7 @@ console.log('计算完成');`
 
     const copyDiff = () => {
       if (diffResult.value.length === 0) {
-        instance.proxy.$message.success('没有差异结果可复制')
+        messageService.success(t('tools.diffViewer.ui.noDiffResult'))
         return
       }
       
@@ -344,22 +346,22 @@ console.log('计算完成');`
       ).join('\n')
       
       navigator.clipboard.writeText(result)
-      instance.proxy.$message.success('差异结果已复制到剪贴板！')
+      messageService.success(t('tools.diffViewer.ui.copiedDiff'))
     }
 
     const exportPatch = () => {
       if (diffResult.value.length === 0) {
-        instance.proxy.$message.success('没有差异可导出')
+        messageService.success(t('tools.diffViewer.ui.noDiffToExport'))
         return
       }
       
-      let patch = '--- 原始文本\n+++ 修改文本\n'
+      let patch = `--- ${t('tools.diffViewer.ui.originalTextLabel')}\n+++ ${t('tools.diffViewer.ui.modifiedTextLabel')}\n`
       patch += diffResult.value.map(line => 
         `${getDiffSymbol(line)}${line.content}`
       ).join('\n')
       
       navigator.clipboard.writeText(patch)
-      instance.proxy.$message.success('Patch 格式已复制到剪贴板！')
+      messageService.success(t('tools.diffViewer.ui.copiedPatch'))
     }
 
     const swapTexts = () => {

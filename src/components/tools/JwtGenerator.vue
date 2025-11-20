@@ -1,44 +1,44 @@
 <template>
   <div class="jwt-generator-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-key"></i> JWT 生成器</h3>
-      <p>生成和验证 JWT Token (本地 HS256)</p>
+      <h3><i class="fas fa-key"></i> {{ $t('tools.jwtGenerator.ui.title') }}</h3>
+      <p>{{ $t('tools.jwtGenerator.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
         <div class="jwt-inputs">
           <div class="input-group">
-            <label>Header (JSON)</label>
+            <label>{{ $t('tools.jwtGenerator.ui.header') }}</label>
             <textarea v-model="header" class="code-input" placeholder='{"alg": "HS256", "typ": "JWT"}'></textarea>
           </div>
           <div class="input-group">
-            <label>Payload (JSON)</label>
+            <label>{{ $t('tools.jwtGenerator.ui.payload') }}</label>
             <textarea v-model="payload" class="code-input" placeholder='{"sub": "1234567890", "name": "John Doe", "iat": 1516239022}'></textarea>
           </div>
           <div class="input-group">
-            <label>Secret Key</label>
+            <label>{{ $t('tools.jwtGenerator.ui.secretKey') }}</label>
             <input v-model="secret" type="text" class="secret-input" placeholder="your-256-bit-secret" />
           </div>
         </div>
         <div class="actions">
           <button @click="generateJWT" class="action-btn primary">
-            <i class="fas fa-cog"></i> 生成 JWT
+            <i class="fas fa-cog"></i> {{ $t('tools.jwtGenerator.ui.generateJWT') }}
           </button>
           <button @click="loadExample" class="action-btn">
-            <i class="fas fa-lightbulb"></i> 示例
+            <i class="fas fa-lightbulb"></i> {{ $t('tools.jwtGenerator.ui.example') }}
           </button>
           <button @click="clearAll" class="action-btn">
-            <i class="fas fa-eraser"></i> 清空
+            <i class="fas fa-eraser"></i> {{ $t('tools.jwtGenerator.ui.clear') }}
           </button>
         </div>
       </div>
 
       <div v-if="generatedJWT" class="output-section">
         <div class="section-header">
-          <label>生成的 JWT Token</label>
+          <label>{{ $t('tools.jwtGenerator.ui.generatedJWT') }}</label>
           <button @click="copyJWT" class="copy-btn">
-            <i class="fas fa-copy"></i> 复制
+            <i class="fas fa-copy"></i> {{ $t('tools.jwtGenerator.ui.copy') }}
           </button>
         </div>
         <div class="jwt-output">
@@ -46,15 +46,15 @@
         </div>
         <div class="jwt-parts">
           <div class="jwt-part header">
-            <h5>Header</h5>
+            <h5>{{ $t('tools.jwtGenerator.ui.headerLabel') }}</h5>
             <pre>{{ formatJSON(decodedHeader) }}</pre>
           </div>
           <div class="jwt-part payload">
-            <h5>Payload</h5>
+            <h5>{{ $t('tools.jwtGenerator.ui.payloadLabel') }}</h5>
             <pre>{{ formatJSON(decodedPayload) }}</pre>
           </div>
           <div class="jwt-part signature">
-            <h5>Signature</h5>
+            <h5>{{ $t('tools.jwtGenerator.ui.signatureLabel') }}</h5>
             <pre>{{ signature }}</pre>
           </div>
         </div>
@@ -70,11 +70,13 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import CryptoJS from 'crypto-js'
 
 export default {
   name: 'JwtGenerator',
   setup() {
+    const { t } = useI18n()
     const header = ref('{"alg": "HS256", "typ": "JWT"}')
     const payload = ref('{"sub": "1234567890", "name": "John Doe", "iat": 1516239022}')
     const secret = ref('your-256-bit-secret')
@@ -123,7 +125,7 @@ export default {
         
         generatedJWT.value = `${data}.${signature}`
       } catch (e) {
-        error.value = '生成失败: ' + e.message
+        error.value = t('tools.jwtGenerator.ui.generateFailed') + ': ' + e.message
       }
     }
 
@@ -151,7 +153,7 @@ export default {
       try {
         await navigator.clipboard.writeText(generatedJWT.value)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.jwtGenerator.ui.copyFailed') + ':', err)
       }
     }
 

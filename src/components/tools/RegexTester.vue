@@ -1,34 +1,34 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-search"></i> RegEx Tester</h2>
+    <h2><i class="fas fa-search"></i> {{ $t('tools.regexTester.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.regexTester.ui.loadExample') }}
       </button>
     </div>
     
     <div style="margin-bottom: 1rem;">
-      <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">正则表达式:</label>
+      <label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">{{ $t('tools.regexTester.ui.regexLabel') }}</label>
       <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
         <span>/</span>
         <input 
           v-model="regexPattern" 
-          placeholder="输入正则表达式..."
+          :placeholder="$t('tools.regexTester.ui.regexPlaceholder')"
           style="flex: 1; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-family: 'Courier New', monospace;"
           @input="testRegex"
         >
         <span>/</span>
         <div style="display: flex; gap: 0.25rem;">
-          <label style="display: flex; align-items: center; gap: 0.25rem;">
+          <label className="check-box-label" style="display: flex; align-items: center; gap: 0.25rem;">
             <input type="checkbox" v-model="flags.global" @change="testRegex">
             g
           </label>
-          <label style="display: flex; align-items: center; gap: 0.25rem;">
+          <label className="check-box-label" style="display: flex; align-items: center; gap: 0.25rem;">
             <input type="checkbox" v-model="flags.ignoreCase" @change="testRegex">
             i
           </label>
-          <label style="display: flex; align-items: center; gap: 0.25rem;">
+          <label className="check-box-label" style="display: flex; align-items: center; gap: 0.25rem;">
             <input type="checkbox" v-model="flags.multiline" @change="testRegex">
             m
           </label>
@@ -42,17 +42,17 @@
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 400px;">
       <div style="display: flex; flex-direction: column;">
-        <h3>测试文本</h3>
+        <h3>{{ $t('tools.regexTester.ui.testText') }}</h3>
         <textarea 
           v-model="testText" 
-          placeholder="输入要测试的文本..."
+          :placeholder="$t('tools.regexTester.ui.testPlaceholder')"
           style="flex: 1; resize: none; font-family: 'Courier New', monospace;"
           @input="testRegex"
         ></textarea>
       </div>
       
       <div style="display: flex; flex-direction: column;">
-        <h3>匹配结果</h3>
+        <h3>{{ $t('tools.regexTester.ui.matchResult') }}</h3>
         <div 
           class="match-display" 
           v-html="highlightedText"
@@ -65,26 +65,26 @@
       <div class="stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; text-align: center; margin-bottom: 1rem;">
         <div>
           <div style="font-weight: bold; color: var(--text-accent);">{{ matchCount }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">匹配次数</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.regexTester.ui.matchCount') }}</div>
         </div>
         <div>
           <div style="font-weight: bold; color: var(--text-accent);">{{ groupCount }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">捕获组</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.regexTester.ui.groupCount') }}</div>
         </div>
         <div>
           <div style="font-weight: bold; color: var(--text-accent);">{{ textLength }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">文本长度</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.regexTester.ui.textLength') }}</div>
         </div>
       </div>
       
       <div v-if="matches.length > 0" style="margin-bottom: 1rem;">
-        <h4>匹配详情:</h4>
+        <h4>{{ $t('tools.regexTester.ui.matchDetails') }}</h4>
         <div style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 4px; background: var(--bg-surface);">
           <div v-for="(match, index) in matches" :key="index" style="margin-bottom: 0.5rem; padding: 0.5rem; border-left: 3px solid var(--text-accent); background: rgba(59, 130, 246, 0.1);">
-            <div style="font-weight: bold;">匹配 {{ index + 1 }}: "{{ match.match }}"</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">位置: {{ match.index }} - {{ match.index + match.match.length }}</div>
+            <div style="font-weight: bold;">{{ $t('tools.regexTester.ui.match') }} {{ index + 1 }}: "{{ match.match }}"</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.regexTester.ui.position') }} {{ match.index }} - {{ match.index + match.match.length }}</div>
             <div v-if="match.groups.length > 0" style="font-size: 0.8rem; margin-top: 0.25rem;">
-              <span style="color: var(--text-muted);">捕获组:</span>
+              <span style="color: var(--text-muted);">{{ $t('tools.regexTester.ui.captureGroups') }}</span>
               <span v-for="(group, gIndex) in match.groups" :key="gIndex" style="margin-left: 0.5rem;">
                 [{{ gIndex + 1 }}]: "{{ group }}"
               </span>
@@ -94,16 +94,18 @@
       </div>
       
       <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-        <button @click="copyMatches">复制匹配结果</button>
-        <button @click="copyRegex">复制正则表达式</button>
-        <button @click="clearAll">清空</button>
+        <button @click="copyMatches">{{ $t('tools.regexTester.ui.copyMatches') }}</button>
+        <button @click="copyRegex">{{ $t('tools.regexTester.ui.copyRegex') }}</button>
+        <button @click="clearAll">{{ $t('tools.regexTester.ui.clear') }}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'RegexTester',
@@ -111,7 +113,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const regexPattern = ref('')
     const testText = ref('')
     const regexError = ref('')
@@ -208,27 +210,27 @@ export default {
           }
         }
       } catch (error) {
-        regexError.value = `正则表达式错误: ${error.message}`
+        regexError.value = `${t('tools.regexTester.ui.regexError')} ${error.message}`
       }
     }
 
     const copyMatches = () => {
       if (matches.value.length === 0) {
-        instance.proxy.$message.success('没有匹配结果可复制')
+        messageService.success(t('tools.regexTester.ui.noMatches'))
         return
       }
       
       const result = matches.value.map((match, index) => 
-        `匹配 ${index + 1}: "${match.match}" (位置: ${match.index})`
+        `${t('tools.regexTester.ui.match')} ${index + 1}: "${match.match}" (${t('tools.regexTester.ui.position')} ${match.index})`
       ).join('\n')
       
       navigator.clipboard.writeText(result)
-      instance.proxy.$message.success('匹配结果已复制到剪贴板！')
+      messageService.success(t('tools.regexTester.ui.copiedMatches'))
     }
 
     const copyRegex = () => {
       if (!regexPattern.value) {
-        instance.proxy.$message.success('没有正则表达式可复制')
+        messageService.success(t('tools.regexTester.ui.noRegex'))
         return
       }
       
@@ -239,7 +241,7 @@ export default {
       
       const regexString = `/${regexPattern.value}/${flagString}`
       navigator.clipboard.writeText(regexString)
-      instance.proxy.$message.success('正则表达式已复制到剪贴板！')
+      messageService.success(t('tools.regexTester.ui.copiedRegex'))
     }
 
     const clearAll = () => {

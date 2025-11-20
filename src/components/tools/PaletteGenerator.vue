@@ -1,13 +1,13 @@
 <template>
   <div class="palette-generator-container">
     <div class="tool-header">
-      <h2>🎨 Palette Maker</h2>
-      <p>自动配色调色板生成器</p>
+      <h2>🎨 {{ $t('tools.paletteGenerator.ui.title') }}</h2>
+      <p>{{ $t('tools.paletteGenerator.ui.description') }}</p>
     </div>
 
     <div class="base-color-section">
       <div class="base-color-input">
-        <label>基础颜色</label>
+        <label>{{ $t('tools.paletteGenerator.ui.baseColorLabel') }}</label>
         <div class="color-input-wrapper">
           <input type="color" v-model="baseColor" @input="generatePalettes" class="color-picker">
           <input type="text" v-model="baseColor" @input="generatePalettes" class="color-text" placeholder="#FF5733">
@@ -15,14 +15,14 @@
       </div>
 
       <div class="harmony-selector">
-        <label>配色方案</label>
+        <label>{{ $t('tools.paletteGenerator.ui.harmonySchemeLabel') }}</label>
         <select v-model="selectedHarmony" @change="generatePalettes" class="harmony-select">
-          <option value="monochromatic">单色配色</option>
-          <option value="analogous">相邻配色</option>
-          <option value="complementary">互补配色</option>
-          <option value="triadic">三角配色</option>
-          <option value="tetradic">四角配色</option>
-          <option value="splitComplementary">分离互补</option>
+          <option value="monochromatic">{{ $t('tools.paletteGenerator.ui.monochromatic') }}</option>
+          <option value="analogous">{{ $t('tools.paletteGenerator.ui.analogous') }}</option>
+          <option value="complementary">{{ $t('tools.paletteGenerator.ui.complementary') }}</option>
+          <option value="triadic">{{ $t('tools.paletteGenerator.ui.triadic') }}</option>
+          <option value="tetradic">{{ $t('tools.paletteGenerator.ui.tetradic') }}</option>
+          <option value="splitComplementary">{{ $t('tools.paletteGenerator.ui.splitComplementary') }}</option>
         </select>
       </div>
     </div>
@@ -31,7 +31,7 @@
       <div v-for="(palette, index) in palettes" :key="index" class="palette-section">
         <div class="palette-header">
           <h3>{{ palette.name }}</h3>
-          <button @click="copyPalette(palette)" class="copy-palette-btn">📋 复制调色板</button>
+          <button @click="copyPalette(palette)" class="copy-palette-btn">📋 {{ $t('tools.paletteGenerator.ui.copyPalette') }}</button>
         </div>
         <div class="color-row">
           <div 
@@ -52,8 +52,8 @@
 
     <div class="random-palettes">
       <div class="random-header">
-        <h3>随机调色板</h3>
-        <button @click="generateRandomPalettes" class="generate-btn">🎲 生成随机</button>
+        <h3>{{ $t('tools.paletteGenerator.ui.randomPalettes') }}</h3>
+        <button @click="generateRandomPalettes" class="generate-btn">🎲 {{ $t('tools.paletteGenerator.ui.generateRandom') }}</button>
       </div>
       <div class="random-grid">
         <div 
@@ -75,12 +75,12 @@
     </div>
 
     <div class="export-section">
-      <h3>导出格式</h3>
+      <h3>{{ $t('tools.paletteGenerator.ui.exportFormat') }}</h3>
       <div class="export-options">
-        <button @click="exportAsCSS" class="export-btn">CSS 变量</button>
-        <button @click="exportAsSass" class="export-btn">SCSS 变量</button>
-        <button @click="exportAsJSON" class="export-btn">JSON 格式</button>
-        <button @click="exportAsASE" class="export-btn">Adobe ASE</button>
+        <button @click="exportAsCSS" class="export-btn">{{ $t('tools.paletteGenerator.ui.exportCSS') }}</button>
+        <button @click="exportAsSass" class="export-btn">{{ $t('tools.paletteGenerator.ui.exportSass') }}</button>
+        <button @click="exportAsJSON" class="export-btn">{{ $t('tools.paletteGenerator.ui.exportJSON') }}</button>
+        <button @click="exportAsASE" class="export-btn">{{ $t('tools.paletteGenerator.ui.exportASE') }}</button>
       </div>
     </div>
   </div>
@@ -88,10 +88,12 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'PaletteGenerator',
   setup() {
+    const { t } = useI18n()
     const baseColor = ref('#3B82F6')
     const selectedHarmony = ref('analogous')
     const palettes = ref([])
@@ -131,7 +133,7 @@ export default {
         colors.push(hslToHex(hsl.h, hsl.s, lightness))
       }
       
-      return { name: '单色配色', colors }
+      return { name: t('tools.paletteGenerator.ui.monochromatic'), colors }
     }
 
     const generateAnalogous = () => {
@@ -143,7 +145,7 @@ export default {
         colors.push(hslToHex(hue, hsl.s, hsl.l))
       }
       
-      return { name: '相邻配色', colors }
+      return { name: t('tools.paletteGenerator.ui.analogous'), colors }
     }
 
     const generateComplementary = () => {
@@ -151,7 +153,7 @@ export default {
       const complementHue = (hsl.h + 180) % 360
       
       return {
-        name: '互补配色',
+        name: t('tools.paletteGenerator.ui.complementary'),
         colors: [
           baseColor.value,
           hslToHex(complementHue, hsl.s, hsl.l),
@@ -173,7 +175,7 @@ export default {
         colors.push(hslToHex(hue, Math.max(10, hsl.s - 20), Math.min(90, hsl.l + 15)))
       }
       
-      return { name: '三角配色', colors: colors.slice(0, 6) }
+      return { name: t('tools.paletteGenerator.ui.triadic'), colors: colors.slice(0, 6) }
     }
 
     const generateTetradic = () => {
@@ -188,7 +190,7 @@ export default {
       // 添加中性色
       colors.push(hslToHex(hsl.h, 10, 85))
       
-      return { name: '四角配色', colors }
+      return { name: t('tools.paletteGenerator.ui.tetradic'), colors }
     }
 
     const generateSplitComplementary = () => {
@@ -196,7 +198,7 @@ export default {
       const complement = (hsl.h + 180) % 360
       
       return {
-        name: '分离互补',
+        name: t('tools.paletteGenerator.ui.splitComplementary'),
         colors: [
           baseColor.value,
           hslToHex((complement - 30 + 360) % 360, hsl.s, hsl.l),
@@ -233,9 +235,9 @@ export default {
     const copyColor = async (color) => {
       try {
         await navigator.clipboard.writeText(color)
-        console.log('已复制颜色:', color)
+        console.log(t('tools.paletteGenerator.ui.colorCopied'), color)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.paletteGenerator.ui.copyFailed'), err)
       }
     }
 
@@ -243,9 +245,9 @@ export default {
       const colors = palette.colors.join(', ')
       try {
         await navigator.clipboard.writeText(colors)
-        console.log('已复制调色板')
+        console.log(t('tools.paletteGenerator.ui.paletteCopied'))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.paletteGenerator.ui.copyFailed'), err)
       }
     }
 

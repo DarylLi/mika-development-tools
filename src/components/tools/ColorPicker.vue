@@ -1,13 +1,13 @@
 <template>
   <div class="color-picker-container">
     <div class="tool-header">
-      <h2>🎨 Color Picker</h2>
-      <p>取色并复制十六进制颜色值</p>
+      <h2>🎨 {{ $t('tools.colorPicker.ui.title') }}</h2>
+      <p>{{ $t('tools.colorPicker.ui.description') }}</p>
     </div>
 
     <div class="color-inputs">
       <div class="color-input-section">
-        <label>颜色选择器</label>
+        <label>{{ $t('tools.colorPicker.ui.colorPickerLabel') }}</label>
         <div class="color-picker-wrapper">
           <input 
             type="color" 
@@ -20,7 +20,7 @@
       </div>
 
       <div class="manual-input-section">
-        <label>手动输入</label>
+        <label>{{ $t('tools.colorPicker.ui.manualInputLabel') }}</label>
         <input 
           type="text" 
           v-model="hexInput" 
@@ -32,7 +32,7 @@
     </div>
 
     <div class="color-info">
-      <h3>颜色信息</h3>
+      <h3>{{ $t('tools.colorPicker.ui.colorInfo') }}</h3>
       <div class="color-formats">
         <div class="format-item" @click="copyToClipboard(colorData.hex, 'HEX')">
           <span class="format-label">HEX:</span>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="color-palette">
-      <h3>相似色调</h3>
+      <h3>{{ $t('tools.colorPicker.ui.similarColors') }}</h3>
       <div class="palette-grid">
         <div 
           v-for="(color, index) in similarColors" 
@@ -72,10 +72,10 @@
     </div>
 
     <div class="saved-colors">
-      <h3>保存的颜色</h3>
+      <h3>{{ $t('tools.colorPicker.ui.savedColors') }}</h3>
       <div class="actions">
-        <button @click="saveColor" class="save-btn">保存当前颜色</button>
-        <button @click="clearSaved" class="clear-btn">清空保存</button>
+        <button @click="saveColor" class="save-btn">{{ $t('tools.colorPicker.ui.saveCurrentColor') }}</button>
+        <button @click="clearSaved" class="clear-btn">{{ $t('tools.colorPicker.ui.clearSaved') }}</button>
       </div>
       <div class="saved-grid">
         <div 
@@ -85,7 +85,7 @@
           :style="{ backgroundColor: color }"
           @click="selectColor(color)"
           @dblclick="removeSavedColor(index)"
-          :title="`${color} (双击删除)`"
+          :title="`${color} (${$t('tools.colorPicker.ui.doubleClickToDelete')})`"
         ></div>
       </div>
     </div>
@@ -94,10 +94,12 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ColorPicker',
   setup() {
+    const { t } = useI18n()
     const currentColor = ref('#FF5733')
     const hexInput = ref('#FF5733')
     const savedColors = ref([])
@@ -175,7 +177,7 @@ export default {
           btn.textContent = originalText
         }, 1000)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.colorPicker.ui.copyFailed'), err)
       }
     }
 

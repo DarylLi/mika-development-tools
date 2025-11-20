@@ -1,29 +1,29 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-key"></i> 密码生成器</h2>
+    <h2><i class="fas fa-key"></i> {{ $t('tools.passwordGenerator.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 推荐配置
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.passwordGenerator.ui.recommendedConfig') }}
       </button>
     </div>
     
     <div class="form-group">
-      <label>密码长度: <span>{{ passwordLength }}</span></label>
+      <label>{{ $t('tools.passwordGenerator.ui.passwordLength') }} <span>{{ passwordLength }}</span></label>
       <input type="range" v-model="passwordLength" min="4" max="50" class="modern-slider">
     </div>
     
     <div class="checkbox-group">
-      <label><input type="checkbox" v-model="includeUppercase"> 包含大写字母</label>
-      <label><input type="checkbox" v-model="includeLowercase"> 包含小写字母</label>
-      <label><input type="checkbox" v-model="includeNumbers"> 包含数字</label>
-      <label><input type="checkbox" v-model="includeSymbols"> 包含符号</label>
+      <label><input type="checkbox" v-model="includeUppercase"> {{ $t('tools.passwordGenerator.ui.includeUppercase') }}</label>
+      <label><input type="checkbox" v-model="includeLowercase"> {{ $t('tools.passwordGenerator.ui.includeLowercase') }}</label>
+      <label><input type="checkbox" v-model="includeNumbers"> {{ $t('tools.passwordGenerator.ui.includeNumbers') }}</label>
+      <label><input type="checkbox" v-model="includeSymbols"> {{ $t('tools.passwordGenerator.ui.includeSymbols') }}</label>
     </div>
     
-    <button @click="generatePassword">生成密码</button>
+    <button @click="generatePassword">{{ $t('tools.passwordGenerator.ui.generatePassword') }}</button>
     
-    <div style="display: flex; gap: 0.5rem; align-items: center;">
-      <input type="text" v-model="generatedPassword" readonly placeholder="生成的密码将显示在这里..." style="flex: 1;">
+    <div style="display: flex; gap: 0.5rem; align-items: center;margin-top: 20px;">
+      <input type="text" v-model="generatedPassword" readonly :placeholder="$t('tools.passwordGenerator.ui.passwordPlaceholder')" style="flex: 1;">
       <button v-if="generatedPassword" @click="copyPassword" style="background: #28a745; padding: 0.5rem;">
         <i class="fas fa-copy"></i>
       </button>
@@ -32,7 +32,9 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'PasswordGenerator',
@@ -40,7 +42,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const passwordLength = ref(12)
     const includeUppercase = ref(true)
     const includeLowercase = ref(true)
@@ -68,7 +70,7 @@ export default {
       if (includeSymbols.value) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?'
       
       if (charset === '') {
-        instance.proxy.$message.success('请至少选择一种字符类型！')
+        messageService.warning(t('common.warning'))
         return
       }
       
@@ -83,9 +85,9 @@ export default {
     const copyPassword = () => {
       if (generatedPassword.value) {
         navigator.clipboard.writeText(generatedPassword.value).then(() => {
-          instance.proxy.$message.success('密码已复制到剪贴板！')
+          messageService.success(t('common.copied'))
         }).catch(err => {
-          console.error('复制失败:', err)
+          console.error(t('tools.passwordGenerator.ui.copyFailed'), err)
         })
       }
     }

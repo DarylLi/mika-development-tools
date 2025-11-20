@@ -1,13 +1,13 @@
 <template>
   <div class="age-calculator">
-    <h2>年龄计算器</h2>
-    <p>精确计算年龄、生日统计和人生里程碑</p>
+    <h2>{{ $t('tools.ageCalculator.ui.title') }}</h2>
+    <p>{{ $t('tools.ageCalculator.ui.description') }}</p>
 
     <!-- 输入区域 -->
     <div class="input-section">
       <div class="birthday-input">
         <div class="input-group">
-          <label>出生日期</label>
+          <label>{{ $t('tools.ageCalculator.ui.birthDate') }}</label>
           <input 
             type="date" 
             v-model="birthDate"
@@ -17,27 +17,27 @@
         </div>
         
         <div class="input-group">
-          <label>计算到日期（可选）</label>
+          <label>{{ $t('tools.ageCalculator.ui.targetDate') }}</label>
           <input 
             type="date" 
             v-model="targetDate"
             @change="calculateAge"
           >
           <button @click="setToToday" class="today-btn">
-            <i class="fas fa-calendar-day"></i> 今天
+            <i class="fas fa-calendar-day"></i> {{ $t('tools.ageCalculator.ui.today') }}
           </button>
         </div>
       </div>
 
       <!-- 快速设置 -->
       <div class="quick-settings">
-        <h4>快速设置生日年份</h4>
+        <h4>{{ $t('tools.ageCalculator.ui.quickSettings') }}</h4>
         <div class="year-buttons">
-          <button @click="setDecade(1990)" class="decade-btn">90后</button>
-          <button @click="setDecade(2000)" class="decade-btn">00后</button>
-          <button @click="setDecade(2010)" class="decade-btn">10后</button>
-          <button @click="setDecade(1980)" class="decade-btn">80后</button>
-          <button @click="setDecade(1970)" class="decade-btn">70后</button>
+          <button @click="setDecade(1990)" class="decade-btn">{{ $t('tools.ageCalculator.ui.generation90s') }}</button>
+          <button @click="setDecade(2000)" class="decade-btn">{{ $t('tools.ageCalculator.ui.generation00s') }}</button>
+          <button @click="setDecade(2010)" class="decade-btn">{{ $t('tools.ageCalculator.ui.generation10s') }}</button>
+          <button @click="setDecade(1980)" class="decade-btn">{{ $t('tools.ageCalculator.ui.generation80s') }}</button>
+          <button @click="setDecade(1970)" class="decade-btn">{{ $t('tools.ageCalculator.ui.generation70s') }}</button>
         </div>
       </div>
     </div>
@@ -48,13 +48,13 @@
       <div class="main-age-display">
         <div class="age-primary">
           <span class="age-number">{{ ageResult.years }}</span>
-          <span class="age-unit">岁</span>
+          <span class="age-unit">{{ $t('tools.ageCalculator.ui.ageUnit') }}</span>
         </div>
         <div class="age-details">
-          {{ ageResult.months }}个月 {{ ageResult.days }}天
+          {{ ageResult.months }}{{ $t('tools.ageCalculator.ui.months') }} {{ ageResult.days }}{{ $t('tools.ageCalculator.ui.days') }}
         </div>
         <div class="precise-age">
-          精确年龄：{{ ageResult.totalDays.toLocaleString() }}天
+          {{ $t('tools.ageCalculator.ui.preciseAge') }}：{{ ageResult.totalDays.toLocaleString() }}{{ $t('tools.ageCalculator.ui.days') }}
         </div>
       </div>
 
@@ -66,7 +66,7 @@
           </div>
           <div class="stat-content">
             <div class="stat-value">{{ ageResult.totalDays.toLocaleString() }}</div>
-            <div class="stat-label">总天数</div>
+            <div class="stat-label">{{ $t('tools.ageCalculator.ui.totalDays') }}</div>
           </div>
         </div>
 
@@ -76,7 +76,7 @@
           </div>
           <div class="stat-content">
             <div class="stat-value">{{ ageResult.totalHours.toLocaleString() }}</div>
-            <div class="stat-label">总小时数</div>
+            <div class="stat-label">{{ $t('tools.ageCalculator.ui.totalHours') }}</div>
           </div>
         </div>
 
@@ -86,7 +86,7 @@
           </div>
           <div class="stat-content">
             <div class="stat-value">{{ ageResult.totalMinutes.toLocaleString() }}</div>
-            <div class="stat-label">总分钟数</div>
+            <div class="stat-label">{{ $t('tools.ageCalculator.ui.totalMinutes') }}</div>
           </div>
         </div>
 
@@ -96,45 +96,45 @@
           </div>
           <div class="stat-content">
             <div class="stat-value">{{ lifeStats.heartbeats.toLocaleString() }}</div>
-            <div class="stat-label">心跳次数</div>
+            <div class="stat-label">{{ $t('tools.ageCalculator.ui.heartbeats') }}</div>
           </div>
         </div>
       </div>
 
       <!-- 生日信息 -->
       <div class="birthday-info">
-        <h3>生日信息</h3>
+        <h3>{{ $t('tools.ageCalculator.ui.birthdayInfo') }}</h3>
         <div class="birthday-stats">
           <div class="birthday-item">
-            <div class="birthday-label">出生星期</div>
+            <div class="birthday-label">{{ $t('tools.ageCalculator.ui.dayOfWeek') }}</div>
             <div class="birthday-value">{{ birthdayInfo.dayOfWeek }}</div>
           </div>
           <div class="birthday-item">
-            <div class="birthday-label">生肖</div>
+            <div class="birthday-label">{{ $t('tools.ageCalculator.ui.zodiacAnimal') }}</div>
             <div class="birthday-value">{{ birthdayInfo.zodiacAnimal }} {{ birthdayInfo.zodiacAnimalEmoji }}</div>
           </div>
           <div class="birthday-item">
-            <div class="birthday-label">星座</div>
+            <div class="birthday-label">{{ $t('tools.ageCalculator.ui.constellation') }}</div>
             <div class="birthday-value">{{ birthdayInfo.constellation }} {{ birthdayInfo.constellationEmoji }}</div>
           </div>
           <div class="birthday-item">
-            <div class="birthday-label">下次生日</div>
+            <div class="birthday-label">{{ $t('tools.ageCalculator.ui.nextBirthday') }}</div>
             <div class="birthday-value">{{ birthdayInfo.nextBirthday }}</div>
           </div>
           <div class="birthday-item">
-            <div class="birthday-label">距下次生日</div>
-            <div class="birthday-value">{{ birthdayInfo.daysToNextBirthday }}天</div>
+            <div class="birthday-label">{{ $t('tools.ageCalculator.ui.daysToNextBirthday') }}</div>
+            <div class="birthday-value">{{ birthdayInfo.daysToNextBirthday }}{{ $t('tools.ageCalculator.ui.days') }}</div>
           </div>
           <div class="birthday-item">
-            <div class="birthday-label">已过生日</div>
-            <div class="birthday-value">{{ birthdayInfo.birthdaysPassed }}次</div>
+            <div class="birthday-label">{{ $t('tools.ageCalculator.ui.birthdaysPassed') }}</div>
+            <div class="birthday-value">{{ birthdayInfo.birthdaysPassed }}{{ $t('tools.ageCalculator.ui.times') }}</div>
           </div>
         </div>
       </div>
 
       <!-- 人生里程碑 -->
       <div class="milestones-section">
-        <h3>人生里程碑</h3>
+        <h3>{{ $t('tools.ageCalculator.ui.lifeMilestones') }}</h3>
         <div class="milestones-grid">
           <div 
             v-for="milestone in milestones" 
@@ -150,10 +150,10 @@
               <div class="milestone-date">{{ milestone.date }}</div>
               <div class="milestone-status">
                 <span v-if="milestone.achieved" class="achieved-text">
-                  <i class="fas fa-check"></i> 已达成 ({{ milestone.daysAgo }}天前)
+                  <i class="fas fa-check"></i> {{ $t('tools.ageCalculator.ui.achieved') }} ({{ milestone.daysAgo }}{{ $t('tools.ageCalculator.ui.daysAgo') }})
                 </span>
                 <span v-else class="upcoming-text">
-                  <i class="fas fa-clock"></i> 还需 {{ milestone.daysLeft }}天
+                  <i class="fas fa-clock"></i> {{ $t('tools.ageCalculator.ui.daysLeft') }} {{ milestone.daysLeft }}{{ $t('tools.ageCalculator.ui.days') }}
                 </span>
               </div>
             </div>
@@ -163,14 +163,14 @@
 
       <!-- 生命统计 -->
       <div class="life-statistics">
-        <h3>生命统计 (估算)</h3>
+        <h3>{{ $t('tools.ageCalculator.ui.lifeStatistics') }}</h3>
         <div class="life-stats-grid">
           <div class="life-stat-item">
             <i class="fas fa-bed"></i>
             <div class="life-stat-content">
               <div class="life-stat-value">{{ lifeStats.sleepDays.toLocaleString() }}</div>
-              <div class="life-stat-label">睡眠天数</div>
-              <div class="life-stat-percent">约 {{ lifeStats.sleepPercent }}% 的人生</div>
+              <div class="life-stat-label">{{ $t('tools.ageCalculator.ui.sleepDays') }}</div>
+              <div class="life-stat-percent">{{ $t('tools.ageCalculator.ui.aboutLife') }} {{ lifeStats.sleepPercent }}{{ $t('tools.ageCalculator.ui.percentOfLife') }}</div>
             </div>
           </div>
 
@@ -178,8 +178,8 @@
             <i class="fas fa-utensils"></i>
             <div class="life-stat-content">
               <div class="life-stat-value">{{ lifeStats.meals.toLocaleString() }}</div>
-              <div class="life-stat-label">用餐次数</div>
-              <div class="life-stat-percent">平均每天3餐</div>
+              <div class="life-stat-label">{{ $t('tools.ageCalculator.ui.meals') }}</div>
+              <div class="life-stat-percent">{{ $t('tools.ageCalculator.ui.average3MealsPerDay') }}</div>
             </div>
           </div>
 
@@ -187,8 +187,8 @@
             <i class="fas fa-lungs"></i>
             <div class="life-stat-content">
               <div class="life-stat-value">{{ lifeStats.breaths.toLocaleString() }}</div>
-              <div class="life-stat-label">呼吸次数</div>
-              <div class="life-stat-percent">平均每分钟15次</div>
+              <div class="life-stat-label">{{ $t('tools.ageCalculator.ui.breaths') }}</div>
+              <div class="life-stat-percent">{{ $t('tools.ageCalculator.ui.average15BreathsPerMin') }}</div>
             </div>
           </div>
 
@@ -196,8 +196,8 @@
             <i class="fas fa-tint"></i>
             <div class="life-stat-content">
               <div class="life-stat-value">{{ lifeStats.waterLiters.toLocaleString() }}</div>
-              <div class="life-stat-label">饮水量(升)</div>
-              <div class="life-stat-percent">平均每天2升</div>
+              <div class="life-stat-label">{{ $t('tools.ageCalculator.ui.waterLiters') }}</div>
+              <div class="life-stat-percent">{{ $t('tools.ageCalculator.ui.average2LitersPerDay') }}</div>
             </div>
           </div>
         </div>
@@ -257,16 +257,16 @@ export default {
       const target = this.targetDate ? new Date(this.targetDate) : new Date()
       
       const milestones = [
-        { name: '满1岁', days: 365, icon: 'fas fa-baby' },
-        { name: '上小学', days: 365 * 6, icon: 'fas fa-school' },
-        { name: '成年', days: 365 * 18, icon: 'fas fa-user-graduate' },
-        { name: '大学毕业', days: 365 * 22, icon: 'fas fa-graduation-cap' },
-        { name: '而立之年', days: 365 * 30, icon: 'fas fa-briefcase' },
-        { name: '不惑之年', days: 365 * 40, icon: 'fas fa-lightbulb' },
-        { name: '知天命', days: 365 * 50, icon: 'fas fa-star' },
-        { name: '花甲之年', days: 365 * 60, icon: 'fas fa-crown' },
-        { name: '古稀之年', days: 365 * 70, icon: 'fas fa-gem' },
-        { name: '耄耋之年', days: 365 * 80, icon: 'fas fa-medal' }
+        { name: this.$t('tools.ageCalculator.ui.milestone1Year'), days: 365, icon: 'fas fa-baby' },
+        { name: this.$t('tools.ageCalculator.ui.milestoneSchool'), days: 365 * 6, icon: 'fas fa-school' },
+        { name: this.$t('tools.ageCalculator.ui.milestoneAdult'), days: 365 * 18, icon: 'fas fa-user-graduate' },
+        { name: this.$t('tools.ageCalculator.ui.milestoneGraduate'), days: 365 * 22, icon: 'fas fa-graduation-cap' },
+        { name: this.$t('tools.ageCalculator.ui.milestone30'), days: 365 * 30, icon: 'fas fa-briefcase' },
+        { name: this.$t('tools.ageCalculator.ui.milestone40'), days: 365 * 40, icon: 'fas fa-lightbulb' },
+        { name: this.$t('tools.ageCalculator.ui.milestone50'), days: 365 * 50, icon: 'fas fa-star' },
+        { name: this.$t('tools.ageCalculator.ui.milestone60'), days: 365 * 60, icon: 'fas fa-crown' },
+        { name: this.$t('tools.ageCalculator.ui.milestone70'), days: 365 * 70, icon: 'fas fa-gem' },
+        { name: this.$t('tools.ageCalculator.ui.milestone80'), days: 365 * 80, icon: 'fas fa-medal' }
       ]
       
       return milestones.map(milestone => {

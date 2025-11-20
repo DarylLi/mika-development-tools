@@ -1,13 +1,13 @@
 <template>
   <div class="tool-container">
     <div class="tool-header">
-      <h2><i class="fas fa-shield-alt"></i> 文件哈希校验</h2>
-      <p>计算文件的MD5、SHA-256等哈希值，用于文件完整性验证</p>
+      <h2><i class="fas fa-shield-alt"></i> {{ $t('tools.fileHash.ui.title') }}</h2>
+      <p>{{ $t('tools.fileHash.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
-        <h3><i class="fas fa-upload"></i> 选择文件</h3>
+        <h3><i class="fas fa-upload"></i> {{ $t('tools.fileHash.ui.selectFile') }}</h3>
         <div class="file-upload-area">
           <input
             type="file"
@@ -16,13 +16,13 @@
             style="display: none"
           />
           <button @click="$refs.fileInput.click()" class="upload-btn">
-            <i class="fas fa-cloud-upload-alt"></i> 选择文件
+            <i class="fas fa-cloud-upload-alt"></i> {{ $t('tools.fileHash.ui.selectFile') }}
           </button>
-          <span class="file-info" v-if="fileName">已选择: {{ fileName }}</span>
+          <span class="file-info" v-if="fileName">{{ $t('tools.fileHash.ui.selected') }} {{ fileName }}</span>
         </div>
 
         <div class="hash-options" v-if="fileName">
-          <h4>选择哈希算法:</h4>
+          <h4>{{ $t('tools.fileHash.ui.selectHashAlgorithm') }}</h4>
           <div class="algorithm-list">
             <label class="algorithm-item">
               <input type="checkbox" v-model="selectedAlgorithms" value="md5" />
@@ -39,15 +39,15 @@
       <div class="action-section">
         <button @click="calculateHashes" class="calculate-btn" :disabled="!fileName || selectedAlgorithms.length === 0 || isCalculating">
           <i :class="isCalculating ? 'fas fa-spinner fa-spin' : 'fas fa-calculator'"></i>
-          {{ isCalculating ? '计算中...' : '计算哈希值' }}
+          {{ isCalculating ? $t('tools.fileHash.ui.calculating') : $t('tools.fileHash.ui.calculateHash') }}
         </button>
         <button @click="clearAll" class="clear-btn">
-          <i class="fas fa-trash"></i> 清空
+          <i class="fas fa-trash"></i> {{ $t('tools.fileHash.ui.clear') }}
         </button>
       </div>
 
       <div class="results-section" v-if="hashResults.length > 0">
-        <h3><i class="fas fa-key"></i> 哈希结果</h3>
+        <h3><i class="fas fa-key"></i> {{ $t('tools.fileHash.ui.hashResults') }}</h3>
         <div class="hash-result" v-for="result in hashResults" :key="result.algorithm">
           <div class="hash-label">{{ result.algorithm.toUpperCase() }}:</div>
           <div class="hash-value">
@@ -64,12 +64,12 @@
       </div>
 
       <div class="note-section">
-        <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.fileHash.ui.usageInstructions') }}</h4>
         <ul>
-          <li>支持任意类型和大小的文件</li>
-          <li>可同时计算多种哈希算法</li>
-          <li>处理过程在浏览器本地完成，保护隐私</li>
-          <li>可用于验证文件完整性和一致性</li>
+          <li>{{ $t('tools.fileHash.ui.instruction1') }}</li>
+          <li>{{ $t('tools.fileHash.ui.instruction2') }}</li>
+          <li>{{ $t('tools.fileHash.ui.instruction3') }}</li>
+          <li>{{ $t('tools.fileHash.ui.instruction4') }}</li>
         </ul>
       </div>
     </div>
@@ -78,10 +78,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'FileHash',
   setup() {
+    const { t } = useI18n()
     const fileName = ref('')
     const selectedFile = ref(null)
     const selectedAlgorithms = ref(['md5', 'sha256'])
@@ -105,7 +107,7 @@ export default {
       
       // 文件哈希计算需要专业的库（如crypto-js），这里提供说明
       setTimeout(() => {
-        error.value = '抱歉，文件哈希计算功能需要crypto-js等专业库。建议使用在线文件哈希工具。'
+        error.value = t('tools.fileHash.ui.hashFailed')
         isCalculating.value = false
       }, 1000)
     }

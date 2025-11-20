@@ -3,7 +3,7 @@
     <div class="converter-container">
       <!-- 主转换面板 -->
       <div class="main-converter">
-        <h3><i class="fas fa-columns"></i> 罗马数字转换器</h3>
+        <h3><i class="fas fa-columns"></i> {{ $t('tools.romanNumeral.ui.title') }}</h3>
         
         <div class="conversion-modes">
           <button 
@@ -11,42 +11,42 @@
             :class="{ active: mode === 'toRoman' }"
             class="mode-btn">
             <i class="fas fa-arrow-right"></i>
-            阿拉伯 → 罗马
+            {{ $t('tools.romanNumeral.ui.modeToRoman') }}
           </button>
           <button 
             @click="mode = 'toArabic'" 
             :class="{ active: mode === 'toArabic' }"
             class="mode-btn">
             <i class="fas fa-arrow-left"></i>
-            罗马 → 阿拉伯
+            {{ $t('tools.romanNumeral.ui.modeToArabic') }}
           </button>
         </div>
 
         <!-- 阿拉伯转罗马 -->
         <div v-if="mode === 'toRoman'" class="conversion-panel">
           <div class="input-section">
-            <label>输入阿拉伯数字 (1-3999)</label>
+            <label>{{ $t('tools.romanNumeral.ui.labelArabic') }}</label>
             <input 
               v-model="arabicInput" 
               type="number" 
               min="1" 
               max="3999"
-              placeholder="输入数字，如：2024"
+              :placeholder="$t('tools.romanNumeral.ui.placeholderArabic')"
               @input="convertToRoman"
               class="input-field">
           </div>
           
           <div v-if="romanResult" class="result-section">
             <div class="result-display">
-              <div class="result-label">罗马数字</div>
+              <div class="result-label">{{ $t('tools.romanNumeral.ui.resultRoman') }}</div>
               <div class="result-value roman" @click="copyResult">{{ romanResult }}</div>
               <button @click="copyResult" class="copy-btn">
-                <i class="fas fa-copy"></i> 复制
+                <i class="fas fa-copy"></i> {{ $t('tools.romanNumeral.ui.copy') }}
               </button>
             </div>
             
             <div class="breakdown-section">
-              <h4><i class="fas fa-list"></i> 转换分解</h4>
+              <h4><i class="fas fa-list"></i> {{ $t('tools.romanNumeral.ui.breakdown') }}</h4>
               <div class="breakdown-steps">
                 <div v-for="step in conversionSteps" :key="step.position" class="step-item">
                   <span class="step-number">{{ step.arabic }}</span>
@@ -62,30 +62,30 @@
         <!-- 罗马转阿拉伯 -->
         <div v-if="mode === 'toArabic'" class="conversion-panel">
           <div class="input-section">
-            <label>输入罗马数字</label>
+            <label>{{ $t('tools.romanNumeral.ui.labelRoman') }}</label>
             <input 
               v-model="romanInput" 
               type="text" 
-              placeholder="输入罗马数字，如：MMXXIV"
+              :placeholder="$t('tools.romanNumeral.ui.placeholderRoman')"
               @input="convertToArabic"
               class="input-field roman-input"
               style="text-transform: uppercase;">
             <div class="input-help">
-              可用字符：I, V, X, L, C, D, M
+              {{ $t('tools.romanNumeral.ui.inputHelp') }}
             </div>
           </div>
           
           <div v-if="arabicResult !== null" class="result-section">
             <div class="result-display">
-              <div class="result-label">阿拉伯数字</div>
+              <div class="result-label">{{ $t('tools.romanNumeral.ui.resultArabic') }}</div>
               <div class="result-value arabic" @click="copyResult">{{ arabicResult }}</div>
               <button @click="copyResult" class="copy-btn">
-                <i class="fas fa-copy"></i> 复制
+                <i class="fas fa-copy"></i> {{ $t('tools.romanNumeral.ui.copy') }}
               </button>
             </div>
             
             <div v-if="parseSteps.length > 0" class="breakdown-section">
-              <h4><i class="fas fa-list"></i> 解析过程</h4>
+              <h4><i class="fas fa-list"></i> {{ $t('tools.romanNumeral.ui.parseSteps') }}</h4>
               <div class="breakdown-steps">
                 <div v-for="step in parseSteps" :key="step.position" class="step-item">
                   <span class="step-roman">{{ step.symbol }}</span>
@@ -106,7 +106,7 @@
 
       <!-- 快速转换 -->
       <div class="quick-convert">
-        <h4><i class="fas fa-bolt"></i> 快速转换</h4>
+        <h4><i class="fas fa-bolt"></i> {{ $t('tools.romanNumeral.ui.quickConvert') }}</h4>
         <div class="quick-numbers">
           <button 
             v-for="num in quickNumbers" 
@@ -121,7 +121,7 @@
 
       <!-- 罗马数字规则 -->
       <div class="rules-section">
-        <h4><i class="fas fa-book"></i> 罗马数字对照表</h4>
+        <h4><i class="fas fa-book"></i> {{ $t('tools.romanNumeral.ui.rulesTitle') }}</h4>
         <div class="symbols-grid">
           <div class="symbol-card" v-for="symbol in romanSymbols" :key="symbol.roman">
             <div class="symbol-roman">{{ symbol.roman }}</div>
@@ -131,30 +131,30 @@
         </div>
         
         <div class="rules-list">
-          <h5><i class="fas fa-rules"></i> 构成规则</h5>
+          <h5><i class="fas fa-rules"></i> {{ $t('tools.romanNumeral.ui.rulesList') }}</h5>
           <div class="rule-cards">
             <div class="rule-card">
-              <div class="rule-title">基本规则</div>
+              <div class="rule-title">{{ $t('tools.romanNumeral.ui.ruleBasic') }}</div>
               <div class="rule-content">
-                <p>• 相同数字连续出现，表示相加</p>
-                <p>• 小数字在大数字右边，表示相加</p>
-                <p>• 小数字在大数字左边，表示相减</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleBasic1') }}</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleBasic2') }}</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleBasic3') }}</p>
               </div>
             </div>
             <div class="rule-card">
-              <div class="rule-title">重复限制</div>
+              <div class="rule-title">{{ $t('tools.romanNumeral.ui.ruleRepeat') }}</div>
               <div class="rule-content">
-                <p>• I、X、C 最多连续出现3次</p>
-                <p>• V、L、D 不能连续出现</p>
-                <p>• 减法组合有限制</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleRepeat1') }}</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleRepeat2') }}</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleRepeat3') }}</p>
               </div>
             </div>
             <div class="rule-card">
-              <div class="rule-title">减法规则</div>
+              <div class="rule-title">{{ $t('tools.romanNumeral.ui.ruleSubtract') }}</div>
               <div class="rule-content">
-                <p>• IV = 4, IX = 9</p>
-                <p>• XL = 40, XC = 90</p>
-                <p>• CD = 400, CM = 900</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleSubtract1') }}</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleSubtract2') }}</p>
+                <p>{{ $t('tools.romanNumeral.ui.ruleSubtract3') }}</p>
               </div>
             </div>
           </div>
@@ -163,7 +163,7 @@
 
       <!-- 历史记录 -->
       <div v-if="history.length > 0" class="history-section">
-        <h4><i class="fas fa-history"></i> 转换历史</h4>
+        <h4><i class="fas fa-history"></i> {{ $t('tools.romanNumeral.ui.conversionHistory') }}</h4>
         <div class="history-list">
           <div v-for="(item, index) in history" :key="index" class="history-item" @click="loadHistory(item)">
             <div class="history-conversion">
@@ -178,40 +178,40 @@
           </div>
         </div>
         <button @click="clearHistory" class="clear-btn">
-          <i class="fas fa-trash"></i> 清空历史
+          <i class="fas fa-trash"></i> {{ $t('tools.romanNumeral.ui.clearHistory') }}
         </button>
       </div>
 
       <!-- 趣味知识 -->
       <div class="knowledge-section">
-        <h4><i class="fas fa-lightbulb"></i> 罗马数字趣知识</h4>
+        <h4><i class="fas fa-lightbulb"></i> {{ $t('tools.romanNumeral.ui.knowledgeTitle') }}</h4>
         <div class="knowledge-grid">
           <div class="knowledge-card">
             <i class="fas fa-calendar"></i>
             <div>
-              <strong>历史起源</strong>
-              <p>罗马数字起源于古罗马，至今仍用于钟表、书籍章节等</p>
+              <strong>{{ $t('tools.romanNumeral.ui.knowledgeOrigin') }}</strong>
+              <p>{{ $t('tools.romanNumeral.ui.knowledgeOriginDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-crown"></i>
             <div>
-              <strong>皇室应用</strong>
-              <p>常用于表示君主世代，如伊丽莎白二世(Elizabeth II)</p>
+              <strong>{{ $t('tools.romanNumeral.ui.knowledgeRoyal') }}</strong>
+              <p>{{ $t('tools.romanNumeral.ui.knowledgeRoyalDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-film"></i>
             <div>
-              <strong>影视应用</strong>
-              <p>电影制作年份、续集编号常使用罗马数字</p>
+              <strong>{{ $t('tools.romanNumeral.ui.knowledgeFilm') }}</strong>
+              <p>{{ $t('tools.romanNumeral.ui.knowledgeFilmDesc') }}</p>
             </div>
           </div>
           <div class="knowledge-card">
             <i class="fas fa-church"></i>
             <div>
-              <strong>建筑标记</strong>
-              <p>古典建筑、纪念碑上的年份常用罗马数字刻制</p>
+              <strong>{{ $t('tools.romanNumeral.ui.knowledgeArchitecture') }}</strong>
+              <p>{{ $t('tools.romanNumeral.ui.knowledgeArchitectureDesc') }}</p>
             </div>
           </div>
         </div>
@@ -222,10 +222,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'RomanNumeral',
   setup() {
+    const { t } = useI18n()
     const mode = ref('toRoman')
     const arabicInput = ref('')
     const romanInput = ref('')
@@ -406,7 +408,7 @@ export default {
       
       // 验证输入
       if (!/^[IVXLCDM]+$/.test(input)) {
-        errorMessage.value = '包含无效字符，只能使用 I, V, X, L, C, D, M'
+        errorMessage.value = t('tools.romanNumeral.ui.errorInvalidChar')
         arabicResult.value = null
         return
       }
@@ -437,7 +439,7 @@ export default {
             result += oneCharValue.value
             i += 1
           } else {
-            errorMessage.value = `无效字符: ${oneChar}`
+            errorMessage.value = `${t('tools.romanNumeral.ui.errorInvalidChar')}: ${oneChar}`
             arabicResult.value = null
             return
           }
@@ -446,7 +448,7 @@ export default {
       
       // 验证结果
       if (result < 1 || result > 3999) {
-        errorMessage.value = '结果超出有效范围 (1-3999)'
+        errorMessage.value = t('tools.romanNumeral.ui.errorOutOfRange')
         arabicResult.value = null
         return
       }
@@ -454,7 +456,7 @@ export default {
       // 验证是否为有效的罗马数字格式
       const reconstructed = convertNumber(result)
       if (reconstructed !== input) {
-        errorMessage.value = `格式不正确，标准写法应为: ${reconstructed}`
+        errorMessage.value = `${t('tools.romanNumeral.ui.errorInvalidFormat')} ${reconstructed}`
       }
       
       arabicResult.value = result

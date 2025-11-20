@@ -1,20 +1,20 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-chart-bar"></i> 文本统计</h2>
+    <h2><i class="fas fa-chart-bar"></i> {{ $t('tools.textStats.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.textStats.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="statsInput" @input="updateStats" placeholder="请输入要统计的文本..."></textarea>
+    <textarea v-model="statsInput" @input="updateStats" :placeholder="$t('tools.textStats.ui.placeholder')"></textarea>
     
     <div class="result-display">
-      字符数: {{ stats.chars }}
-      单词数: {{ stats.words }}
-      行数: {{ stats.lines }}
-      段落数: {{ stats.paragraphs }}
+      {{ $t('tools.textStats.ui.chars') }}: {{ stats.chars }}
+      {{ $t('tools.textStats.ui.words') }}: {{ stats.words }}
+      {{ $t('tools.textStats.ui.lines') }}: {{ stats.lines }}
+      {{ $t('tools.textStats.ui.paragraphs') }}: {{ stats.paragraphs }}
     </div>
   </div>
 </template>

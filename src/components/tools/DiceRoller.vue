@@ -1,14 +1,14 @@
 <template>
   <div class="dice-roller-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-dice"></i> RPG 骰子工具</h3>
-      <p>专业的桌游骰子模拟器，支持多种骰子类型和复合投掷</p>
+      <h3><i class="fas fa-dice"></i> {{ $t('tools.diceRoller.ui.title') }}</h3>
+      <p>{{ $t('tools.diceRoller.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="dice-controls">
         <div class="preset-dice">
-          <h4>常用骰子</h4>
+          <h4>{{ $t('tools.diceRoller.ui.commonDice') }}</h4>
           <div class="dice-buttons">
             <button @click="rollPreset(4)" class="dice-btn d4">
               <i class="fas fa-dice-four"></i>
@@ -42,14 +42,14 @@
         </div>
 
         <div class="custom-roll">
-          <h4>自定义投掷</h4>
+          <h4>{{ $t('tools.diceRoller.ui.customRoll') }}</h4>
           <div class="custom-inputs">
             <div class="input-group">
-              <label for="diceCount">骰子数量</label>
+              <label for="diceCount">{{ $t('tools.diceRoller.ui.diceCount') }}</label>
               <input type="number" id="diceCount" v-model.number="diceCount" min="1" max="100" />
             </div>
             <div class="input-group">
-              <label for="diceType">骰子类型</label>
+              <label for="diceType">{{ $t('tools.diceRoller.ui.diceType') }}</label>
               <select id="diceType" v-model="diceType">
                 <option value="4">D4</option>
                 <option value="6">D6</option>
@@ -58,41 +58,41 @@
                 <option value="12">D12</option>
                 <option value="20">D20</option>
                 <option value="100">D100</option>
-                <option value="custom">自定义</option>
+                <option value="custom">{{ $t('tools.diceRoller.ui.custom') }}</option>
               </select>
             </div>
             <div class="input-group" v-if="diceType === 'custom'">
-              <label for="customSides">面数</label>
+              <label for="customSides">{{ $t('tools.diceRoller.ui.sides') }}</label>
               <input type="number" id="customSides" v-model.number="customSides" min="2" max="1000" />
             </div>
             <div class="input-group">
-              <label for="modifier">修正值</label>
+              <label for="modifier">{{ $t('tools.diceRoller.ui.modifier') }}</label>
               <input type="number" id="modifier" v-model.number="modifier" />
             </div>
           </div>
           <button @click="rollCustom" class="btn-primary roll-btn">
-            <i class="fas fa-dice"></i> 投掷
+            <i class="fas fa-dice"></i> {{ $t('tools.diceRoller.ui.roll') }}
           </button>
         </div>
 
         <div class="formula-roll">
-          <h4>公式投掷</h4>
+          <h4>{{ $t('tools.diceRoller.ui.formulaRoll') }}</h4>
           <div class="formula-inputs">
             <input 
               type="text" 
               v-model="formula" 
-              placeholder="例: 2d6+3, 3d8-1, 1d20+5"
+              :placeholder="$t('tools.diceRoller.ui.formulaPlaceholder')"
               class="formula-input"
             />
             <button @click="rollFormula" class="btn-secondary">
-              <i class="fas fa-calculator"></i> 计算
+              <i class="fas fa-calculator"></i> {{ $t('tools.diceRoller.ui.calculate') }}
             </button>
           </div>
           <div class="formula-presets">
-            <button @click="setFormula('1d20+3')" class="preset-formula">攻击检定</button>
-            <button @click="setFormula('2d6+2')" class="preset-formula">伤害投掷</button>
-            <button @click="setFormula('4d6')" class="preset-formula">属性投掷</button>
-            <button @click="setFormula('1d100')" class="preset-formula">百分比</button>
+            <button @click="setFormula('1d20+3')" class="preset-formula">{{ $t('tools.diceRoller.ui.attackCheck') }}</button>
+            <button @click="setFormula('2d6+2')" class="preset-formula">{{ $t('tools.diceRoller.ui.damageRoll') }}</button>
+            <button @click="setFormula('4d6')" class="preset-formula">{{ $t('tools.diceRoller.ui.attributeRoll') }}</button>
+            <button @click="setFormula('1d100')" class="preset-formula">{{ $t('tools.diceRoller.ui.percentage') }}</button>
           </div>
         </div>
       </div>
@@ -100,13 +100,13 @@
       <div class="roll-result" v-if="lastRoll">
         <div class="result-card">
           <div class="result-header">
-            <h3>投掷结果</h3>
+            <h3>{{ $t('tools.diceRoller.ui.rollResult') }}</h3>
             <div class="result-formula">{{ lastRoll.formula }}</div>
           </div>
           
           <div class="result-display">
             <div class="individual-dice" v-if="lastRoll.dice.length > 1">
-              <div class="dice-label">各骰子结果:</div>
+              <div class="dice-label">{{ $t('tools.diceRoller.ui.individualDice') }}</div>
               <div class="dice-values">
                 <span 
                   v-for="(die, index) in lastRoll.dice" 
@@ -120,37 +120,37 @@
             </div>
             
             <div class="total-result">
-              <div class="total-label">总计:</div>
+              <div class="total-label">{{ $t('tools.diceRoller.ui.total') }}</div>
               <div class="total-value" :class="getResultClass(lastRoll.total)">
                 {{ lastRoll.total }}
               </div>
             </div>
             
             <div class="result-breakdown" v-if="lastRoll.breakdown">
-              <div class="breakdown-label">计算过程:</div>
+              <div class="breakdown-label">{{ $t('tools.diceRoller.ui.breakdown') }}</div>
               <div class="breakdown-text">{{ lastRoll.breakdown }}</div>
             </div>
           </div>
           
           <div class="result-actions">
             <button @click="reroll" class="btn-secondary">
-              <i class="fas fa-redo"></i> 重投
+              <i class="fas fa-redo"></i> {{ $t('tools.diceRoller.ui.reroll') }}
             </button>
             <button @click="saveRoll" class="btn-secondary">
-              <i class="fas fa-save"></i> 保存
+              <i class="fas fa-save"></i> {{ $t('tools.diceRoller.ui.save') }}
             </button>
           </div>
         </div>
       </div>
 
       <div class="roll-history" v-if="rollHistory.length">
-        <h4>投掷历史</h4>
+        <h4>{{ $t('tools.diceRoller.ui.rollHistory') }}</h4>
         <div class="history-controls">
           <button @click="clearHistory" class="btn-secondary">
-            <i class="fas fa-trash"></i> 清空历史
+            <i class="fas fa-trash"></i> {{ $t('tools.diceRoller.ui.clearHistory') }}
           </button>
           <button @click="exportHistory" class="btn-secondary">
-            <i class="fas fa-download"></i> 导出
+            <i class="fas fa-download"></i> {{ $t('tools.diceRoller.ui.export') }}
           </button>
         </div>
         
@@ -163,7 +163,7 @@
             <div class="history-formula">{{ roll.formula }}</div>
             <div class="history-result">{{ roll.total }}</div>
             <div class="history-time">{{ roll.timestamp }}</div>
-            <button @click="repeatRoll(roll)" class="btn-icon repeat-btn" title="重复此投掷">
+            <button @click="repeatRoll(roll)" class="btn-icon repeat-btn" :title="$t('tools.diceRoller.ui.repeatRoll')">
               <i class="fas fa-redo"></i>
             </button>
           </div>
@@ -171,23 +171,23 @@
       </div>
 
       <div class="statistics" v-if="rollHistory.length > 5">
-        <h4>统计信息</h4>
+        <h4>{{ $t('tools.diceRoller.ui.statistics') }}</h4>
         <div class="stats-grid">
           <div class="stat-item">
             <div class="stat-value">{{ rollHistory.length }}</div>
-            <div class="stat-label">总投掷次数</div>
+            <div class="stat-label">{{ $t('tools.diceRoller.ui.totalRolls') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ averageRoll.toFixed(1) }}</div>
-            <div class="stat-label">平均值</div>
+            <div class="stat-label">{{ $t('tools.diceRoller.ui.average') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ highestRoll }}</div>
-            <div class="stat-label">最高值</div>
+            <div class="stat-label">{{ $t('tools.diceRoller.ui.highest') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ lowestRoll }}</div>
-            <div class="stat-label">最低值</div>
+            <div class="stat-label">{{ $t('tools.diceRoller.ui.lowest') }}</div>
           </div>
         </div>
       </div>
@@ -196,12 +196,14 @@
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'DiceRoller',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const diceCount = ref(1)
     const diceType = ref('20')
     const customSides = ref(6)
@@ -267,7 +269,7 @@ export default {
         lastRoll.value = result
         addToHistory(result)
       } catch (error) {
-        instance.proxy.$message.success('无效的投掷公式，请检查格式')
+        messageService.warning(t('common.warning'))
       }
     }
 
@@ -328,7 +330,7 @@ export default {
         // 简单实现：复制到剪贴板
         const rollText = `${lastRoll.value.formula}: ${lastRoll.value.total}`
         navigator.clipboard.writeText(rollText).then(() => {
-          instance.proxy.$message.success('投掷结果已复制到剪贴板')
+          messageService.success(t('common.copied'))
         })
       }
     }
@@ -349,7 +351,7 @@ export default {
 
     // 清空历史
     const clearHistory = async () => {
-      if (await instance.proxy.$message.confirm('确定要清空投掷历史吗？')) {
+      if (await messageService.confirm(t('common.confirm'))) {
         rollHistory.value = []
       }
     }

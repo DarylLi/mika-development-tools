@@ -1,8 +1,8 @@
 <template>
   <div class="image-crop-container">
     <div class="tool-header">
-      <h3>图片裁剪工具</h3>
-      <p>精确裁剪图片区域，支持多种比例预设</p>
+      <h3>{{ $t('tools.imageCrop.ui.title') }}</h3>
+      <p>{{ $t('tools.imageCrop.ui.description') }}</p>
     </div>
 
     <div class="upload-section" v-if="!originalImage">
@@ -23,8 +23,8 @@
         />
         <div class="upload-content">
           <div class="upload-icon">✂️</div>
-          <p>点击选择或拖拽图片文件</p>
-          <small>支持 JPG、PNG、WebP、GIF 格式</small>
+          <p>{{ $t('tools.imageCrop.ui.uploadText') }}</p>
+          <small>{{ $t('tools.imageCrop.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
@@ -48,13 +48,13 @@
 
         <div class="controls-panel">
           <div class="aspect-ratios">
-            <h4>宽高比</h4>
+            <h4>{{ $t('tools.imageCrop.ui.aspectRatio') }}</h4>
             <div class="ratio-buttons">
               <button 
                 v-for="ratio in aspectRatios"
-                :key="ratio.name"
+                :key="ratio.key"
                 @click="setAspectRatio(ratio)"
-                :class="['ratio-btn', { active: selectedRatio?.name === ratio.name }]"
+                :class="['ratio-btn', { active: selectedRatio?.key === ratio.key }]"
               >
                 {{ ratio.name }}
               </button>
@@ -63,7 +63,7 @@
 
           <div class="crop-controls">
             <div class="control-group">
-              <label>X 坐标</label>
+              <label>{{ $t('tools.imageCrop.ui.xCoordinate') }}</label>
               <input 
                 type="number" 
                 v-model="cropArea.x" 
@@ -74,7 +74,7 @@
               />
             </div>
             <div class="control-group">
-              <label>Y 坐标</label>
+              <label>{{ $t('tools.imageCrop.ui.yCoordinate') }}</label>
               <input 
                 type="number" 
                 v-model="cropArea.y" 
@@ -85,7 +85,7 @@
               />
             </div>
             <div class="control-group">
-              <label>宽度</label>
+              <label>{{ $t('tools.imageCrop.ui.width') }}</label>
               <input 
                 type="number" 
                 v-model="cropArea.width" 
@@ -96,7 +96,7 @@
               />
             </div>
             <div class="control-group">
-              <label>高度</label>
+              <label>{{ $t('tools.imageCrop.ui.height') }}</label>
               <input 
                 type="number" 
                 v-model="cropArea.height" 
@@ -109,11 +109,11 @@
           </div>
 
           <div class="preset-sizes">
-            <h4>常用尺寸</h4>
+            <h4>{{ $t('tools.imageCrop.ui.commonSizes') }}</h4>
             <div class="preset-buttons">
               <button 
                 v-for="preset in presetSizes"
-                :key="preset.name"
+                :key="preset.key"
                 @click="applyPreset(preset)"
                 class="preset-btn"
               >
@@ -125,17 +125,17 @@
 
           <div class="action-buttons">
             <button @click="cropImage" class="crop-btn" :disabled="!canCrop">
-              裁剪图片
+              {{ $t('tools.imageCrop.ui.cropImage') }}
             </button>
-            <button @click="reset" class="reset-btn">重新选择</button>
+            <button @click="reset" class="reset-btn">{{ $t('tools.imageCrop.ui.reselect') }}</button>
           </div>
 
           <div class="preview-section" v-if="croppedImage">
-            <h4>裁剪预览</h4>
+            <h4>{{ $t('tools.imageCrop.ui.cropPreview') }}</h4>
             <div class="preview-container">
-              <img :src="croppedImage" alt="裁剪预览" class="cropped-preview" />
+              <img :src="croppedImage" :alt="$t('tools.imageCrop.ui.cropPreview')" class="cropped-preview" />
               <button @click="downloadCropped" class="download-btn">
-                下载裁剪图片
+                {{ $t('tools.imageCrop.ui.downloadCropped') }}
               </button>
             </div>
           </div>
@@ -170,30 +170,34 @@ export default {
       scale: 1,
       isDragging: false,
       dragStart: { x: 0, y: 0 },
-      selectedRatio: null,
-      aspectRatios: [
-        { name: '自由', ratio: null },
-        { name: '1:1', ratio: 1 },
-        { name: '4:3', ratio: 4/3 },
-        { name: '3:2', ratio: 3/2 },
-        { name: '16:9', ratio: 16/9 },
-        { name: '3:4', ratio: 3/4 },
-        { name: '2:3', ratio: 2/3 },
-        { name: '9:16', ratio: 9/16 }
-      ],
-      presetSizes: [
-        { name: '头像', width: 200, height: 200 },
-        { name: '缩略图', width: 150, height: 150 },
-        { name: 'Instagram', width: 1080, height: 1080 },
-        { name: 'Facebook封面', width: 1200, height: 630 },
-        { name: 'Twitter头图', width: 1500, height: 500 },
-        { name: '微信头像', width: 300, height: 300 }
-      ]
+      selectedRatio: null
     }
   },
   computed: {
     canCrop() {
       return this.cropArea.width > 0 && this.cropArea.height > 0
+    },
+    aspectRatios() {
+      return [
+        { key: 'free', name: this.$t('tools.imageCrop.ui.ratioFree'), ratio: null },
+        { key: '1:1', name: '1:1', ratio: 1 },
+        { key: '4:3', name: '4:3', ratio: 4/3 },
+        { key: '3:2', name: '3:2', ratio: 3/2 },
+        { key: '16:9', name: '16:9', ratio: 16/9 },
+        { key: '3:4', name: '3:4', ratio: 3/4 },
+        { key: '2:3', name: '2:3', ratio: 2/3 },
+        { key: '9:16', name: '9:16', ratio: 9/16 }
+      ]
+    },
+    presetSizes() {
+      return [
+        { key: 'avatar', name: this.$t('tools.imageCrop.ui.presetAvatar'), width: 200, height: 200 },
+        { key: 'thumbnail', name: this.$t('tools.imageCrop.ui.presetThumbnail'), width: 150, height: 150 },
+        { key: 'instagram', name: this.$t('tools.imageCrop.ui.presetInstagram'), width: 1080, height: 1080 },
+        { key: 'facebookCover', name: this.$t('tools.imageCrop.ui.presetFacebookCover'), width: 1200, height: 630 },
+        { key: 'twitterHeader', name: this.$t('tools.imageCrop.ui.presetTwitterHeader'), width: 1500, height: 500 },
+        { key: 'wechatAvatar', name: this.$t('tools.imageCrop.ui.presetWeChatAvatar'), width: 300, height: 300 }
+      ]
     }
   },
   methods: {

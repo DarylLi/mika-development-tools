@@ -1,80 +1,80 @@
 <template>
   <div class="date-add-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-calculator"></i> 日期计算器</h3>
-      <p>计算日期的加减法，支持年、月、日、时、分、秒的精确计算</p>
+      <h3><i class="fas fa-calculator"></i> {{ $t('tools.dateAdd.ui.title') }}</h3>
+      <p>{{ $t('tools.dateAdd.ui.description') }}</p>
     </div>
 
     <!-- 主要计算区域 -->
     <div class="main-calc-section">
       <div class="calc-form">
         <div class="base-date-group">
-          <label>基准日期</label>
+          <label>{{ $t('tools.dateAdd.ui.baseDate') }}</label>
           <input 
             type="datetime-local" 
             v-model="baseDateTime" 
             class="datetime-input"
           >
           <button @click="setCurrentTime" class="current-btn">
-            <i class="fas fa-clock"></i> 当前时间
+            <i class="fas fa-clock"></i> {{ $t('tools.dateAdd.ui.currentTime') }}
           </button>
         </div>
 
         <div class="operation-group">
           <div class="operation-row">
             <select v-model="operation" class="operation-select">
-              <option value="add">加上</option>
-              <option value="subtract">减去</option>
+              <option value="add">{{ $t('tools.dateAdd.ui.add') }}</option>
+              <option value="subtract">{{ $t('tools.dateAdd.ui.subtract') }}</option>
             </select>
             
             <div class="time-units">
               <div class="unit-input">
                 <input type="number" v-model.number="years" class="unit-value">
-                <span>年</span>
+                <span>{{ $t('tools.dateAdd.ui.years') }}</span>
               </div>
               <div class="unit-input">
                 <input type="number" v-model.number="months" class="unit-value">
-                <span>月</span>
+                <span>{{ $t('tools.dateAdd.ui.months') }}</span>
               </div>
               <div class="unit-input">
                 <input type="number" v-model.number="days" class="unit-value">
-                <span>天</span>
+                <span>{{ $t('tools.dateAdd.ui.days') }}</span>
               </div>
               <div class="unit-input">
                 <input type="number" v-model.number="hours" class="unit-value">
-                <span>时</span>
+                <span>{{ $t('tools.dateAdd.ui.hours') }}</span>
               </div>
               <div class="unit-input">
                 <input type="number" v-model.number="minutes" class="unit-value">
-                <span>分</span>
+                <span>{{ $t('tools.dateAdd.ui.minutes') }}</span>
               </div>
               <div class="unit-input">
                 <input type="number" v-model.number="seconds" class="unit-value">
-                <span>秒</span>
+                <span>{{ $t('tools.dateAdd.ui.seconds') }}</span>
               </div>
             </div>
           </div>
         </div>
 
         <div class="quick-presets">
-          <button @click="setQuickValue('1-day')" class="preset-btn">1天</button>
-          <button @click="setQuickValue('1-week')" class="preset-btn">1周</button>
-          <button @click="setQuickValue('1-month')" class="preset-btn">1个月</button>
-          <button @click="setQuickValue('1-year')" class="preset-btn">1年</button>
-          <button @click="setQuickValue('100-days')" class="preset-btn">100天</button>
-          <button @click="clearValues" class="preset-btn clear">清空</button>
+          <button @click="setQuickValue('1-day')" class="preset-btn">{{ $t('tools.dateAdd.ui.preset1day') }}</button>
+          <button @click="setQuickValue('1-week')" class="preset-btn">{{ $t('tools.dateAdd.ui.preset1week') }}</button>
+          <button @click="setQuickValue('1-month')" class="preset-btn">{{ $t('tools.dateAdd.ui.preset1month') }}</button>
+          <button @click="setQuickValue('1-year')" class="preset-btn">{{ $t('tools.dateAdd.ui.preset1year') }}</button>
+          <button @click="setQuickValue('100-days')" class="preset-btn">{{ $t('tools.dateAdd.ui.preset100days') }}</button>
+          <button @click="clearValues" class="preset-btn clear">{{ $t('tools.dateAdd.ui.clear') }}</button>
         </div>
       </div>
     </div>
 
     <!-- 计算结果 -->
     <div class="result-section" v-if="calculatedDate">
-      <h4><i class="fas fa-calendar-check"></i> 计算结果</h4>
+      <h4><i class="fas fa-calendar-check"></i> {{ $t('tools.dateAdd.ui.calculationResult') }}</h4>
       <div class="result-cards">
         <div class="result-card main">
           <div class="card-header">
             <i class="fas fa-calendar-alt"></i>
-            <span>结果日期</span>
+            <span>{{ $t('tools.dateAdd.ui.resultDate') }}</span>
           </div>
           <div class="result-datetime">{{ calculatedDate }}</div>
         </div>
@@ -82,7 +82,7 @@
         <div class="result-card">
           <div class="card-header">
             <i class="fas fa-clock"></i>
-            <span>时间差</span>
+            <span>{{ $t('tools.dateAdd.ui.timeDifference') }}</span>
           </div>
           <div class="time-difference">{{ timeDifferenceText }}</div>
         </div>
@@ -90,7 +90,7 @@
         <div class="result-card">
           <div class="card-header">
             <i class="fas fa-sun"></i>
-            <span>星期</span>
+            <span>{{ $t('tools.dateAdd.ui.weekday') }}</span>
           </div>
           <div class="weekday-info">{{ weekdayInfo }}</div>
         </div>
@@ -99,7 +99,7 @@
 
     <!-- 批量计算 -->
     <div class="batch-calc-section">
-      <h4><i class="fas fa-list"></i> 批量计算</h4>
+      <h4><i class="fas fa-list"></i> {{ $t('tools.dateAdd.ui.batchCalculation') }}</h4>
       <div class="batch-grid">
         <div v-for="(calc, index) in batchCalcs" :key="index" class="batch-item">
           <span class="batch-label">{{ calc.label }}</span>
@@ -163,7 +163,7 @@ export default {
       if (!this.calculatedDate) return ''
       
       const date = new Date(this.calculatedDate)
-      const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+      const weekdays = this.$t('tools.dateAdd.ui.weekdays') || ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
       return weekdays[date.getDay()]
     },
     
@@ -175,14 +175,14 @@ export default {
       
       // 常用的日期计算
       const calculations = [
-        { label: '明天', days: 1 },
-        { label: '下周', days: 7 },
-        { label: '下个月', months: 1 },
-        { label: '下季度', months: 3 },
-        { label: '明年', years: 1 },
-        { label: '昨天', days: -1 },
-        { label: '上周', days: -7 },
-        { label: '上个月', months: -1 }
+        { label: this.$t('tools.dateAdd.ui.tomorrow'), days: 1 },
+        { label: this.$t('tools.dateAdd.ui.nextWeek'), days: 7 },
+        { label: this.$t('tools.dateAdd.ui.nextMonth'), months: 1 },
+        { label: this.$t('tools.dateAdd.ui.nextQuarter'), months: 3 },
+        { label: this.$t('tools.dateAdd.ui.nextYear'), years: 1 },
+        { label: this.$t('tools.dateAdd.ui.yesterday'), days: -1 },
+        { label: this.$t('tools.dateAdd.ui.lastWeek'), days: -7 },
+        { label: this.$t('tools.dateAdd.ui.lastMonth'), months: -1 }
       ]
       
       calculations.forEach(calc => {

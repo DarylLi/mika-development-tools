@@ -1,20 +1,20 @@
 <template>
   <div class="time-diff-tool">
-    <h2>日期间隔计算</h2>
-    <p>计算两个日期之间的时间间隔，支持多种时间单位显示</p>
+    <h2>{{ $t('tools.timeDiff.ui.title') }}</h2>
+    <p>{{ $t('tools.timeDiff.ui.description') }}</p>
 
     <!-- 日期输入区域 -->
     <div class="input-section">
       <div class="date-inputs">
         <div class="date-group">
-          <label>开始日期</label>
+          <label>{{ $t('tools.timeDiff.ui.startDate') }}</label>
           <input 
             type="datetime-local" 
             v-model="startDate"
             @change="calculateDiff"
           >
           <button @click="setToNow('start')" class="now-btn">
-            <i class="fas fa-clock"></i> 现在
+            <i class="fas fa-clock"></i> {{ $t('tools.timeDiff.ui.now') }}
           </button>
         </div>
         
@@ -23,57 +23,57 @@
         </div>
         
         <div class="date-group">
-          <label>结束日期</label>
+          <label>{{ $t('tools.timeDiff.ui.endDate') }}</label>
           <input 
             type="datetime-local" 
             v-model="endDate"
             @change="calculateDiff"
           >
           <button @click="setToNow('end')" class="now-btn">
-            <i class="fas fa-clock"></i> 现在
+            <i class="fas fa-clock"></i> {{ $t('tools.timeDiff.ui.now') }}
           </button>
         </div>
       </div>
 
       <!-- 快速预设 -->
       <div class="quick-presets">
-        <button @click="setPreset('1hour')" class="preset-btn">1小时后</button>
-        <button @click="setPreset('1day')" class="preset-btn">1天后</button>
-        <button @click="setPreset('1week')" class="preset-btn">1周后</button>
-        <button @click="setPreset('1month')" class="preset-btn">1月后</button>
-        <button @click="setPreset('1year')" class="preset-btn">1年后</button>
+        <button @click="setPreset('1hour')" class="preset-btn">{{ $t('tools.timeDiff.ui.preset1Hour') }}</button>
+        <button @click="setPreset('1day')" class="preset-btn">{{ $t('tools.timeDiff.ui.preset1Day') }}</button>
+        <button @click="setPreset('1week')" class="preset-btn">{{ $t('tools.timeDiff.ui.preset1Week') }}</button>
+        <button @click="setPreset('1month')" class="preset-btn">{{ $t('tools.timeDiff.ui.preset1Month') }}</button>
+        <button @click="setPreset('1year')" class="preset-btn">{{ $t('tools.timeDiff.ui.preset1Year') }}</button>
       </div>
     </div>
 
     <!-- 结果显示区域 -->
     <div class="results-section" v-if="diffResult">
-      <h3>时间间隔结果</h3>
+      <h3>{{ $t('tools.timeDiff.ui.timeIntervalResult') }}</h3>
       
       <!-- 主要结果显示 -->
       <div class="main-result">
         <div class="time-display">
           <span class="time-number" v-if="diffResult.years">{{ diffResult.years }}</span>
-          <span class="time-unit" v-if="diffResult.years">年</span>
+          <span class="time-unit" v-if="diffResult.years">{{ $t('tools.timeDiff.ui.years') }}</span>
           
           <span class="time-number" v-if="diffResult.months">{{ diffResult.months }}</span>
-          <span class="time-unit" v-if="diffResult.months">个月</span>
+          <span class="time-unit" v-if="diffResult.months">{{ $t('tools.timeDiff.ui.months') }}</span>
           
           <span class="time-number" v-if="diffResult.days">{{ diffResult.days }}</span>
-          <span class="time-unit" v-if="diffResult.days">天</span>
+          <span class="time-unit" v-if="diffResult.days">{{ $t('tools.timeDiff.ui.days') }}</span>
           
           <span class="time-number" v-if="diffResult.hours">{{ diffResult.hours }}</span>
-          <span class="time-unit" v-if="diffResult.hours">小时</span>
+          <span class="time-unit" v-if="diffResult.hours">{{ $t('tools.timeDiff.ui.hours') }}</span>
           
           <span class="time-number" v-if="diffResult.minutes">{{ diffResult.minutes }}</span>
-          <span class="time-unit" v-if="diffResult.minutes">分钟</span>
+          <span class="time-unit" v-if="diffResult.minutes">{{ $t('tools.timeDiff.ui.minutes') }}</span>
           
           <span class="time-number" v-if="diffResult.seconds">{{ diffResult.seconds }}</span>
-          <span class="time-unit" v-if="diffResult.seconds">秒</span>
+          <span class="time-unit" v-if="diffResult.seconds">{{ $t('tools.timeDiff.ui.seconds') }}</span>
         </div>
         
         <div class="direction-indicator" :class="{ 'future': diffResult.future, 'past': !diffResult.future }">
           <i class="fas" :class="diffResult.future ? 'fa-arrow-up' : 'fa-arrow-down'"></i>
-          {{ diffResult.future ? '未来时间' : '过去时间' }}
+          {{ diffResult.future ? $t('tools.timeDiff.ui.futureTime') : $t('tools.timeDiff.ui.pastTime') }}
         </div>
       </div>
 
@@ -82,64 +82,64 @@
         <div class="stat-grid">
           <div class="stat-item">
             <div class="stat-value">{{ Math.abs(diffResult.totalDays).toLocaleString() }}</div>
-            <div class="stat-label">总天数</div>
+            <div class="stat-label">{{ $t('tools.timeDiff.ui.totalDays') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ Math.abs(diffResult.totalHours).toLocaleString() }}</div>
-            <div class="stat-label">总小时数</div>
+            <div class="stat-label">{{ $t('tools.timeDiff.ui.totalHours') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ Math.abs(diffResult.totalMinutes).toLocaleString() }}</div>
-            <div class="stat-label">总分钟数</div>
+            <div class="stat-label">{{ $t('tools.timeDiff.ui.totalMinutes') }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">{{ Math.abs(diffResult.totalSeconds).toLocaleString() }}</div>
-            <div class="stat-label">总秒数</div>
+            <div class="stat-label">{{ $t('tools.timeDiff.ui.totalSeconds') }}</div>
           </div>
         </div>
       </div>
 
       <!-- 工作日计算 -->
       <div class="workdays-section">
-        <h4>工作日计算</h4>
+        <h4>{{ $t('tools.timeDiff.ui.workdayCalculation') }}</h4>
         <div class="workdays-stats">
           <div class="workday-item">
-            <span class="workday-label">工作日：</span>
-            <span class="workday-value">{{ workdaysResult.workdays }} 天</span>
+            <span class="workday-label">{{ $t('tools.timeDiff.ui.workdays') }}：</span>
+            <span class="workday-value">{{ workdaysResult.workdays }} {{ $t('tools.timeDiff.ui.days') }}</span>
           </div>
           <div class="workday-item">
-            <span class="workday-label">周末：</span>
-            <span class="workday-value">{{ workdaysResult.weekends }} 天</span>
+            <span class="workday-label">{{ $t('tools.timeDiff.ui.weekends') }}：</span>
+            <span class="workday-value">{{ workdaysResult.weekends }} {{ $t('tools.timeDiff.ui.days') }}</span>
           </div>
           <div class="workday-item">
-            <span class="workday-label">工作周：</span>
-            <span class="workday-value">{{ workdaysResult.workweeks.toFixed(1) }} 周</span>
+            <span class="workday-label">{{ $t('tools.timeDiff.ui.workweeks') }}：</span>
+            <span class="workday-value">{{ workdaysResult.workweeks.toFixed(1) }} {{ $t('tools.timeDiff.ui.week') }}</span>
           </div>
         </div>
       </div>
 
       <!-- 人生统计 -->
       <div class="life-stats" v-if="Math.abs(diffResult.totalDays) > 30">
-        <h4>生命统计（基于平均值）</h4>
+        <h4>{{ $t('tools.timeDiff.ui.lifeStatistics') }}</h4>
         <div class="life-grid">
           <div class="life-item">
             <i class="fas fa-heartbeat"></i>
-            <span class="life-label">心跳次数</span>
+            <span class="life-label">{{ $t('tools.timeDiff.ui.heartbeats') }}</span>
             <span class="life-value">{{ lifeStats.heartbeats.toLocaleString() }}</span>
           </div>
           <div class="life-item">
             <i class="fas fa-lungs"></i>
-            <span class="life-label">呼吸次数</span>
+            <span class="life-label">{{ $t('tools.timeDiff.ui.breaths') }}</span>
             <span class="life-value">{{ lifeStats.breaths.toLocaleString() }}</span>
           </div>
           <div class="life-item">
             <i class="fas fa-bed"></i>
-            <span class="life-label">睡眠时间</span>
-            <span class="life-value">{{ lifeStats.sleepHours.toLocaleString() }} 小时</span>
+            <span class="life-label">{{ $t('tools.timeDiff.ui.sleepTime') }}</span>
+            <span class="life-value">{{ lifeStats.sleepHours.toLocaleString() }} {{ $t('tools.timeDiff.ui.hours') }}</span>
           </div>
           <div class="life-item">
             <i class="fas fa-utensils"></i>
-            <span class="life-label">用餐次数</span>
+            <span class="life-label">{{ $t('tools.timeDiff.ui.meals') }}</span>
             <span class="life-value">{{ lifeStats.meals.toLocaleString() }}</span>
           </div>
         </div>

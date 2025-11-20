@@ -1,8 +1,8 @@
 <template>
   <div class="image-resize-container">
     <div class="tool-header">
-      <h3>图片尺寸调整</h3>
-      <p>等比缩放或自定义尺寸，保持图片质量</p>
+      <h3>{{ $t('tools.imageResize.ui.title') }}</h3>
+      <p>{{ $t('tools.imageResize.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -23,8 +23,8 @@
         />
         <div class="upload-content">
           <div class="upload-icon">🖼️</div>
-          <p>点击选择或拖拽图片文件</p>
-          <small>支持 JPG、PNG、WebP、GIF 格式</small>
+          <p>{{ $t('tools.imageResize.ui.uploadText') }}</p>
+          <small>{{ $t('tools.imageResize.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
@@ -32,9 +32,9 @@
     <div class="editor-section" v-if="originalImage">
       <div class="image-preview-container">
         <div class="preview-panel">
-          <h4>原始图片</h4>
+          <h4>{{ $t('tools.imageResize.ui.originalImage') }}</h4>
           <div class="image-wrapper">
-            <img :src="originalImage.preview" alt="原图" />
+            <img :src="originalImage.preview" :alt="$t('tools.imageResize.ui.originalImageAlt')" />
             <div class="image-info">
               <p>{{ originalImage.width }} × {{ originalImage.height }}</p>
               <p>{{ formatFileSize(originalImage.size) }}</p>
@@ -43,9 +43,9 @@
         </div>
 
         <div class="preview-panel" v-if="resizedImage">
-          <h4>调整后</h4>
+          <h4>{{ $t('tools.imageResize.ui.resizedImage') }}</h4>
           <div class="image-wrapper">
-            <img :src="resizedImage.preview" alt="调整后" />
+            <img :src="resizedImage.preview" :alt="$t('tools.imageResize.ui.resizedImage')" />
             <div class="image-info">
               <p>{{ newWidth }} × {{ newHeight }}</p>
               <p>{{ formatFileSize(resizedImage.size) }}</p>
@@ -56,7 +56,7 @@
 
       <div class="controls-section">
         <div class="resize-methods">
-          <h4>调整方式</h4>
+          <h4>{{ $t('tools.imageResize.ui.resizeMethod') }}</h4>
           <div class="method-options">
             <label class="method-option">
               <input 
@@ -64,7 +64,7 @@
                 v-model="resizeMethod" 
                 value="percentage"
               />
-              <span>按百分比</span>
+              <span>{{ $t('tools.imageResize.ui.methodPercentage') }}</span>
             </label>
             <label class="method-option">
               <input 
@@ -72,7 +72,7 @@
                 v-model="resizeMethod" 
                 value="pixels"
               />
-              <span>按像素</span>
+              <span>{{ $t('tools.imageResize.ui.methodPixels') }}</span>
             </label>
             <label class="method-option">
               <input 
@@ -80,14 +80,14 @@
                 v-model="resizeMethod" 
                 value="preset"
               />
-              <span>预设尺寸</span>
+              <span>{{ $t('tools.imageResize.ui.methodPreset') }}</span>
             </label>
           </div>
         </div>
 
         <div class="resize-controls" v-if="resizeMethod === 'percentage'">
           <div class="control-group">
-            <label>缩放比例</label>
+            <label>{{ $t('tools.imageResize.ui.scaleLabel') }}</label>
             <div class="percentage-control">
               <input 
                 type="range" 
@@ -119,12 +119,12 @@
                 v-model="maintainRatio"
                 @change="updateFromPixels"
               />
-              <span>保持宽高比</span>
+              <span>{{ $t('tools.imageResize.ui.maintainRatio') }}</span>
             </label>
           </div>
           <div class="pixel-controls">
             <div class="pixel-input-group">
-              <label>宽度</label>
+              <label>{{ $t('tools.imageResize.ui.widthLabel') }}</label>
               <input 
                 type="number" 
                 v-model="newWidth" 
@@ -134,7 +134,7 @@
               />
             </div>
             <div class="pixel-input-group">
-              <label>高度</label>
+              <label>{{ $t('tools.imageResize.ui.heightLabel') }}</label>
               <input 
                 type="number" 
                 v-model="newHeight" 
@@ -150,7 +150,7 @@
           <div class="preset-grid">
             <button 
               v-for="preset in presetSizes"
-              :key="preset.name"
+              :key="preset.key"
               @click="applyPreset(preset)"
               class="preset-btn"
             >
@@ -162,7 +162,7 @@
 
         <div class="quality-section">
           <div class="control-group">
-            <label>输出质量</label>
+            <label>{{ $t('tools.imageResize.ui.outputQuality') }}</label>
             <div class="quality-control">
               <input 
                 type="range" 
@@ -179,28 +179,28 @@
 
         <div class="action-buttons">
           <button @click="processResize" class="resize-btn" :disabled="processing">
-            {{ processing ? '处理中...' : '应用调整' }}
+            {{ processing ? $t('tools.imageResize.ui.processing') : $t('tools.imageResize.ui.applyResize') }}
           </button>
           <button 
             @click="downloadImage" 
             class="download-btn"
             v-if="resizedImage"
           >
-            下载图片
+            {{ $t('tools.imageResize.ui.downloadImage') }}
           </button>
-          <button @click="reset" class="reset-btn">重置</button>
+          <button @click="reset" class="reset-btn">{{ $t('tools.imageResize.ui.reset') }}</button>
         </div>
       </div>
     </div>
 
     <div class="tips-section">
-      <h4>💡 使用提示</h4>
+      <h4>💡 {{ $t('tools.imageResize.ui.tipsTitle') }}</h4>
       <ul>
-        <li>保持宽高比可避免图片变形</li>
-        <li>放大图片可能会降低清晰度</li>
-        <li>缩小图片有助于减少文件大小</li>
-        <li>建议质量设置在 80-95% 之间</li>
-        <li>所有处理都在本地完成，不会上传到服务器</li>
+        <li>{{ $t('tools.imageResize.ui.tip1') }}</li>
+        <li>{{ $t('tools.imageResize.ui.tip2') }}</li>
+        <li>{{ $t('tools.imageResize.ui.tip3') }}</li>
+        <li>{{ $t('tools.imageResize.ui.tip4') }}</li>
+        <li>{{ $t('tools.imageResize.ui.tip5') }}</li>
       </ul>
     </div>
   </div>
@@ -220,25 +220,27 @@ export default {
       newHeight: 0,
       maintainRatio: true,
       quality: 0.9,
-      processing: false,
-      presetSizes: [
-        { name: '头像', width: 256, height: 256 },
-        { name: '缩略图', width: 150, height: 150 },
-        { name: 'Instagram', width: 1080, height: 1080 },
-        { name: 'Facebook封面', width: 1200, height: 630 },
-        { name: 'Twitter头图', width: 1500, height: 500 },
-        { name: '微信头像', width: 300, height: 300 },
-        { name: '4K', width: 3840, height: 2160 },
-        { name: '2K', width: 2560, height: 1440 },
-        { name: 'Full HD', width: 1920, height: 1080 },
-        { name: 'HD', width: 1280, height: 720 }
-      ]
+      processing: false
     }
   },
   computed: {
     aspectRatio() {
       if (!this.originalImage) return 1
       return this.originalImage.width / this.originalImage.height
+    },
+    presetSizes() {
+      return [
+        { key: 'avatar', name: this.$t('tools.imageResize.ui.presetAvatar'), width: 256, height: 256 },
+        { key: 'thumbnail', name: this.$t('tools.imageResize.ui.presetThumbnail'), width: 150, height: 150 },
+        { key: 'instagram', name: this.$t('tools.imageResize.ui.presetInstagram'), width: 1080, height: 1080 },
+        { key: 'facebookCover', name: this.$t('tools.imageResize.ui.presetFacebookCover'), width: 1200, height: 630 },
+        { key: 'twitterHeader', name: this.$t('tools.imageResize.ui.presetTwitterHeader'), width: 1500, height: 500 },
+        { key: 'wechatAvatar', name: this.$t('tools.imageResize.ui.presetWeChatAvatar'), width: 300, height: 300 },
+        { key: '4k', name: this.$t('tools.imageResize.ui.preset4K'), width: 3840, height: 2160 },
+        { key: '2k', name: this.$t('tools.imageResize.ui.preset2K'), width: 2560, height: 1440 },
+        { key: 'fullHD', name: this.$t('tools.imageResize.ui.presetFullHD'), width: 1920, height: 1080 },
+        { key: 'hd', name: this.$t('tools.imageResize.ui.presetHD'), width: 1280, height: 720 }
+      ]
     }
   },
   methods: {
@@ -342,8 +344,8 @@ export default {
         }
         
       } catch (error) {
-        console.error('处理失败:', error)
-        this.$message.success('图片处理失败')
+        console.error(this.$t('tools.imageResize.ui.processFailed'), error)
+        this.$message.success(this.$t('tools.imageResize.ui.imageProcessFailed'))
       } finally {
         this.processing = false
       }
@@ -513,13 +515,14 @@ export default {
 .method-option {
   display: flex;
   align-items: center;
-  gap: 8px;
   cursor: pointer;
   color: var(--text-primary);
 }
 
 .method-option input[type="radio"] {
   accent-color: var(--primary-color);
+  width: 25px;
+  margin: 0px;
 }
 
 .control-group {
@@ -539,71 +542,6 @@ export default {
   gap: 15px;
 }
 
-.percentage-control input[type="range"] {
-  flex: 1;
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  outline: none;
-  appearance: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.percentage-control input[type="range"]:hover {
-  height: 10px;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-}
-
-.percentage-control input[type="range"]:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-.percentage-control input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  background: var(--primary-color);
-  border: 3px solid var(--bg-primary);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 2;
-}
-
-.percentage-control input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.percentage-control input[type="range"]::-webkit-slider-track {
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  border: none;
-}
-
-/* Firefox样式 */
-.percentage-control input[type="range"]::-moz-range-track {
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  border: none;
-}
-
-.percentage-control input[type="range"]::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  background: var(--primary-color);
-  border: 3px solid var(--bg-primary);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
 
 .percentage-input {
   width: 80px;
@@ -686,71 +624,6 @@ input[type="checkbox"] {
   gap: 15px;
 }
 
-.quality-control input[type="range"] {
-  flex: 1;
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  outline: none;
-  appearance: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.quality-control input[type="range"]:hover {
-  height: 10px;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-}
-
-.quality-control input[type="range"]:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-.quality-control input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  background: var(--primary-color);
-  border: 3px solid var(--bg-primary);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 2;
-}
-
-.quality-control input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.quality-control input[type="range"]::-webkit-slider-track {
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  border: none;
-}
-
-/* Firefox样式 */
-.quality-control input[type="range"]::-moz-range-track {
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  border: none;
-}
-
-.quality-control input[type="range"]::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  background: var(--primary-color);
-  border: 3px solid var(--bg-primary);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
 
 .action-buttons {
   display: flex;
@@ -897,36 +770,6 @@ input[type="checkbox"] {
   border: none;
 }
 
-/* Firefox 样式 */
-.modern-slider::-moz-range-track {
-  height: 8px;
-  background: linear-gradient(90deg, #e2e8f0 0%, #cbd5e1 100%);
-  border-radius: 10px;
-  border: none;
-}
-
-.modern-slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 50%;
-  border: 3px solid white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.modern-slider::-moz-range-thumb:hover {
-  transform: scale(1.15);
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-}
-
-.modern-slider::-moz-range-thumb:active {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6), 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
 /* 深色主题适配 */
 :global(.dark-theme) .modern-slider {
   background: linear-gradient(90deg, #374151 0%, #4b5563 100%);
@@ -953,12 +796,4 @@ input[type="checkbox"] {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
-:global(.dark-theme) .modern-slider::-moz-range-thumb {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-  border-color: #1f2937;
-}
-
-:global(.dark-theme) .modern-slider::-moz-range-thumb:hover {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-}
 </style> 

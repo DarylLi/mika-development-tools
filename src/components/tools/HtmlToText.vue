@@ -1,29 +1,29 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-code"></i> HTML to Text</h2>
+    <h2><i class="fas fa-code"></i> {{ $t('tools.htmlToText.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.htmlToText.ui.loadExample') }}
       </button>
     </div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 450px;">
       <div style="display: flex; flex-direction: column;">
-        <h3>HTML 输入</h3>
+        <h3>{{ $t('tools.htmlToText.ui.htmlInput') }}</h3>
         <textarea 
           v-model="htmlInput" 
-          placeholder="请输入 HTML 代码..."
+          :placeholder="$t('tools.htmlToText.ui.htmlPlaceholder')"
           style="flex: 1; resize: none; font-family: 'Courier New', monospace;"
           @input="convertHtmlToText"
         ></textarea>
       </div>
       
       <div style="display: flex; flex-direction: column;">
-        <h3>纯文本输出</h3>
+        <h3>{{ $t('tools.htmlToText.ui.textOutput') }}</h3>
         <textarea 
           v-model="textOutput" 
-          placeholder="提取的纯文本将显示在这里..."
+          :placeholder="$t('tools.htmlToText.ui.textPlaceholder')"
           style="flex: 1; resize: none;"
           readonly
         ></textarea>
@@ -31,44 +31,44 @@
     </div>
     
     <div style="margin: 1rem 0;">
-      <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+      <label className="check-box-label" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
         <input type="checkbox" v-model="preserveLineBreaks" @change="convertHtmlToText">
-        保留换行符
+        {{ $t('tools.htmlToText.ui.preserveLineBreaks') }}
       </label>
-      <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+      <label  className="check-box-label"style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
         <input type="checkbox" v-model="preserveSpaces" @change="convertHtmlToText">
-        保留多个空格
+        {{ $t('tools.htmlToText.ui.preserveSpaces') }}
       </label>
-      <label style="display: flex; align-items: center; gap: 0.5rem;">
+      <label  className="check-box-label"style="display: flex; align-items: center; gap: 0.5rem;">
         <input type="checkbox" v-model="extractLinks" @change="convertHtmlToText">
-        提取链接地址
+        {{ $t('tools.htmlToText.ui.extractLinks') }}
       </label>
     </div>
     
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-      <button @click="copyText">复制纯文本</button>
-      <button @click="clearAll">清空</button>
-      <button @click="removeAllTags">移除所有标签</button>
-      <button @click="extractText">仅提取文本</button>
+      <button @click="copyText">{{ $t('tools.htmlToText.ui.copyText') }}</button>
+      <button @click="clearAll">{{ $t('tools.htmlToText.ui.clear') }}</button>
+      <button @click="removeAllTags">{{ $t('tools.htmlToText.ui.removeAllTags') }}</button>
+      <button @click="extractText">{{ $t('tools.htmlToText.ui.extractText') }}</button>
     </div>
     
     <div class="stats" style="margin-top: 1rem; padding: 0.5rem; background: var(--bg-surface); border-radius: 4px;">
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; text-align: center;">
         <div>
           <div style="font-weight: bold; color: var(--text-accent);">{{ htmlInput.length }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">HTML 字符数</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.htmlToText.ui.htmlChars') }}</div>
         </div>
         <div>
           <div style="font-weight: bold; color: var(--text-accent);">{{ textOutput.length }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">文本字符数</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.htmlToText.ui.textChars') }}</div>
         </div>
         <div>
           <div style="font-weight: bold; color: var(--text-accent);">{{ wordCount }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">单词数</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.htmlToText.ui.wordCount') }}</div>
         </div>
         <div>
           <div style="font-weight: bold; color: var(--text-accent);">{{ tagCount }}</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">HTML 标签数</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">{{ $t('tools.htmlToText.ui.tagCount') }}</div>
         </div>
       </div>
     </div>
@@ -76,7 +76,9 @@
 </template>
 
 <script>
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'HtmlToText',
@@ -84,7 +86,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const htmlInput = ref('')
     const textOutput = ref('')
     const preserveLineBreaks = ref(true)
@@ -232,7 +234,7 @@ export default {
     const copyText = () => {
       if (textOutput.value) {
         navigator.clipboard.writeText(textOutput.value)
-        instance.proxy.$message.success('纯文本已复制到剪贴板！')
+        messageService.success(t('tools.htmlToText.ui.copiedText'))
       }
     }
 

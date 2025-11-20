@@ -1,18 +1,18 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-code"></i> Base64 编码/解码</h2>
+    <h2><i class="fas fa-code"></i> {{ $t('tools.base64Converter.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.base64Converter.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="base64Input" placeholder="输入要编码/解码的文本..."></textarea>
+    <textarea v-model="base64Input" :placeholder="$t('tools.base64Converter.ui.placeholder')"></textarea>
     
     <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-      <button @click="encode">编码</button>
-      <button @click="decode">解码</button>
+      <button @click="encode">{{ $t('tools.base64Converter.ui.encode') }}</button>
+      <button @click="decode">{{ $t('tools.base64Converter.ui.decode') }}</button>
     </div>
     
     <div class="result-display">{{ result }}</div>
@@ -21,6 +21,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Base64Converter',
@@ -28,6 +29,7 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const base64Input = ref('')
     const result = ref('')
 
@@ -43,7 +45,7 @@ export default {
       try {
         result.value = btoa(unescape(encodeURIComponent(base64Input.value)))
       } catch (error) {
-        result.value = '编码失败: ' + error.message
+        result.value = t('tools.base64Converter.ui.encodeFailed') + error.message
       }
     }
 
@@ -51,7 +53,7 @@ export default {
       try {
         result.value = decodeURIComponent(escape(atob(base64Input.value)))
       } catch (error) {
-        result.value = '解码失败: ' + error.message
+        result.value = t('tools.base64Converter.ui.decodeFailed') + error.message
       }
     }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="gradient-maker-container">
     <div class="tool-header">
-      <h2>🌈 Gradient Maker</h2>
-      <p>CSS 渐变生成器</p>
+      <h2>🌈 {{ $t('tools.gradientMaker.ui.title') }}</h2>
+      <p>{{ $t('tools.gradientMaker.ui.description') }}</p>
     </div>
 
     <div class="gradient-preview">
@@ -14,22 +14,22 @@
           class="css-textarea"
           @click="copyCSS"
         ></textarea>
-        <button @click="copyCSS" class="copy-btn">📋 复制CSS</button>
+        <button @click="copyCSS" class="copy-btn">📋 {{ $t('tools.gradientMaker.ui.copyCSS') }}</button>
       </div>
     </div>
 
     <div class="gradient-controls">
       <div class="gradient-type">
-        <label>渐变类型</label>
+        <label>{{ $t('tools.gradientMaker.ui.gradientTypeLabel') }}</label>
         <select v-model="gradientType" @change="updateGradient" class="type-select">
-          <option value="linear">线性渐变</option>
-          <option value="radial">径向渐变</option>
-          <option value="conic">圆锥渐变</option>
+          <option value="linear">{{ $t('tools.gradientMaker.ui.linear') }}</option>
+          <option value="radial">{{ $t('tools.gradientMaker.ui.radial') }}</option>
+          <option value="conic">{{ $t('tools.gradientMaker.ui.conic') }}</option>
         </select>
       </div>
 
       <div v-if="gradientType === 'linear'" class="direction-control">
-        <label>方向 ({{ direction }}°)</label>
+        <label>{{ $t('tools.gradientMaker.ui.directionLabel') }} ({{ direction }}°)</label>
         <input 
           type="range" 
           class="modern-slider direction-slider"
@@ -52,20 +52,20 @@
 
       <div v-if="gradientType === 'radial'" class="radial-controls">
         <div class="shape-control">
-          <label>形状</label>
+          <label>{{ $t('tools.gradientMaker.ui.shapeLabel') }}</label>
           <select v-model="radialShape" @change="updateGradient" class="shape-select">
-            <option value="circle">圆形</option>
-            <option value="ellipse">椭圆</option>
+            <option value="circle">{{ $t('tools.gradientMaker.ui.circle') }}</option>
+            <option value="ellipse">{{ $t('tools.gradientMaker.ui.ellipse') }}</option>
           </select>
         </div>
         <div class="position-control">
-          <label>位置</label>
+          <label>{{ $t('tools.gradientMaker.ui.positionLabel') }}</label>
           <select v-model="radialPosition" @change="updateGradient" class="position-select">
-            <option value="center">中心</option>
-            <option value="top left">左上</option>
-            <option value="top right">右上</option>
-            <option value="bottom left">左下</option>
-            <option value="bottom right">右下</option>
+            <option value="center">{{ $t('tools.gradientMaker.ui.center') }}</option>
+            <option value="top left">{{ $t('tools.gradientMaker.ui.topLeft') }}</option>
+            <option value="top right">{{ $t('tools.gradientMaker.ui.topRight') }}</option>
+            <option value="bottom left">{{ $t('tools.gradientMaker.ui.bottomLeft') }}</option>
+            <option value="bottom right">{{ $t('tools.gradientMaker.ui.bottomRight') }}</option>
           </select>
         </div>
       </div>
@@ -73,8 +73,8 @@
 
     <div class="color-stops">
       <div class="stops-header">
-        <h3>颜色节点</h3>
-        <button @click="addColorStop" class="add-stop-btn">+ 添加颜色</button>
+        <h3>{{ $t('tools.gradientMaker.ui.colorStops') }}</h3>
+        <button @click="addColorStop" class="add-stop-btn">+ {{ $t('tools.gradientMaker.ui.addColor') }}</button>
       </div>
       
       <div class="stops-list">
@@ -110,7 +110,7 @@
     </div>
 
     <div class="gradient-presets">
-      <h3>预设渐变</h3>
+      <h3>{{ $t('tools.gradientMaker.ui.gradientPresets') }}</h3>
       <div class="presets-grid">
         <div 
           v-for="preset in gradientPresets" 
@@ -128,10 +128,12 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'GradientMaker',
   setup() {
+    const { t } = useI18n()
     const gradientType = ref('linear')
     const direction = ref(90)
     const radialShape = ref('circle')
@@ -141,21 +143,21 @@ export default {
       { color: '#4ECDC4', position: 100 }
     ])
 
-    const directionPresets = [
-      { name: '上', angle: 0 },
-      { name: '右', angle: 90 },
-      { name: '下', angle: 180 },
-      { name: '左', angle: 270 }
-    ]
+    const directionPresets = computed(() => [
+      { name: t('tools.gradientMaker.ui.directionUp'), angle: 0 },
+      { name: t('tools.gradientMaker.ui.directionRight'), angle: 90 },
+      { name: t('tools.gradientMaker.ui.directionDown'), angle: 180 },
+      { name: t('tools.gradientMaker.ui.directionLeft'), angle: 270 }
+    ])
 
-    const gradientPresets = [
-      { name: '日落', css: 'linear-gradient(45deg, #FF6B6B, #FFE66D, #FF6B6B)' },
-      { name: '海洋', css: 'linear-gradient(135deg, #667eea, #764ba2)' },
-      { name: '森林', css: 'linear-gradient(to right, #56ab2f, #a8e6cf)' },
-      { name: '夜空', css: 'linear-gradient(to bottom, #2c3e50, #34495e)' },
-      { name: '彩虹', css: 'linear-gradient(45deg, #f093fb, #f5576c, #4facfe, #43e97b)' },
-      { name: '金属', css: 'linear-gradient(135deg, #667eea, #764ba2, #f093fb)' }
-    ]
+    const gradientPresets = computed(() => [
+      { name: t('tools.gradientMaker.ui.presetSunset'), css: 'linear-gradient(45deg, #FF6B6B, #FFE66D, #FF6B6B)' },
+      { name: t('tools.gradientMaker.ui.presetOcean'), css: 'linear-gradient(135deg, #667eea, #764ba2)' },
+      { name: t('tools.gradientMaker.ui.presetForest'), css: 'linear-gradient(to right, #56ab2f, #a8e6cf)' },
+      { name: t('tools.gradientMaker.ui.presetNight'), css: 'linear-gradient(to bottom, #2c3e50, #34495e)' },
+      { name: t('tools.gradientMaker.ui.presetRainbow'), css: 'linear-gradient(45deg, #f093fb, #f5576c, #4facfe, #43e97b)' },
+      { name: t('tools.gradientMaker.ui.presetMetal'), css: 'linear-gradient(135deg, #667eea, #764ba2, #f093fb)' }
+    ])
 
     const gradientCSS = computed(() => {
       const stops = colorStops.value
@@ -214,9 +216,9 @@ export default {
     const copyCSS = async () => {
       try {
         await navigator.clipboard.writeText(gradientCSS.value)
-        console.log('CSS已复制')
+        console.log(t('tools.gradientMaker.ui.cssCopied'))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.gradientMaker.ui.copyFailed'), err)
       }
     }
 
@@ -438,15 +440,19 @@ export default {
 }
 
 .remove-stop {
-  width: 30px;
-  height: 30px;
-  background: #EF4444;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
+    width: 20px;
+    height: 20px;
+    background: #EF4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
 }
 
 .remove-stop:disabled {

@@ -1,10 +1,19 @@
 // ===== 导入Sass模块 =====
 @use "sass:map";
+
 @font-face {
-    font-family: "mika_xi";
-    src: url(https://all.franxxdaryl.site/assets/mika_xi.ttf);
+  font-family: mika_xi;
+  src: url(https://all.franxxdaryl.site/assets/mika_xi.ttf)
 }
+
 // ===== SCSS 变量定义 =====
+body {
+  font-family: mika_xi,Segoe UI,Tahoma,Geneva,Verdana,sans-serif!important;
+  background: linear-gradient(135deg,#fff,#f8fafc,#e2e8f0);
+  color: #1e293b;
+  min-height: 100vh;
+  line-height: 1.6
+}
 
 // 颜色变量 - 浅色主题
 $light-theme: (
@@ -190,13 +199,10 @@ $current-theme: $light-theme !default;
 }
 
 body {
-  font-family: 'mika_xi','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   @include theme-styles($light-theme);
   min-height: 100vh;
   line-height: 1.6;
-  span,div{
-    font-family: 'mika_xi';
-  }
 }
 
 // ===== 主容器 =====
@@ -268,8 +274,6 @@ main {
   margin-bottom: 2rem;
   text-shadow: theme(text-shadow);
   font-weight: 600;
-  padding: 24px 0;
-  border-bottom: 1px solid #dedede7d;
 }
 
 // ===== 工具网格布局 =====
@@ -385,40 +389,29 @@ button {
 }
 
 // ===== 滑块 =====
-input[type="range"] {
-  width: 100%;
-  height: 10px;
-  background: linear-gradient(
-    to right,
-    #43e5f7 0%,
-    #43e5f7 var(--slider-value, 50%),
-    #9a905d var(--slider-value, 50%),
-    #9a905d 100%
-  );
-  border-radius: 5px;
-  outline: none;
-  appearance: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 1rem;
-  position: relative;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+
+
+input[type=range]::-webkit-slider-thumb {
+  border-color: rgb(255,53,127);
 }
 
-input[type="range"]:hover {
-  height: 12px;
-  box-shadow: 
-    inset 0 1px 3px rgba(0,0,0,0.2),
-    0 2px 8px rgba(67, 229, 247, 0.4);
-  transform: translateY(-1px);
+input[type=range]::-moz-range-thumb {
+  border-color: rgb(59,173,227);
 }
 
 input[type="range"]:focus {
-  box-shadow: 
-    inset 0 1px 3px rgba(0,0,0,0.2),
-    0 0 0 3px rgba(67, 229, 247, 0.3);
+  box-shadow: none!important;
 }
-
+.check-box-label{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  input{
+    width: 20px;
+    padding: 0px;
+    margin: 0px;
+  }
+}
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 24px;
@@ -765,7 +758,7 @@ footer {
 
 // ===== 分类概览 =====
 .category-overview {
-  padding: 0rem 1rem;
+  padding: 2rem 1rem;
   max-width: 1200px;
   margin: 0 auto;
   
@@ -1318,3 +1311,185 @@ footer {
   }
 }
 
+.container {
+  position: absolute;
+  margin: auto;
+  display: block;
+  width: 484px;
+  height: 484px;
+  margin-top: 10%;
+  left: -260px;
+  top: -201px;
+}
+.dark-theme{
+  .container{
+    display: none;
+  }
+}
+.container::after {
+    content: "";
+    position: absolute;
+    mix-blend-mode: color-dodge;
+    width: 450px;
+    height: 150px;
+    top: 60px;
+    left: -700px;
+    
+    animation: window-2 25000ms linear 0s 1 normal;
+}
+@keyframes window-2 {
+    0% {
+        background-color: rgba(255,255,255, 0.2);
+        top: 40%;
+        left: -500px;
+    }
+    100% {
+        background-color: rgba(255,255,255, 0.2);
+        top: 40%;
+        left: -200px;
+    }
+}
+.container::before {
+    content: "";
+    position: absolute;
+    mix-blend-mode: color dodge;
+    width: 450px;
+    height: 350px;
+    top: -260px;
+    left: -700px;
+    
+    animation: window-1 25000ms linear 0s 1 normal;   
+}
+@keyframes window-1 {
+    0% {
+        background-color: rgba(255,255,255, 0.2);
+        top: -180px;
+        left: -500px;
+    }
+    100% {
+        background-color: rgba(255,255,255, 0.2);
+        top: -180px;
+        left: -200px;
+    }
+}
+
+
+.clockbase {
+    width: 300px;
+    height: 300px;
+    border-radius: 100%;
+    border: solid rgb(216,236,223) 25px;
+    background-color: rgb(252, 255, 243);
+    position: relative;
+    top: 24px;
+    left: 18px;
+    
+}
+.clockbase::after {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50% 50%;
+    border: solid rgb(239,247,212) 15px;
+    top: -11%;
+    left: -11%;
+}
+.clockbase-design {
+    position: absolute;
+    width: 245px;
+    height: 245px;
+    border-radius: 50% 50%;
+    border: dotted rgb(216,236,223) 4.6px;
+    top: 51px;
+    left: 45px;
+    z-index: 2px;
+    transform: rotate(18.8deg)
+}
+
+.tip {
+    width: 5px;
+    height: 252px;
+    position: absolute;
+    top: 49px;
+    left: 164.5px;
+    border-top: solid rgb(216,236,223) 20px;
+    border-bottom: solid rgb(216,236,223) 20px;
+}
+.tip:after {
+    content: "";
+    width: 215px;
+    height: 5px;
+    position: absolute;
+    top: 103px;
+    left: -125px;
+    border-left: solid rgb(216,236,223) 20px;
+    border-right: solid rgb(216,236,223) 20px;
+}
+
+.hours {
+    position: absolute;
+    width: 8px;
+    height: 50px;
+    background-color: rgb(169,211,247);
+    top: 123.5px;
+    left: 162px;
+    transform-origin: center bottom
+}
+.minutes {
+    position: absolute;
+    width: 5px;
+    height: 80px;
+    background-color: rgb(169,211,247);
+    top: 95px;
+    left: 164.2px;
+    transform-origin: center bottom
+}
+.seconds {
+    position: absolute;
+    width: 3px;
+    height: 110px;
+    background-color: rgb(169,211,247);
+    top: 64px;
+    left: 164.5px;
+    transform-origin: center bottom
+}
+.center {
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    background-color: rgb(169,211,247);
+    position: absolute;
+    top: 168px;
+    left: 160px;
+}
+.dimension {
+    width: 300px;
+    height: 300px;
+    border-radius: 100%;
+    border: solid rgb(216,236,223) 25px;
+    background-color: rgb(252, 255, 243);
+    top: 40px;
+    left: 40px;
+    position: absolute;
+    z-index: -1;
+}
+.drop-shadow {
+     width: 300px;
+    height: 300px;
+    border-radius: 100%;
+    border: solid rgba(169,211,247, .9) 25px;
+    background-color: rgb(169,211,247);
+    top: 60px;
+    left: 60px;
+    position: absolute;
+    z-index: -2;
+}
+.lighing {
+    position: absolute;
+    width: 200px;
+    height: 300px;
+    background-color: rgb(239,247,212);
+    top: 20px;
+    z-index: -2;
+}

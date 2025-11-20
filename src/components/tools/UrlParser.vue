@@ -2,32 +2,32 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">🔗</div>
-      <h2>URL 解析工具</h2>
-      <p>解析URL的各个组成部分，包括协议、域名、路径、参数等</p>
+      <h2>{{ $t('tools.urlParser.ui.title') }}</h2>
+      <p>{{ $t('tools.urlParser.ui.description') }}</p>
       
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.urlParser.ui.quickStart') }}</span>
         <button @click="loadExample('basic')" class="example-btn">
-          <i class="fas fa-link"></i> 基础URL
+          <i class="fas fa-link"></i> {{ $t('tools.urlParser.ui.basicUrl') }}
         </button>
         <button @click="loadExample('complex')" class="example-btn">
-          <i class="fas fa-cogs"></i> 复杂URL
+          <i class="fas fa-cogs"></i> {{ $t('tools.urlParser.ui.complexUrl') }}
         </button>
         <button @click="loadExample('api')" class="example-btn">
-          <i class="fas fa-cloud"></i> API地址
+          <i class="fas fa-cloud"></i> {{ $t('tools.urlParser.ui.apiUrl') }}
         </button>
       </div>
     </div>
 
     <div class="input-card">
       <div class="card-header">
-        <h3><i class="fas fa-edit"></i> URL 输入</h3>
+        <h3><i class="fas fa-edit"></i> {{ $t('tools.urlParser.ui.urlInput') }}</h3>
         <div class="input-actions">
           <button @click="pasteFromClipboard" class="action-btn">
-            <i class="fas fa-paste"></i> 从剪贴板粘贴
+            <i class="fas fa-paste"></i> {{ $t('tools.urlParser.ui.pasteFromClipboard') }}
           </button>
           <button @click="clearInput" class="action-btn">
-            <i class="fas fa-trash"></i> 清空
+            <i class="fas fa-trash"></i> {{ $t('tools.urlParser.ui.clear') }}
           </button>
         </div>
       </div>
@@ -36,7 +36,7 @@
         <input
           v-model="urlInput"
           type="text"
-          placeholder="请输入要解析的URL地址..."
+          :placeholder="$t('tools.urlParser.ui.urlPlaceholder')"
           class="url-input"
           @input="parseUrl"
           @paste="handlePaste"
@@ -48,7 +48,7 @@
             {{ urlStatus }}
           </div>
           <div v-if="urlInput.length > 0" class="url-length">
-            长度: {{ urlInput.length }} 字符
+            {{ $t('tools.urlParser.ui.length') }} {{ urlInput.length }} {{ $t('tools.urlParser.ui.characters') }}
           </div>
         </div>
       </div>
@@ -56,13 +56,13 @@
 
     <div v-if="parsedUrl" class="analysis-card">
       <div class="card-header">
-        <h3><i class="fas fa-search"></i> URL 解析结果</h3>
+        <h3><i class="fas fa-search"></i> {{ $t('tools.urlParser.ui.urlParseResult') }}</h3>
         <div class="analysis-actions">
           <button @click="copyAnalysis" class="action-btn">
-            <i class="fas fa-copy"></i> 复制结果
+            <i class="fas fa-copy"></i> {{ $t('tools.urlParser.ui.copyResult') }}
           </button>
           <button @click="exportJson" class="action-btn">
-            <i class="fas fa-download"></i> 导出JSON
+            <i class="fas fa-download"></i> {{ $t('tools.urlParser.ui.exportJson') }}
           </button>
         </div>
       </div>
@@ -70,30 +70,30 @@
       <div class="analysis-sections">
         <!-- 基本信息 -->
         <div class="analysis-section">
-          <h4><i class="fas fa-info-circle"></i> 基本信息</h4>
+          <h4><i class="fas fa-info-circle"></i> {{ $t('tools.urlParser.ui.basicInfo') }}</h4>
           <div class="info-grid">
             <div class="info-item">
-              <label>完整URL:</label>
+              <label>{{ $t('tools.urlParser.ui.fullUrl') }}</label>
               <span class="value selectable">{{ parsedUrl.href }}</span>
             </div>
             <div class="info-item">
-              <label>协议:</label>
+              <label>{{ $t('tools.urlParser.ui.protocol') }}</label>
               <span class="value protocol">{{ parsedUrl.protocol }}</span>
             </div>
             <div class="info-item">
-              <label>主机:</label>
+              <label>{{ $t('tools.urlParser.ui.host') }}</label>
               <span class="value host">{{ parsedUrl.host }}</span>
             </div>
             <div class="info-item">
-              <label>域名:</label>
+              <label>{{ $t('tools.urlParser.ui.domain') }}</label>
               <span class="value hostname">{{ parsedUrl.hostname }}</span>
             </div>
             <div class="info-item" v-if="parsedUrl.port">
-              <label>端口:</label>
+              <label>{{ $t('tools.urlParser.ui.port') }}</label>
               <span class="value port">{{ parsedUrl.port }}</span>
             </div>
             <div class="info-item">
-              <label>路径:</label>
+              <label>{{ $t('tools.urlParser.ui.path') }}</label>
               <span class="value path">{{ parsedUrl.pathname }}</span>
             </div>
           </div>
@@ -101,18 +101,18 @@
 
         <!-- 查询参数 -->
         <div class="analysis-section" v-if="queryParams.length > 0">
-          <h4><i class="fas fa-list"></i> 查询参数</h4>
+          <h4><i class="fas fa-list"></i> {{ $t('tools.urlParser.ui.queryParams') }}</h4>
           <div class="params-table">
             <div class="table-header">
-              <span>参数名</span>
-              <span>参数值</span>
-              <span>操作</span>
+              <span>{{ $t('tools.urlParser.ui.paramName') }}</span>
+              <span>{{ $t('tools.urlParser.ui.paramValue') }}</span>
+              <span>{{ $t('tools.urlParser.ui.operation') }}</span>
             </div>
             <div v-for="param in queryParams" :key="param.key" class="param-row">
               <span class="param-key">{{ param.key }}</span>
               <span class="param-value">{{ param.value }}</span>
               <div class="param-actions">
-                <button @click="copyParam(param)" class="mini-btn" title="复制">
+                <button @click="copyParam(param)" class="mini-btn" :title="$t('tools.urlParser.ui.copy')">
                   <i class="fas fa-copy"></i>
                 </button>
               </div>
@@ -122,7 +122,7 @@
 
         <!-- 路径分析 -->
         <div class="analysis-section" v-if="pathSegments.length > 0">
-          <h4><i class="fas fa-folder-tree"></i> 路径分析</h4>
+          <h4><i class="fas fa-folder-tree"></i> {{ $t('tools.urlParser.ui.pathAnalysis') }}</h4>
           <div class="path-breadcrumb">
             <span v-for="(segment, index) in pathSegments" :key="index" class="breadcrumb-item">
               <span class="segment">{{ segment }}</span>
@@ -133,10 +133,10 @@
 
         <!-- 锚点和哈希 -->
         <div class="analysis-section" v-if="parsedUrl.hash">
-          <h4><i class="fas fa-hashtag"></i> 锚点/哈希</h4>
+          <h4><i class="fas fa-hashtag"></i> {{ $t('tools.urlParser.ui.hash') }}</h4>
           <div class="hash-info">
             <span class="hash-value">{{ parsedUrl.hash }}</span>
-            <button @click="copyHash" class="mini-btn" title="复制锚点">
+            <button @click="copyHash" class="mini-btn" :title="$t('tools.urlParser.ui.copy')">
               <i class="fas fa-copy"></i>
             </button>
           </div>
@@ -144,22 +144,22 @@
 
         <!-- 域名信息 -->
         <div class="analysis-section" v-if="domainInfo">
-          <h4><i class="fas fa-globe"></i> 域名信息</h4>
+          <h4><i class="fas fa-globe"></i> {{ $t('tools.urlParser.ui.domainInfo') }}</h4>
           <div class="domain-grid">
             <div class="domain-item">
-              <label>顶级域名:</label>
+              <label>{{ $t('tools.urlParser.ui.topLevelDomain') }}</label>
               <span class="value">{{ domainInfo.tld }}</span>
             </div>
             <div class="domain-item">
-              <label>二级域名:</label>
+              <label>{{ $t('tools.urlParser.ui.secondLevelDomain') }}</label>
               <span class="value">{{ domainInfo.domain }}</span>
             </div>
             <div class="domain-item" v-if="domainInfo.subdomain">
-              <label>子域名:</label>
+              <label>{{ $t('tools.urlParser.ui.subdomain') }}</label>
               <span class="value">{{ domainInfo.subdomain }}</span>
             </div>
             <div class="domain-item">
-              <label>域名类型:</label>
+              <label>{{ $t('tools.urlParser.ui.domainType') }}</label>
               <span class="value">{{ domainInfo.type }}</span>
             </div>
           </div>
@@ -167,19 +167,19 @@
 
         <!-- 安全性分析 -->
         <div class="analysis-section">
-          <h4><i class="fas fa-shield-alt"></i> 安全性分析</h4>
+          <h4><i class="fas fa-shield-alt"></i> {{ $t('tools.urlParser.ui.securityAnalysis') }}</h4>
           <div class="security-checks">
             <div class="security-item" :class="{ safe: parsedUrl.protocol === 'https:', unsafe: parsedUrl.protocol === 'http:' }">
               <i :class="parsedUrl.protocol === 'https:' ? 'fas fa-lock' : 'fas fa-unlock'"></i>
-              <span>{{ parsedUrl.protocol === 'https:' ? 'HTTPS 安全连接' : 'HTTP 非安全连接' }}</span>
+              <span>{{ parsedUrl.protocol === 'https:' ? $t('tools.urlParser.ui.httpsSecure') : $t('tools.urlParser.ui.httpInsecure') }}</span>
             </div>
             <div class="security-item" :class="{ safe: !hasSuspiciousChars, unsafe: hasSuspiciousChars }">
               <i :class="hasSuspiciousChars ? 'fas fa-exclamation-triangle' : 'fas fa-check'"></i>
-              <span>{{ hasSuspiciousChars ? '包含可疑字符' : '字符安全' }}</span>
+              <span>{{ hasSuspiciousChars ? $t('tools.urlParser.ui.suspiciousChars') : $t('tools.urlParser.ui.charsSafe') }}</span>
             </div>
             <div class="security-item" :class="{ safe: !isIpAddress, unsafe: isIpAddress }">
               <i :class="isIpAddress ? 'fas fa-exclamation-triangle' : 'fas fa-check'"></i>
-              <span>{{ isIpAddress ? '使用IP地址' : '使用域名' }}</span>
+              <span>{{ isIpAddress ? $t('tools.urlParser.ui.usingIpAddress') : $t('tools.urlParser.ui.usingDomain') }}</span>
             </div>
           </div>
         </div>
@@ -188,17 +188,17 @@
 
     <div class="tools-card">
       <div class="card-header">
-        <h3><i class="fas fa-tools"></i> URL 工具</h3>
+        <h3><i class="fas fa-tools"></i> {{ $t('tools.urlParser.ui.urlTools') }}</h3>
       </div>
       
       <div class="tools-grid">
         <div class="tool-item">
-          <h5>URL编码/解码</h5>
+          <h5>{{ $t('tools.urlParser.ui.urlEncodeDecode') }}</h5>
           <div class="encode-section">
-            <input v-model="encodeInput" type="text" placeholder="输入要编码的文本" class="tool-input" />
+            <input v-model="encodeInput" type="text" :placeholder="$t('tools.urlParser.ui.encodeInputPlaceholder')" class="tool-input" />
             <div class="tool-buttons">
-              <button @click="encodeUrl" class="tool-btn">编码</button>
-              <button @click="decodeUrl" class="tool-btn">解码</button>
+              <button @click="encodeUrl" class="tool-btn">{{ $t('tools.urlParser.ui.encode') }}</button>
+              <button @click="decodeUrl" class="tool-btn">{{ $t('tools.urlParser.ui.decode') }}</button>
             </div>
             <div v-if="encodeResult" class="tool-result">
               <span>{{ encodeResult }}</span>
@@ -210,11 +210,11 @@
         </div>
 
         <div class="tool-item">
-          <h5>URL构建器</h5>
+          <h5>{{ $t('tools.urlParser.ui.urlBuilder') }}</h5>
           <div class="builder-section">
-            <input v-model="baseUrl" type="text" placeholder="基础URL" class="tool-input" />
-            <input v-model="newParams" type="text" placeholder="参数 (key=value&key2=value2)" class="tool-input" />
-            <button @click="buildUrl" class="tool-btn">构建URL</button>
+            <input v-model="baseUrl" type="text" :placeholder="$t('tools.urlParser.ui.baseUrlPlaceholder')" class="tool-input" />
+            <input v-model="newParams" type="text" :placeholder="$t('tools.urlParser.ui.paramsPlaceholder')" class="tool-input" />
+            <button @click="buildUrl" class="tool-btn">{{ $t('tools.urlParser.ui.buildUrl') }}</button>
             <div v-if="builtUrl" class="tool-result">
               <span>{{ builtUrl }}</span>
               <button @click="copyBuiltUrl" class="mini-btn">
@@ -235,18 +235,18 @@
     </div>
 
     <div class="help-card">
-      <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.urlParser.ui.usageInstructions') }}</h4>
       <div class="help-content">
         <div class="help-section">
-          <h5>功能特点：</h5>
+          <h5>{{ $t('tools.urlParser.ui.features') }}</h5>
           <ul>
-            <li>完整URL结构解析</li>
-            <li>查询参数提取和分析</li>
-            <li>路径分段和层次显示</li>
-            <li>域名结构分析</li>
-            <li>安全性检查</li>
-            <li>URL编码/解码工具</li>
-            <li>URL构建器</li>
+            <li>{{ $t('tools.urlParser.ui.feature1') }}</li>
+            <li>{{ $t('tools.urlParser.ui.feature2') }}</li>
+            <li>{{ $t('tools.urlParser.ui.feature3') }}</li>
+            <li>{{ $t('tools.urlParser.ui.feature4') }}</li>
+            <li>{{ $t('tools.urlParser.ui.feature5') }}</li>
+            <li>{{ $t('tools.urlParser.ui.feature6') }}</li>
+            <li>{{ $t('tools.urlParser.ui.feature7') }}</li>
           </ul>
         </div>
         
@@ -267,10 +267,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'UrlParser',
   setup() {
+    const { t } = useI18n()
     const urlInput = ref('')
     const parsedUrl = ref(null)
     const encodeInput = ref('')
@@ -292,8 +294,8 @@ export default {
     })
 
     const urlStatus = computed(() => {
-      if (!urlInput.value.trim()) return '等待输入URL'
-      return isValidUrl.value ? 'URL格式正确' : 'URL格式错误'
+      if (!urlInput.value.trim()) return t('tools.urlParser.ui.waitingInput')
+      return isValidUrl.value ? t('tools.urlParser.ui.validUrl') : t('tools.urlParser.ui.invalidUrl')
     })
 
     const queryParams = computed(() => {
@@ -407,10 +409,10 @@ export default {
         const text = await navigator.clipboard.readText()
         urlInput.value = text
         parseUrl()
-        success.value = '已从剪贴板粘贴URL'
-        setTimeout(() => success.value = '', 3000)
+      success.value = t('tools.urlParser.ui.pastedFromClipboard')
+      setTimeout(() => success.value = '', 3000)
       } catch (err) {
-        error.value = '无法访问剪贴板'
+        error.value = t('tools.urlParser.ui.cannotAccessClipboard')
         setTimeout(() => error.value = '', 3000)
       }
     }
@@ -442,7 +444,7 @@ export default {
       }
       
       navigator.clipboard.writeText(JSON.stringify(analysis, null, 2))
-      success.value = '解析结果已复制到剪贴板'
+      success.value = t('tools.urlParser.ui.resultCopied')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -471,19 +473,19 @@ export default {
       a.click()
       URL.revokeObjectURL(url)
       
-      success.value = 'JSON文件已下载'
+      success.value = t('tools.urlParser.ui.jsonExported')
       setTimeout(() => success.value = '', 3000)
     }
 
     const copyParam = (param) => {
       navigator.clipboard.writeText(`${param.key}=${param.value}`)
-      success.value = `参数 ${param.key} 已复制`
+      success.value = t('tools.urlParser.ui.paramCopied', { key: param.key })
       setTimeout(() => success.value = '', 3000)
     }
 
     const copyHash = () => {
       navigator.clipboard.writeText(parsedUrl.value.hash)
-      success.value = '锚点已复制'
+      success.value = t('tools.urlParser.ui.hashCopied')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -495,7 +497,7 @@ export default {
       try {
         encodeResult.value = decodeURIComponent(encodeInput.value)
       } catch (err) {
-        error.value = '解码失败，请检查输入格式'
+        error.value = t('tools.urlParser.ui.decodeFailed')
         setTimeout(() => error.value = '', 3000)
       }
     }
@@ -560,7 +562,8 @@ export default {
       decodeUrl,
       copyResult,
       buildUrl,
-      copyBuiltUrl
+      copyBuiltUrl,
+      t
     }
   }
 }

@@ -1,13 +1,13 @@
 <template>
   <div class="tool-container">
     <div class="tool-header">
-      <h2><i class="fas fa-file-pdf"></i> PDF 合并工具</h2>
-      <p>合并多个PDF文件为一个文档，保持原有格式和质量</p>
+      <h2><i class="fas fa-file-pdf"></i> {{ $t('tools.mergePdf.ui.title') }}</h2>
+      <p>{{ $t('tools.mergePdf.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
-        <h3><i class="fas fa-upload"></i> 选择PDF文件</h3>
+        <h3><i class="fas fa-upload"></i> {{ $t('tools.mergePdf.ui.selectPdfFiles') }}</h3>
         <div class="file-upload-area">
           <input
             type="file"
@@ -18,12 +18,12 @@
             style="display: none"
           />
           <button @click="$refs.fileInput.click()" class="upload-btn">
-            <i class="fas fa-cloud-upload-alt"></i> 选择多个PDF文件
+            <i class="fas fa-cloud-upload-alt"></i> {{ $t('tools.mergePdf.ui.selectMultiplePdf') }}
           </button>
         </div>
 
         <div class="file-list" v-if="pdfFiles.length > 0">
-          <h4>已选择的PDF文件 ({{ pdfFiles.length }} 个):</h4>
+          <h4>{{ $t('tools.mergePdf.ui.selectedFiles', { count: pdfFiles.length }) }}</h4>
           <div class="file-item" v-for="(file, index) in pdfFiles" :key="index">
             <div class="file-info">
               <i class="fas fa-file-pdf"></i>
@@ -48,10 +48,10 @@
       <div class="action-section">
         <button @click="mergePdfs" class="merge-btn" :disabled="pdfFiles.length < 2 || isProcessing">
           <i :class="isProcessing ? 'fas fa-spinner fa-spin' : 'fas fa-object-group'"></i>
-          {{ isProcessing ? '合并中...' : '合并PDF' }}
+          {{ isProcessing ? $t('tools.mergePdf.ui.merging') : $t('tools.mergePdf.ui.mergePdf') }}
         </button>
         <button @click="clearAll" class="clear-btn">
-          <i class="fas fa-trash"></i> 清空
+          <i class="fas fa-trash"></i> {{ $t('tools.mergePdf.ui.clear') }}
         </button>
       </div>
 
@@ -64,12 +64,12 @@
       </div>
 
       <div class="note-section">
-        <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.mergePdf.ui.usageInstructions') }}</h4>
         <ul>
-          <li>选择2个或更多PDF文件进行合并</li>
-          <li>可以通过箭头按钮调整文件顺序</li>
-          <li>合并后的PDF将按照列表顺序排列</li>
-          <li>处理过程在浏览器本地完成，保护隐私</li>
+          <li>{{ $t('tools.mergePdf.ui.instruction1') }}</li>
+          <li>{{ $t('tools.mergePdf.ui.instruction2') }}</li>
+          <li>{{ $t('tools.mergePdf.ui.instruction3') }}</li>
+          <li>{{ $t('tools.mergePdf.ui.instruction4') }}</li>
         </ul>
       </div>
     </div>
@@ -78,10 +78,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'MergePdf',
   setup() {
+    const { t } = useI18n()
     const pdfFiles = ref([])
     const error = ref('')
     const success = ref('')
@@ -134,12 +136,12 @@ export default {
       success.value = ''
       
       if (pdfFiles.value.length < 2) {
-        error.value = '请选择至少2个PDF文件'
+        error.value = t('tools.mergePdf.ui.selectAtLeast2')
         return
       }
 
       // 由于PDF合并需要专业的库（如PDF-lib），这里提供一个简化的解决方案
-      error.value = '抱歉，PDF合并功能需要专业的PDF处理库。建议使用在线PDF合并工具或专业软件。'
+      error.value = t('tools.mergePdf.ui.mergeFailed')
     }
 
     const clearAll = () => {

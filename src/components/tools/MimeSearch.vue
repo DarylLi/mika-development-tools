@@ -1,19 +1,19 @@
 <template>
   <div class="mime-search-tool">
     <div class="tool-header">
-      <h2><i class="fas fa-file-alt"></i> MIME Type Search</h2>
-      <p>搜索文件扩展名对应的MIME类型，或查找MIME类型对应的扩展名</p>
+      <h2><i class="fas fa-file-alt"></i> {{ $t('tools.mimeSearch.ui.title') }}</h2>
+      <p>{{ $t('tools.mimeSearch.ui.description') }}</p>
     </div>
 
     <div class="search-section">
       <div class="search-mode">
         <label class="radio-group">
           <input type="radio" v-model="searchMode" value="extension" />
-          <span>根据扩展名查找MIME类型</span>
+          <span>{{ $t('tools.mimeSearch.ui.searchByExtension') }}</span>
         </label>
         <label class="radio-group">
           <input type="radio" v-model="searchMode" value="mime" />
-          <span>根据MIME类型查找扩展名</span>
+          <span>{{ $t('tools.mimeSearch.ui.searchByMime') }}</span>
         </label>
       </div>
       
@@ -21,7 +21,7 @@
         <div class="input-group">
           <input 
             v-model="searchQuery"
-            :placeholder="searchMode === 'extension' ? '输入文件扩展名 (如: jpg, png, pdf)' : '输入MIME类型 (如: image/jpeg, text/html)'"
+            :placeholder="searchMode === 'extension' ? $t('tools.mimeSearch.ui.extensionPlaceholder') : $t('tools.mimeSearch.ui.mimePlaceholder')"
             @input="performSearch"
             class="search-input"
           />
@@ -33,7 +33,7 @@
     </div>
 
     <div class="results-section" v-if="searchResults.length > 0">
-      <h3>搜索结果 ({{ searchResults.length }})</h3>
+      <h3>{{ $t('tools.mimeSearch.ui.searchResults') }} ({{ searchResults.length }})</h3>
       <div class="results-grid">
         <div 
           v-for="result in searchResults" 
@@ -42,7 +42,7 @@
         >
           <div class="result-header">
             <span class="extension">.{{ result.extension }}</span>
-            <button @click="copyToClipboard(result.mime)" class="copy-btn" :title="'复制 ' + result.mime">
+            <button @click="copyToClipboard(result.mime)" class="copy-btn" :title="$t('tools.mimeSearch.ui.copy') + ' ' + result.mime">
               <i class="fas fa-copy"></i>
             </button>
           </div>
@@ -53,7 +53,7 @@
     </div>
 
     <div class="common-types" v-if="searchQuery === ''">
-      <h3>常见MIME类型</h3>
+      <h3>{{ $t('tools.mimeSearch.ui.commonMimeTypes') }}</h3>
       <div class="category-grid">
         <div v-for="category in commonCategories" :key="category.name" class="category-card">
           <h4><i :class="category.icon"></i> {{ category.name }}</h4>
@@ -74,19 +74,19 @@
 
     <div class="no-results" v-if="searchQuery && searchResults.length === 0">
       <i class="fas fa-search"></i>
-      <p>未找到匹配的结果</p>
-      <p class="hint">请尝试其他关键词或检查拼写</p>
+      <p>{{ $t('tools.mimeSearch.ui.noResults') }}</p>
+      <p class="hint">{{ $t('tools.mimeSearch.ui.tryOtherKeywords') }}</p>
     </div>
 
     <!-- 使用说明 -->
     <div class="info-section">
-      <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
+      <h3><i class="fas fa-info-circle"></i> {{ $t('tools.mimeSearch.ui.usageInfo') }}</h3>
       <ul>
-        <li>🔍 支持根据文件扩展名搜索对应的MIME类型</li>
-        <li>🔄 支持根据MIME类型搜索对应的文件扩展名</li>
-        <li>📋 点击复制按钮快速复制MIME类型</li>
-        <li>🏷️ 包含常见文件格式的完整数据库</li>
-        <li>⚡ 实时搜索，即时显示结果</li>
+        <li>{{ $t('tools.mimeSearch.ui.supportExtensionSearch') }}</li>
+        <li>{{ $t('tools.mimeSearch.ui.supportMimeSearch') }}</li>
+        <li>{{ $t('tools.mimeSearch.ui.quickCopy') }}</li>
+        <li>{{ $t('tools.mimeSearch.ui.completeDatabase') }}</li>
+        <li>{{ $t('tools.mimeSearch.ui.realtimeSearch') }}</li>
       </ul>
     </div>
   </div>
@@ -94,10 +94,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'MimeSearch',
   setup() {
+    const { t } = useI18n()
     const searchMode = ref('extension')
     const searchQuery = ref('')
     const searchResults = ref([])
@@ -158,12 +160,12 @@ export default {
     // 常见类型分类
     const commonCategories = ref([
       {
-        name: '图片格式',
+        name: t('tools.mimeSearch.ui.imageFormats'),
         icon: 'fas fa-image',
         types: mimeDatabase.filter(item => item.mime.startsWith('image/')).slice(0, 6)
       },
       {
-        name: '文档格式',
+        name: t('tools.mimeSearch.ui.documentFormats'),
         icon: 'fas fa-file-alt',
         types: mimeDatabase.filter(item => 
           item.mime.includes('pdf') || 
@@ -173,7 +175,7 @@ export default {
         ).slice(0, 6)
       },
       {
-        name: '音视频',
+        name: t('tools.mimeSearch.ui.audioVideo'),
         icon: 'fas fa-play-circle',
         types: mimeDatabase.filter(item => 
           item.mime.startsWith('audio/') || 
@@ -181,7 +183,7 @@ export default {
         ).slice(0, 6)
       },
       {
-        name: 'Web格式',
+        name: t('tools.mimeSearch.ui.webFormats'),
         icon: 'fas fa-code',
         types: mimeDatabase.filter(item => 
           ['html', 'css', 'js', 'json', 'xml'].includes(item.extension)
@@ -230,7 +232,7 @@ export default {
       try {
         await navigator.clipboard.writeText(text)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.mimeSearch.ui.copyFailed') + ':', err)
       }
     }
 

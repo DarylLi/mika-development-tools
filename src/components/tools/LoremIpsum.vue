@@ -1,27 +1,27 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-font"></i> Lorem Ipsum Generator</h2>
+    <h2><i class="fas fa-font"></i> {{ $t('tools.loremIpsum.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 生成示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.loremIpsum.ui.generateExample') }}
       </button>
     </div>
     
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem; margin-bottom: 1rem;">
       <select v-model="generateType">
-        <option value="words">单词</option>
-        <option value="sentences">句子</option>
-        <option value="paragraphs">段落</option>
+        <option value="words">{{ $t('tools.loremIpsum.ui.words') }}</option>
+        <option value="sentences">{{ $t('tools.loremIpsum.ui.sentences') }}</option>
+        <option value="paragraphs">{{ $t('tools.loremIpsum.ui.paragraphs') }}</option>
       </select>
-      <input v-model.number="generateCount" type="number" min="1" max="100" placeholder="数量">
+      <input v-model.number="generateCount" type="number" min="1" max="100" :placeholder="$t('tools.loremIpsum.ui.count')">
     </div>
     
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-      <button @click="generateLorem">生成 Lorem Ipsum</button>
-      <button @click="generateChinese">生成中文假文</button>
-      <button @click="generateMixed">生成混合文本</button>
-      <button @click="copyResult">复制结果</button>
+      <button @click="generateLorem">{{ $t('tools.loremIpsum.ui.generateLorem') }}</button>
+      <button @click="generateChinese">{{ $t('tools.loremIpsum.ui.generateChinese') }}</button>
+      <button @click="generateMixed">{{ $t('tools.loremIpsum.ui.generateMixed') }}</button>
+      <button @click="copyResult">{{ $t('tools.loremIpsum.ui.copyResult') }}</button>
     </div>
     
     <div class="result-display" style="max-height: 300px; overflow-y: auto;">{{ loremResult }}</div>
@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'LoremIpsum',
@@ -37,7 +38,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const generateType = ref('paragraphs')
     const generateCount = ref(3)
     const loremResult = ref('')
@@ -171,7 +172,7 @@ export default {
     const copyResult = () => {
       if (loremResult.value) {
         navigator.clipboard.writeText(loremResult.value)
-        instance.proxy.$message.success('已复制到剪贴板！')
+        // 可以使用消息提示组件，这里暂时省略
       }
     }
 

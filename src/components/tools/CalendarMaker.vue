@@ -1,19 +1,19 @@
 <template>
   <div class="calendar-maker-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-calendar"></i> 日历生成器</h3>
-      <p>生成自定义日历，支持多种样式和导出功能</p>
+      <h3><i class="fas fa-calendar"></i> {{ $t('tools.calendarMaker.ui.title') }}</h3>
+      <p>{{ $t('tools.calendarMaker.ui.description') }}</p>
     </div>
 
     <!-- 设置面板 -->
     <div class="settings-panel">
       <div class="settings-row">
         <div class="setting-group">
-          <label>年份</label>
+          <label>{{ $t('tools.calendarMaker.ui.year') }}</label>
           <input type="number" v-model.number="selectedYear" :min="1900" :max="2100" class="year-input">
         </div>
         <div class="setting-group">
-          <label>月份</label>
+          <label>{{ $t('tools.calendarMaker.ui.month') }}</label>
           <select v-model="selectedMonth" class="month-select">
             <option v-for="(month, index) in months" :key="index" :value="index">
               {{ month }}
@@ -21,50 +21,50 @@
           </select>
         </div>
         <div class="setting-group">
-          <label>一周开始</label>
+          <label>{{ $t('tools.calendarMaker.ui.weekStart') }}</label>
           <select v-model="weekStart" class="week-select">
-            <option value="0">星期日</option>
-            <option value="1">星期一</option>
+            <option value="0">{{ $t('tools.calendarMaker.ui.sunday') }}</option>
+            <option value="1">{{ $t('tools.calendarMaker.ui.monday') }}</option>
           </select>
         </div>
       </div>
 
       <div class="settings-row">
         <div class="setting-group">
-          <label>日历样式</label>
+          <label>{{ $t('tools.calendarMaker.ui.calendarStyle') }}</label>
           <select v-model="calendarStyle" class="style-select">
-            <option value="modern">现代风格</option>
-            <option value="classic">经典风格</option>
-            <option value="minimal">极简风格</option>
-            <option value="colorful">彩色风格</option>
+            <option value="modern">{{ $t('tools.calendarMaker.ui.modern') }}</option>
+            <option value="classic">{{ $t('tools.calendarMaker.ui.classic') }}</option>
+            <option value="minimal">{{ $t('tools.calendarMaker.ui.minimal') }}</option>
+            <option value="colorful">{{ $t('tools.calendarMaker.ui.colorful') }}</option>
           </select>
         </div>
         <div class="setting-group">
           <label>
             <input type="checkbox" v-model="showWeekNumbers">
-            <span>显示周数</span>
+            <span>{{ $t('tools.calendarMaker.ui.showWeekNumber') }}</span>
           </label>
         </div>
         <div class="setting-group">
           <label>
             <input type="checkbox" v-model="showHolidays">
-            <span>显示节假日</span>
+            <span>{{ $t('tools.calendarMaker.ui.showHolidays') }}</span>
           </label>
         </div>
       </div>
 
       <div class="action-buttons">
         <button @click="previousMonth" class="nav-btn">
-          <i class="fas fa-chevron-left"></i> 上月
+          <i class="fas fa-chevron-left"></i> {{ $t('tools.calendarMaker.ui.previousMonth') }}
         </button>
         <button @click="currentMonth" class="nav-btn current">
-          <i class="fas fa-calendar-day"></i> 本月
+          <i class="fas fa-calendar-day"></i> {{ $t('tools.calendarMaker.ui.thisMonth') }}
         </button>
         <button @click="nextMonth" class="nav-btn">
-          下月 <i class="fas fa-chevron-right"></i>
+          {{ $t('tools.calendarMaker.ui.nextMonth') }} <i class="fas fa-chevron-right"></i>
         </button>
         <button @click="exportCalendar" class="export-btn">
-          <i class="fas fa-download"></i> 导出
+          <i class="fas fa-download"></i> {{ $t('tools.calendarMaker.ui.export') }}
         </button>
       </div>
     </div>
@@ -72,13 +72,13 @@
     <!-- 日历显示 -->
     <div class="calendar-container" :class="calendarStyle">
       <div class="calendar-header">
-        <h2>{{ selectedYear }}年{{ months[selectedMonth] }}</h2>
+        <h2>{{ selectedYear }}{{ $t('tools.calendarMaker.ui.year') }}{{ months[selectedMonth] }}</h2>
       </div>
 
       <div class="calendar-grid">
         <!-- 周数列（如果启用） -->
         <div v-if="showWeekNumbers" class="week-numbers-column">
-          <div class="week-header">周</div>
+          <div class="week-header">{{ $t('tools.weekNumber.ui.weekUnit') }}</div>
           <div 
             v-for="weekNum in weekNumbers" 
             :key="weekNum"
@@ -124,11 +124,11 @@
 
       <!-- 节假日图例 -->
       <div v-if="showHolidays" class="holidays-legend">
-        <h4>节假日说明</h4>
+        <h4>{{ $t('tools.calendarMaker.ui.holidayLegend') }}</h4>
         <div class="legend-items">
-          <span class="legend-item holiday">节假日</span>
-          <span class="legend-item weekend">周末</span>
-          <span class="legend-item today">今天</span>
+          <span class="legend-item holiday">{{ $t('tools.calendarMaker.ui.holiday') }}</span>
+          <span class="legend-item weekend">{{ $t('tools.calendarMaker.ui.weekend') }}</span>
+          <span class="legend-item today">{{ $t('tools.calendarMaker.ui.today') }}</span>
         </div>
       </div>
     </div>
@@ -137,19 +137,19 @@
     <div class="calendar-stats">
       <div class="stat-card">
         <div class="stat-number">{{ monthStats.totalDays }}</div>
-        <div class="stat-label">总天数</div>
+        <div class="stat-label">{{ $t('tools.calendarMaker.ui.totalDays') }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-number">{{ monthStats.workdays }}</div>
-        <div class="stat-label">工作日</div>
+        <div class="stat-label">{{ $t('tools.calendarMaker.ui.workdays') }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-number">{{ monthStats.weekends }}</div>
-        <div class="stat-label">周末</div>
+        <div class="stat-label">{{ $t('tools.calendarMaker.ui.weekends') }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-number">{{ monthStats.holidays }}</div>
-        <div class="stat-label">节假日</div>
+        <div class="stat-label">{{ $t('tools.calendarMaker.ui.holidays') }}</div>
       </div>
     </div>
   </div>
@@ -166,7 +166,7 @@ export default {
       calendarStyle: 'modern',
       showWeekNumbers: true,
       showHolidays: true,
-      months: [
+      months: this.$t ? this.$t('tools.calendarMaker.ui.months') : [
         '1月', '2月', '3月', '4月', '5月', '6月',
         '7月', '8月', '9月', '10月', '11月', '12月'
       ],

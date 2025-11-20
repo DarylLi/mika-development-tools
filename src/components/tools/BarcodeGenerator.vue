@@ -1,42 +1,44 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-barcode"></i> 条形码生成器</h2>
-    <p>生成Code 128格式的条形码</p>
+    <h2><i class="fas fa-barcode"></i> {{ $t('tools.barcodeGenerator.ui.title') }}</h2>
+    <p>{{ $t('tools.barcodeGenerator.ui.description') }}</p>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.barcodeGenerator.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="barcodeText" placeholder="输入要生成条形码的文本..."></textarea>
+    <textarea v-model="barcodeText" :placeholder="$t('tools.barcodeGenerator.ui.placeholder')"></textarea>
     
     <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-      <button @click="generateBarcode">生成条形码</button>
-      <button @click="clearText">清空</button>
+      <button @click="generateBarcode">{{ $t('tools.barcodeGenerator.ui.generateBarcode') }}</button>
+      <button @click="clearText">{{ $t('tools.barcodeGenerator.ui.clear') }}</button>
     </div>
     
     <div v-if="barcodeResult" class="result-display">
       <div class="barcode-container">
-        <h4>生成的条形码:</h4>
+        <h4>{{ $t('tools.barcodeGenerator.ui.generatedBarcode') }}</h4>
         <div class="barcode-display" v-html="barcodeResult"></div>
         <div class="barcode-text">{{ barcodeText }}</div>
         <button @click="downloadBarcode" class="download-btn">
-          <i class="fas fa-download"></i> 下载图片
+          <i class="fas fa-download"></i> {{ $t('tools.barcodeGenerator.ui.downloadImage') }}
         </button>
       </div>
     </div>
 
     <div class="info-section">
-      <h4><i class="fas fa-info-circle"></i> 关于条形码</h4>
-      <p>条形码是将数字和字符信息通过一组规则排列的平行线条表示的自动识别技术。</p>
-      <p><strong>Code 128:</strong> 支持ASCII字符集，广泛应用于物流和零售行业。</p>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.barcodeGenerator.ui.aboutBarcode') }}</h4>
+      <p>{{ $t('tools.barcodeGenerator.ui.barcodeInfo') }}</p>
+      <p><strong>Code 128:</strong> {{ $t('tools.barcodeGenerator.ui.code128Info') }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'BarcodeGenerator',
@@ -44,7 +46,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const barcodeText = ref('')
     const barcodeResult = ref('')
 
@@ -101,7 +103,7 @@ export default {
 
     const downloadBarcode = () => {
       // 简单的下载功能提示
-      instance.proxy.$message.success('条形码下载功能需要更复杂的图像处理库。当前版本仅供展示。')
+      messageService.info(t('common.info'))
     }
 
     return {

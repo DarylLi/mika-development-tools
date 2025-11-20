@@ -1,73 +1,73 @@
 <template>
   <div class="uuid-batch-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-fingerprint"></i> UUID 批量生成器</h3>
-      <p>批量生成唯一标识符，支持多种UUID版本和格式</p>
+      <h3><i class="fas fa-fingerprint"></i> {{ $t('tools.uuidBatch.ui.title') }}</h3>
+      <p>{{ $t('tools.uuidBatch.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="generation-controls">
         <div class="control-group">
-          <label for="version">UUID 版本</label>
+          <label for="version">{{ $t('tools.uuidBatch.ui.version') }}</label>
           <select id="version" v-model="version">
-            <option value="v4">版本 4 (随机)</option>
-            <option value="v1">版本 1 (时间戳)</option>
+            <option value="v4">{{ $t('tools.uuidBatch.ui.version4') }}</option>
+            <option value="v1">{{ $t('tools.uuidBatch.ui.version1') }}</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="format">输出格式</label>
+          <label for="format">{{ $t('tools.uuidBatch.ui.format') }}</label>
           <select id="format" v-model="format">
-            <option value="standard">标准格式 (带连字符)</option>
-            <option value="compact">紧凑格式 (无连字符)</option>
-            <option value="uppercase">大写格式</option>
-            <option value="braces">花括号格式</option>
+            <option value="standard">{{ $t('tools.uuidBatch.ui.formatStandard') }}</option>
+            <option value="compact">{{ $t('tools.uuidBatch.ui.formatCompact') }}</option>
+            <option value="uppercase">{{ $t('tools.uuidBatch.ui.formatUppercase') }}</option>
+            <option value="braces">{{ $t('tools.uuidBatch.ui.formatBraces') }}</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="count">生成数量</label>
+          <label for="count">{{ $t('tools.uuidBatch.ui.count') }}</label>
           <input type="number" id="count" v-model.number="count" min="1" max="1000" />
         </div>
         
         <div class="control-group">
-          <label for="includeTimestamp">包含时间戳</label>
+          <label for="includeTimestamp">{{ $t('tools.uuidBatch.ui.includeTimestamp') }}</label>
           <input type="checkbox" id="includeTimestamp" v-model="includeTimestamp" />
         </div>
       </div>
 
       <div class="actions">
         <button @click="generateUUIDs" class="btn-primary">
-          <i class="fas fa-fingerprint"></i> 生成 UUID
+          <i class="fas fa-fingerprint"></i> {{ $t('tools.uuidBatch.ui.generateUUID') }}
         </button>
         <button @click="copyAllUUIDs" class="btn-secondary" :disabled="!uuids.length">
-          <i class="fas fa-copy"></i> 复制全部
+          <i class="fas fa-copy"></i> {{ $t('tools.uuidBatch.ui.copyAll') }}
         </button>
         <button @click="exportUUIDs" class="btn-secondary" :disabled="!uuids.length">
-          <i class="fas fa-download"></i> 导出文件
+          <i class="fas fa-download"></i> {{ $t('tools.uuidBatch.ui.exportFile') }}
         </button>
         <button @click="clearUUIDs" class="btn-secondary" :disabled="!uuids.length">
-          <i class="fas fa-trash"></i> 清空列表
+          <i class="fas fa-trash"></i> {{ $t('tools.uuidBatch.ui.clearList') }}
         </button>
       </div>
 
       <div class="uuid-stats" v-if="uuids.length">
         <div class="stat-card">
           <div class="stat-value">{{ uuids.length }}</div>
-          <div class="stat-label">已生成</div>
+          <div class="stat-label">{{ $t('tools.uuidBatch.ui.generated') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">{{ version.toUpperCase() }}</div>
-          <div class="stat-label">版本</div>
+          <div class="stat-label">{{ $t('tools.uuidBatch.ui.versionLabel') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">{{ getFormatName(format) }}</div>
-          <div class="stat-label">格式</div>
+          <div class="stat-label">{{ $t('tools.uuidBatch.ui.formatLabel') }}</div>
         </div>
       </div>
 
       <div class="uuid-display" v-if="uuids.length">
-        <h4>生成的 UUID 列表</h4>
+        <h4>{{ $t('tools.uuidBatch.ui.uuidList') }}</h4>
         
         <div class="uuid-list">
           <div 
@@ -84,10 +84,10 @@
             </div>
             
             <div class="uuid-actions">
-              <button @click="copyUUID(item.value)" class="btn-icon copy-btn" title="复制">
+              <button @click="copyUUID(item.value)" class="btn-icon copy-btn" :title="$t('tools.uuidBatch.ui.copy')">
                 <i class="fas fa-copy"></i>
               </button>
-              <button @click="removeUUID(index)" class="btn-icon remove-btn" title="删除">
+              <button @click="removeUUID(index)" class="btn-icon remove-btn" :title="$t('tools.uuidBatch.ui.delete')">
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -99,12 +99,14 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'UuidBatch',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const version = ref('v4')
     const format = ref('standard')
     const count = ref(10)
@@ -112,7 +114,7 @@ export default {
     const uuids = ref([])
 
     // 生成 UUID v4
-    const generateUUIDv4 = async () => {
+    const generateUUIDv4 = () => {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         const r = Math.random() * 16 | 0
         const v = c === 'x' ? r : (r & 0x3 | 0x8)
@@ -121,7 +123,7 @@ export default {
     }
 
     // 生成 UUID v1 (简化版)
-    const generateUUIDv1 = async () => {
+    const generateUUIDv1 = () => {
       const now = Date.now()
       const clockSeq = Math.random() * 0x3fff | 0
       const node = Array.from({length: 6}, () => Math.random() * 255 | 0)
@@ -153,7 +155,7 @@ export default {
     }
 
     // 生成 UUID
-    const generateUUID = async () => {
+    const generateUUID = () => {
       let uuid
       
       switch (version.value) {
@@ -168,7 +170,7 @@ export default {
     }
 
     // 批量生成 UUIDs
-    const generateUUIDs = async () => {
+    const generateUUIDs = () => {
       const newUUIDs = []
       
       for (let i = 0; i < count.value; i++) {
@@ -195,7 +197,7 @@ export default {
           }, 500)
         }
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.uuidBatch.ui.copyFailed') + ':', error)
       }
     }
 
@@ -205,9 +207,9 @@ export default {
       
       try {
         await navigator.clipboard.writeText(uuidList)
-        instance.proxy.$message.success(`已复制 ${uuids.value.length} 个 UUID 到剪贴板`)
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.uuidBatch.ui.copyFailed') + ':', error)
       }
     }
 
@@ -239,7 +241,7 @@ export default {
 
     // 清空 UUIDs
     const clearUUIDs = async () => {
-      if (await instance.proxy.$message.confirm('确定要清空所有 UUID 吗？')) {
+      if (await messageService.confirm(t('common.confirm'))) {
         uuids.value = []
       }
     }
@@ -247,10 +249,10 @@ export default {
     // 获取格式名称
     const getFormatName = (formatValue) => {
       const formatMap = {
-        standard: '标准',
-        compact: '紧凑',
-        uppercase: '大写',
-        braces: '花括号'
+        standard: t('tools.uuidBatch.ui.formatStandardName'),
+        compact: t('tools.uuidBatch.ui.formatCompactName'),
+        uppercase: t('tools.uuidBatch.ui.formatUppercaseName'),
+        braces: t('tools.uuidBatch.ui.formatBracesName')
       }
       return formatMap[formatValue] || formatValue
     }

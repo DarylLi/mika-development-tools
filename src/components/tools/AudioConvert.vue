@@ -1,8 +1,8 @@
 <template>
   <div class="audio-convert-container">
     <div class="tool-header">
-      <h3>音频格式转换</h3>
-      <p>支持多种音频格式相互转换，浏览器端处理</p>
+      <h3>{{ $t('tools.audioConvert.ui.title') }}</h3>
+      <p>{{ $t('tools.audioConvert.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -24,18 +24,18 @@
         />
         <div class="upload-content">
           <div class="upload-icon">🎵</div>
-          <p>点击选择或拖拽音频文件</p>
-          <small>支持 MP3、WAV、OGG、AAC、FLAC 等格式</small>
+          <p>{{ $t('tools.audioConvert.ui.uploadText') }}</p>
+          <small>{{ $t('tools.audioConvert.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
 
     <div class="conversion-settings" v-if="audioFiles.length > 0">
       <div class="settings-panel">
-        <h4>转换设置</h4>
+        <h4>{{ $t('tools.audioConvert.ui.conversionSettings') }}</h4>
         
         <div class="format-selection">
-          <label>目标格式:</label>
+          <label>{{ $t('tools.audioConvert.ui.targetFormat') }}:</label>
           <div class="format-buttons">
             <button 
               v-for="format in outputFormats"
@@ -50,7 +50,7 @@
 
         <div class="quality-settings">
           <div class="setting-group">
-            <label>比特率:</label>
+            <label>{{ $t('tools.audioConvert.ui.bitrate') }}:</label>
             <select v-model="bitrate" class="setting-select">
               <option value="128">128 kbps</option>
               <option value="192">192 kbps</option>
@@ -60,7 +60,7 @@
           </div>
 
           <div class="setting-group">
-            <label>采样率:</label>
+            <label>{{ $t('tools.audioConvert.ui.sampleRate') }}:</label>
             <select v-model="sampleRate" class="setting-select">
               <option value="22050">22.05 kHz</option>
               <option value="44100">44.1 kHz</option>
@@ -69,22 +69,22 @@
           </div>
 
           <div class="setting-group">
-            <label>声道:</label>
+            <label>{{ $t('tools.audioConvert.ui.channels') }}:</label>
             <select v-model="channels" class="setting-select">
-              <option value="1">单声道</option>
-              <option value="2">立体声</option>
+              <option value="1">{{ $t('tools.audioConvert.ui.mono') }}</option>
+              <option value="2">{{ $t('tools.audioConvert.ui.stereo') }}</option>
             </select>
           </div>
         </div>
 
         <div class="batch-actions">
           <button @click="convertAll" class="convert-all-btn" :disabled="converting">
-            {{ converting ? '转换中...' : '批量转换' }}
+            {{ converting ? $t('tools.audioConvert.ui.converting') : $t('tools.audioConvert.ui.batchConvert') }}
           </button>
           <button @click="downloadAll" class="download-all-btn" v-if="convertedFiles.length > 0">
-            下载全部
+            {{ $t('tools.audioConvert.ui.downloadAll') }}
           </button>
-          <button @click="clearAll" class="clear-btn">清空</button>
+          <button @click="clearAll" class="clear-btn">{{ $t('tools.audioConvert.ui.clear') }}</button>
         </div>
       </div>
     </div>
@@ -106,7 +106,7 @@
                 <span v-if="file.duration">{{ formatDuration(file.duration) }}</span>
               </div>
               <div class="conversion-info" v-if="file.convertedSize">
-                <span>转换后: {{ formatFileSize(file.convertedSize) }}</span>
+                <span>{{ $t('tools.audioConvert.ui.converted') }}: {{ formatFileSize(file.convertedSize) }}</span>
               </div>
             </div>
           </div>
@@ -121,16 +121,16 @@
               class="convert-btn"
               :disabled="file.converting || file.converted"
             >
-              {{ file.converting ? '转换中' : (file.converted ? '已转换' : '转换') }}
+              {{ file.converting ? $t('tools.audioConvert.ui.convertingSingle') : (file.converted ? $t('tools.audioConvert.ui.convertedStatus') : $t('tools.audioConvert.ui.convert')) }}
             </button>
             <button 
               @click="downloadFile(index)" 
               class="download-btn"
               v-if="file.converted"
             >
-              下载
+              {{ $t('tools.audioConvert.ui.download') }}
             </button>
-            <button @click="removeFile(index)" class="remove-btn">删除</button>
+            <button @click="removeFile(index)" class="remove-btn">{{ $t('tools.audioConvert.ui.remove') }}</button>
           </div>
 
           <div class="progress-bar" v-if="file.converting">
@@ -141,19 +141,19 @@
     </div>
 
     <div class="format-info-section">
-      <h4>📚 格式说明</h4>
+      <h4>📚 {{ $t('tools.audioConvert.ui.formatInfo') }}</h4>
       <div class="format-info-grid">
         <div class="format-info-item">
-          <strong>MP3:</strong> 最通用的格式，压缩率高，兼容性好
+          <strong>MP3:</strong> {{ $t('tools.audioConvert.ui.mp3Description') }}
         </div>
         <div class="format-info-item">
-          <strong>WAV:</strong> 无损格式，文件较大，音质最佳
+          <strong>WAV:</strong> {{ $t('tools.audioConvert.ui.wavDescription') }}
         </div>
         <div class="format-info-item">
-          <strong>OGG:</strong> 开源格式，压缩效果好，文件小
+          <strong>OGG:</strong> {{ $t('tools.audioConvert.ui.oggDescription') }}
         </div>
         <div class="format-info-item">
-          <strong>AAC:</strong> 现代格式，压缩效率高，移动端首选
+          <strong>AAC:</strong> {{ $t('tools.audioConvert.ui.aacDescription') }}
         </div>
       </div>
     </div>
@@ -223,7 +223,7 @@ export default {
       try {
         audioFile.duration = await this.getAudioDuration(url)
       } catch (error) {
-        console.error('获取音频时长失败:', error)
+        console.error(this.$t('tools.audioConvert.ui.getDurationFailed'), error)
       }
 
       this.audioFiles.push(audioFile)
@@ -283,8 +283,8 @@ export default {
         })
 
       } catch (error) {
-        console.error('转换失败:', error)
-        this.$message.success('音频转换失败')
+        console.error(this.$t('tools.audioConvert.ui.convertFailed'), error)
+        this.$message.success(this.$t('tools.audioConvert.ui.audioConvertFailed'))
       } finally {
         file.converting = false
       }
@@ -364,7 +364,7 @@ export default {
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
       } catch (error) {
-        this.$message.success('批量下载失败，请逐个下载')
+        this.$message.success(this.$t('tools.audioConvert.ui.batchDownloadFailed'))
       }
     },
 

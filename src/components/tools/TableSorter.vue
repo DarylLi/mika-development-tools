@@ -2,26 +2,26 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">📊</div>
-      <h2>表格排序 & 筛选</h2>
-      <p>对表格数据进行排序、筛选、分页和导出操作</p>
+      <h2>{{ $t('tools.tableSorter.ui.title') }}</h2>
+      <p>{{ $t('tools.tableSorter.ui.description') }}</p>
       
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.tableSorter.ui.quickStart') }}</span>
         <button @click="loadExample('employees')" class="example-btn">
-          <i class="fas fa-users"></i> 员工数据
+          <i class="fas fa-users"></i> {{ $t('tools.tableSorter.ui.employeeData') }}
         </button>
         <button @click="loadExample('products')" class="example-btn">
-          <i class="fas fa-boxes"></i> 产品数据
+          <i class="fas fa-boxes"></i> {{ $t('tools.tableSorter.ui.productData') }}
         </button>
         <button @click="loadExample('sales')" class="example-btn">
-          <i class="fas fa-chart-line"></i> 销售数据
+          <i class="fas fa-chart-line"></i> {{ $t('tools.tableSorter.ui.salesData') }}
         </button>
       </div>
     </div>
 
     <div class="input-card">
       <div class="card-header">
-        <h3><i class="fas fa-table"></i> 数据输入</h3>
+        <h3><i class="fas fa-table"></i> {{ $t('tools.tableSorter.ui.dataInput') }}</h3>
         <div class="input-actions">
           <input
             type="file"
@@ -31,10 +31,10 @@
             style="display: none"
           />
           <button @click="$refs.fileInput.click()" class="action-btn">
-            <i class="fas fa-upload"></i> 上传文件
+            <i class="fas fa-upload"></i> {{ $t('tools.tableSorter.ui.uploadFile') }}
           </button>
           <button @click="parseData" class="action-btn">
-            <i class="fas fa-sync"></i> 重新解析
+            <i class="fas fa-sync"></i> {{ $t('tools.tableSorter.ui.reparse') }}
           </button>
         </div>
       </div>
@@ -42,18 +42,18 @@
       <div class="input-section">
         <textarea
           v-model="rawData"
-          placeholder="输入CSV格式数据或JSON数组数据..."
+          :placeholder="$t('tools.tableSorter.ui.dataPlaceholder')"
           class="data-input"
           @input="autoParseData"
         ></textarea>
         
         <div class="parse-options">
           <div class="option-group">
-            <label>数据格式:</label>
+            <label>{{ $t('tools.tableSorter.ui.dataFormat') }}</label>
             <select v-model="dataFormat" @change="parseData" class="format-select">
               <option value="csv">CSV</option>
               <option value="json">JSON</option>
-              <option value="tsv">TSV (制表符分隔)</option>
+              <option value="tsv">{{ $t('tools.tableSorter.ui.tsvFormat') }}</option>
             </select>
           </div>
           
@@ -61,7 +61,7 @@
             <label class="checkbox-label">
               <input type="checkbox" v-model="hasHeaders" @change="parseData" />
               <span class="checkmark"></span>
-              首行为标题
+              {{ $t('tools.tableSorter.ui.firstRowAsHeader') }}
             </label>
           </div>
         </div>
@@ -70,9 +70,9 @@
 
     <div v-if="tableData.length > 0" class="table-card">
       <div class="card-header">
-        <h3><i class="fas fa-list"></i> 数据表格</h3>
+        <h3><i class="fas fa-list"></i> {{ $t('tools.tableSorter.ui.dataTable') }}</h3>
         <div class="table-stats">
-          {{ filteredData.length }} / {{ tableData.length }} 行，{{ columns.length }} 列
+          {{ filteredData.length }} / {{ tableData.length }} {{ $t('tools.tableSorter.ui.rows') }}，{{ columns.length }} {{ $t('tools.tableSorter.ui.columns') }}
         </div>
       </div>
 
@@ -83,7 +83,7 @@
             <input
               v-model="globalSearch"
               type="text"
-              placeholder="全局搜索..."
+              :placeholder="$t('tools.tableSorter.ui.globalSearch')"
               class="search-input"
             />
           </div>
@@ -96,7 +96,7 @@
               <input
                 v-model="columnFilters[column]"
                 type="text"
-                :placeholder="`筛选${column}...`"
+                :placeholder="$t('tools.tableSorter.ui.filterColumn', { column })"
                 class="filter-input"
               />
             </div>
@@ -105,13 +105,13 @@
 
         <div class="pagination-controls">
           <div class="page-size-control">
-            <label>每页显示:</label>
+            <label>{{ $t('tools.tableSorter.ui.itemsPerPage') }}</label>
             <select v-model="pageSize" class="page-size-select">
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
               <option value="100">100</option>
-              <option value="all">全部</option>
+              <option value="all">{{ $t('tools.tableSorter.ui.all') }}</option>
             </select>
           </div>
         </div>
@@ -245,10 +245,12 @@
 
 <script>
 import { ref, computed, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'TableSorter',
   setup() {
+    const { t } = useI18n()
     const rawData = ref('')
     const dataFormat = ref('csv')
     const hasHeaders = ref(true)
@@ -602,7 +604,8 @@ iPad Air,平板,4399,110,2023-03-05`,
       handleFileUpload,
       sortBy,
       goToPage,
-      exportData
+      exportData,
+      t
     }
   }
 }

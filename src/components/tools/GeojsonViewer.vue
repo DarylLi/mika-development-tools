@@ -2,19 +2,19 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">🗺️</div>
-      <h2>GeoJSON 地图查看器</h2>
-      <p>可视化GeoJSON地理数据，支持点、线、面等地理要素的地图展示</p>
+      <h2>{{ $t('tools.geojsonViewer.ui.title') }}</h2>
+      <p>{{ $t('tools.geojsonViewer.ui.description') }}</p>
       
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.geojsonViewer.ui.quickStart') }}</span>
         <button @click="loadExample('point')" class="example-btn">
-          <i class="fas fa-map-pin"></i> 点数据
+          <i class="fas fa-map-pin"></i> {{ $t('tools.geojsonViewer.ui.pointData') }}
         </button>
         <button @click="loadExample('polygon')" class="example-btn">
-          <i class="fas fa-draw-polygon"></i> 面数据
+          <i class="fas fa-draw-polygon"></i> {{ $t('tools.geojsonViewer.ui.polygonData') }}
         </button>
         <button @click="loadExample('line')" class="example-btn">
-          <i class="fas fa-route"></i> 线数据
+          <i class="fas fa-route"></i> {{ $t('tools.geojsonViewer.ui.lineData') }}
         </button>
       </div>
     </div>
@@ -22,7 +22,7 @@
     <div class="editor-layout">
       <div class="editor-card">
         <div class="card-header">
-          <h3><i class="fas fa-code"></i> GeoJSON 数据</h3>
+          <h3><i class="fas fa-code"></i> {{ $t('tools.geojsonViewer.ui.geojsonData') }}</h3>
           <div class="header-actions">
             <input
               type="file"
@@ -32,7 +32,7 @@
               style="display: none"
             />
             <button @click="$refs.fileInput.click()" class="action-btn">
-              <i class="fas fa-upload"></i> 上传文件
+              <i class="fas fa-upload"></i> {{ $t('tools.geojsonViewer.ui.uploadFile') }}
             </button>
           </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="editor-section">
           <textarea
             v-model="geojsonData"
-            placeholder="在此粘贴GeoJSON数据..."
+            :placeholder="$t('tools.geojsonViewer.ui.geojsonPlaceholder')"
             class="geojson-editor"
             @input="validateAndRender"
           ></textarea>
@@ -51,13 +51,13 @@
               {{ validationMessage }}
             </div>
             <div v-if="geoData" class="features-info">
-              要素数量: {{ featureCount }}
+              {{ $t('tools.geojsonViewer.ui.featureCount') }} {{ featureCount }}
             </div>
           </div>
         </div>
 
         <div v-if="geoData" class="features-list">
-          <h4><i class="fas fa-list"></i> 地理要素</h4>
+          <h4><i class="fas fa-list"></i> {{ $t('tools.geojsonViewer.ui.geographicFeatures') }}</h4>
           <div class="feature-items">
             <div v-for="(feature, index) in geoData.features" :key="index" 
                  class="feature-item" 
@@ -79,13 +79,13 @@
 
       <div class="map-card">
         <div class="card-header">
-          <h3><i class="fas fa-map"></i> 地图视图</h3>
+          <h3><i class="fas fa-map"></i> {{ $t('tools.geojsonViewer.ui.mapView') }}</h3>
           <div class="map-controls">
             <button @click="fitToData" class="action-btn" :disabled="!geoData">
-              <i class="fas fa-expand-arrows-alt"></i> 适应数据
+              <i class="fas fa-expand-arrows-alt"></i> {{ $t('tools.geojsonViewer.ui.fitToData') }}
             </button>
             <button @click="downloadImage" class="action-btn" :disabled="!geoData">
-              <i class="fas fa-download"></i> 下载图片
+              <i class="fas fa-download"></i> {{ $t('tools.geojsonViewer.ui.downloadImage') }}
             </button>
           </div>
         </div>
@@ -93,12 +93,12 @@
         <div class="map-container" ref="mapContainer">
           <div v-if="!geojsonData.trim()" class="map-placeholder">
             <i class="fas fa-map"></i>
-            <p>输入GeoJSON数据查看地图</p>
+            <p>{{ $t('tools.geojsonViewer.ui.inputGeojsonToView') }}</p>
           </div>
           
           <div v-else-if="!isValidGeoJSON" class="map-error">
             <i class="fas fa-exclamation-triangle"></i>
-            <p>GeoJSON格式错误</p>
+            <p>{{ $t('tools.geojsonViewer.ui.geojsonFormatError') }}</p>
           </div>
           
           <div v-else class="map-view">
@@ -112,10 +112,10 @@
 
         <div v-if="geoData" class="map-info">
           <div class="info-item">
-            <strong>坐标系:</strong> {{ coordinateSystem }}
+            <strong>{{ $t('tools.geojsonViewer.ui.coordinateSystem') }}</strong> {{ coordinateSystem }}
           </div>
           <div class="info-item">
-            <strong>边界:</strong> {{ boundsInfo }}
+            <strong>{{ $t('tools.geojsonViewer.ui.bounds') }}</strong> {{ boundsInfo }}
           </div>
         </div>
       </div>
@@ -126,17 +126,17 @@
     </div>
 
     <div class="help-card">
-      <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.geojsonViewer.ui.usageInstructions') }}</h4>
       <div class="help-content">
         <div class="help-section">
-          <h5>支持的几何类型：</h5>
+          <h5>{{ $t('tools.geojsonViewer.ui.supportedGeometryTypes') }}</h5>
           <ul>
-            <li><strong>Point</strong> - 点要素</li>
-            <li><strong>LineString</strong> - 线要素</li>
-            <li><strong>Polygon</strong> - 面要素</li>
-            <li><strong>MultiPoint</strong> - 多点要素</li>
-            <li><strong>MultiLineString</strong> - 多线要素</li>
-            <li><strong>MultiPolygon</strong> - 多面要素</li>
+            <li><strong>Point</strong> - {{ $t('tools.geojsonViewer.ui.pointDesc') }}</li>
+            <li><strong>LineString</strong> - {{ $t('tools.geojsonViewer.ui.lineStringDesc') }}</li>
+            <li><strong>Polygon</strong> - {{ $t('tools.geojsonViewer.ui.polygonDesc') }}</li>
+            <li><strong>MultiPoint</strong> - {{ $t('tools.geojsonViewer.ui.multiPointDesc') }}</li>
+            <li><strong>MultiLineString</strong> - {{ $t('tools.geojsonViewer.ui.multiLineStringDesc') }}</li>
+            <li><strong>MultiPolygon</strong> - {{ $t('tools.geojsonViewer.ui.multiPolygonDesc') }}</li>
           </ul>
         </div>
         
@@ -165,10 +165,12 @@
 
 <script>
 import { ref, computed, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'GeojsonViewer',
   setup() {
+    const { t } = useI18n()
     const geojsonData = ref('')
     const geoData = ref(null)
     const isValidGeoJSON = ref(false)
@@ -179,8 +181,8 @@ export default {
     const mapGroup = ref(null)
 
     const validationMessage = computed(() => {
-      if (!geojsonData.value.trim()) return '等待输入GeoJSON数据'
-      return isValidGeoJSON.value ? 'GeoJSON格式正确' : 'GeoJSON格式错误'
+      if (!geojsonData.value.trim()) return t('tools.geojsonViewer.ui.waitingInput')
+      return isValidGeoJSON.value ? t('tools.geojsonViewer.ui.geojsonFormatValid') : t('tools.geojsonViewer.ui.geojsonFormatError')
     })
 
     const featureCount = computed(() => {
@@ -465,7 +467,7 @@ export default {
 
     const fitToData = () => {
       renderMap()
-      success.value = '已适应数据范围'
+      success.value = t('tools.geojsonViewer.ui.fittedToData')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -490,7 +492,7 @@ export default {
         link.href = canvas.toDataURL()
         link.click()
         
-        success.value = '地图图片已下载'
+        success.value = t('tools.geojsonViewer.ui.imageDownloaded')
         setTimeout(() => success.value = '', 3000)
       }
       
@@ -516,7 +518,8 @@ export default {
       highlightFeature,
       handleFileUpload,
       fitToData,
-      downloadImage
+      downloadImage,
+      t
     }
   }
 }

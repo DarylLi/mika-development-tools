@@ -3,7 +3,7 @@
     <div class="converter-container">
       <!-- 单位类别选择 -->
       <div class="category-selector">
-        <h3><i class="fas fa-exchange-alt"></i> 单位换算器</h3>
+        <h3><i class="fas fa-exchange-alt"></i> {{ $t('tools.unitConverter.ui.title') }}</h3>
         <div class="category-tabs">
           <button 
             v-for="category in categories" 
@@ -23,7 +23,7 @@
           <!-- 输入侧 -->
           <div class="converter-side">
             <div class="unit-selector">
-              <label>从</label>
+              <label>{{ $t('tools.unitConverter.ui.from') }}</label>
               <select v-model="fromUnit" @change="convert">
                 <option v-for="unit in currentUnits" :key="unit.id" :value="unit.id">
                   {{ unit.name }} ({{ unit.symbol }})
@@ -35,7 +35,7 @@
                 v-model="inputValue" 
                 type="number" 
                 step="any"
-                placeholder="输入数值"
+                :placeholder="$t('tools.unitConverter.ui.inputPlaceholder')"
                 @input="convert"
                 class="input-field">
             </div>
@@ -43,7 +43,7 @@
 
           <!-- 转换箭头 -->
           <div class="converter-arrow">
-            <button @click="swapUnits" class="swap-btn" title="交换单位">
+            <button @click="swapUnits" class="swap-btn" :title="$t('tools.unitConverter.ui.swapUnits')">
               <i class="fas fa-exchange-alt"></i>
             </button>
           </div>
@@ -51,7 +51,7 @@
           <!-- 输出侧 -->
           <div class="converter-side">
             <div class="unit-selector">
-              <label>到</label>
+              <label>{{ $t('tools.unitConverter.ui.to') }}</label>
               <select v-model="toUnit" @change="convert">
                 <option v-for="unit in currentUnits" :key="unit.id" :value="unit.id">
                   {{ unit.name }} ({{ unit.symbol }})
@@ -64,7 +64,7 @@
                 readonly 
                 class="output-field"
                 @click="copyResult">
-              <button @click="copyResult" class="copy-btn" title="复制结果">
+              <button @click="copyResult" class="copy-btn" :title="$t('tools.unitConverter.ui.copyResult')">
                 <i class="fas fa-copy"></i>
               </button>
             </div>
@@ -73,13 +73,13 @@
 
         <!-- 转换公式显示 -->
         <div v-if="conversionFormula" class="formula-display">
-          <div class="formula-label">转换公式：</div>
+          <div class="formula-label">{{ $t('tools.unitConverter.ui.formulaLabel') }}</div>
           <div class="formula-text">{{ conversionFormula }}</div>
         </div>
 
         <!-- 快速转换表 -->
         <div v-if="quickConversions.length > 0" class="quick-conversions">
-          <h4><i class="fas fa-table"></i> 快速对照表</h4>
+          <h4><i class="fas fa-table"></i> {{ $t('tools.unitConverter.ui.quickTable') }}</h4>
           <div class="conversions-table">
             <div class="table-header">
               <span>{{ getUnitInfo(fromUnit)?.name }}</span>
@@ -95,7 +95,7 @@
 
       <!-- 常用转换快捷按钮 -->
       <div class="quick-actions">
-        <h4><i class="fas fa-bolt"></i> 常用转换</h4>
+        <h4><i class="fas fa-bolt"></i> {{ $t('tools.unitConverter.ui.commonConversions') }}</h4>
         <div class="quick-buttons">
           <button 
             v-for="quick in currentQuickActions" 
@@ -110,7 +110,7 @@
 
       <!-- 单位信息 -->
       <div class="unit-info-section">
-        <h4><i class="fas fa-info-circle"></i> 单位信息</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.unitConverter.ui.unitInfo') }}</h4>
         <div class="info-cards">
           <div v-if="getUnitInfo(fromUnit)" class="info-card">
             <div class="unit-symbol">{{ getUnitInfo(fromUnit).symbol }}</div>
@@ -118,7 +118,7 @@
               <div class="unit-name">{{ getUnitInfo(fromUnit).name }}</div>
               <div class="unit-description">{{ getUnitInfo(fromUnit).description }}</div>
               <div v-if="getUnitInfo(fromUnit).system" class="unit-system">
-                系统：{{ getUnitInfo(fromUnit).system }}
+                {{ $t('tools.unitConverter.ui.system') }}{{ getUnitInfo(fromUnit).system }}
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@
               <div class="unit-name">{{ getUnitInfo(toUnit).name }}</div>
               <div class="unit-description">{{ getUnitInfo(toUnit).description }}</div>
               <div v-if="getUnitInfo(toUnit).system" class="unit-system">
-                系统：{{ getUnitInfo(toUnit).system }}
+                {{ $t('tools.unitConverter.ui.system') }}{{ getUnitInfo(toUnit).system }}
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@
 
       <!-- 历史记录 -->
       <div v-if="history.length > 0" class="history-section">
-        <h4><i class="fas fa-history"></i> 转换历史</h4>
+        <h4><i class="fas fa-history"></i> {{ $t('tools.unitConverter.ui.conversionHistory') }}</h4>
         <div class="history-list">
           <div v-for="(item, index) in history" :key="index" class="history-item" @click="loadHistory(item)">
             <div class="history-conversion">
@@ -150,7 +150,7 @@
           </div>
         </div>
         <button @click="clearHistory" class="clear-history-btn">
-          <i class="fas fa-trash"></i> 清空历史
+          <i class="fas fa-trash"></i> {{ $t('tools.unitConverter.ui.clearHistory') }}
         </button>
       </div>
     </div>
@@ -159,10 +159,12 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'UnitConverter',
   setup() {
+    const { t } = useI18n()
     const selectedCategory = ref('length')
     const fromUnit = ref('meter')
     const toUnit = ref('kilometer')
@@ -170,29 +172,56 @@ export default {
     const outputValue = ref('')
     const history = ref([])
     
-    const categories = [
-      { id: 'length', name: '长度', icon: 'fas fa-ruler' },
-      { id: 'weight', name: '重量', icon: 'fas fa-weight' },
-      { id: 'area', name: '面积', icon: 'fas fa-square' },
-      { id: 'volume', name: '体积', icon: 'fas fa-cube' },
-      { id: 'temperature', name: '温度', icon: 'fas fa-thermometer' },
-      { id: 'time', name: '时间', icon: 'fas fa-clock' },
-      { id: 'speed', name: '速度', icon: 'fas fa-tachometer-alt' },
-      { id: 'pressure', name: '压力', icon: 'fas fa-compress' },
-      { id: 'energy', name: '能量', icon: 'fas fa-battery-full' },
-      { id: 'power', name: '功率', icon: 'fas fa-bolt' }
-    ]
+    const categories = computed(() => [
+      { id: 'length', name: t('tools.unitConverter.ui.categoryLength'), icon: 'fas fa-ruler' },
+      { id: 'weight', name: t('tools.unitConverter.ui.categoryWeight'), icon: 'fas fa-weight' },
+      { id: 'area', name: t('tools.unitConverter.ui.categoryArea'), icon: 'fas fa-square' },
+      { id: 'volume', name: t('tools.unitConverter.ui.categoryVolume'), icon: 'fas fa-cube' },
+      { id: 'temperature', name: t('tools.unitConverter.ui.categoryTemperature'), icon: 'fas fa-thermometer' },
+      { id: 'time', name: t('tools.unitConverter.ui.categoryTime'), icon: 'fas fa-clock' },
+      { id: 'speed', name: t('tools.unitConverter.ui.categorySpeed'), icon: 'fas fa-tachometer-alt' },
+      { id: 'pressure', name: t('tools.unitConverter.ui.categoryPressure'), icon: 'fas fa-compress' },
+      { id: 'energy', name: t('tools.unitConverter.ui.categoryEnergy'), icon: 'fas fa-battery-full' },
+      { id: 'power', name: t('tools.unitConverter.ui.categoryPower'), icon: 'fas fa-bolt' }
+    ])
     
-    const units = {
+    // 辅助函数：获取单位翻译
+    const getUnitName = (unitId) => {
+      const key = `tools.unitConverter.ui.unit${unitId.charAt(0).toUpperCase() + unitId.slice(1)}`
+      return t(key, unitId) // 如果翻译不存在，返回 unitId
+    }
+    
+    const getUnitDesc = (unitId) => {
+      const key = `tools.unitConverter.ui.desc${unitId.charAt(0).toUpperCase() + unitId.slice(1)}`
+      return t(key, '') // 如果翻译不存在，返回空字符串
+    }
+    
+    const getSystemName = (systemId) => {
+      const systemMap = {
+        '公制': 'systemMetric',
+        '英制': 'systemImperial',
+        '科学': 'systemScientific',
+        '通用': 'systemCommon',
+        '海事': 'systemMaritime',
+        '标准': 'systemStandard',
+        '医学': 'systemMedical',
+        '传统': 'systemTraditional',
+        '电力': 'systemElectric'
+      }
+      const key = systemMap[systemId] || systemId
+      return t(`tools.unitConverter.ui.${key}`, systemId)
+    }
+    
+    const units = computed(() => ({
       length: [
-        { id: 'millimeter', name: '毫米', symbol: 'mm', factor: 0.001, description: '长度的基本单位', system: '公制' },
-        { id: 'centimeter', name: '厘米', symbol: 'cm', factor: 0.01, description: '常用长度单位', system: '公制' },
-        { id: 'meter', name: '米', symbol: 'm', factor: 1, description: '国际标准长度单位', system: '公制' },
-        { id: 'kilometer', name: '千米', symbol: 'km', factor: 1000, description: '常用于测量长距离', system: '公制' },
-        { id: 'inch', name: '英寸', symbol: 'in', factor: 0.0254, description: '英制长度单位', system: '英制' },
-        { id: 'foot', name: '英尺', symbol: 'ft', factor: 0.3048, description: '12英寸等于1英尺', system: '英制' },
-        { id: 'yard', name: '码', symbol: 'yd', factor: 0.9144, description: '3英尺等于1码', system: '英制' },
-        { id: 'mile', name: '英里', symbol: 'mi', factor: 1609.344, description: '1760码等于1英里', system: '英制' }
+        { id: 'millimeter', name: t('tools.unitConverter.ui.unitMillimeter'), symbol: 'mm', factor: 0.001, description: t('tools.unitConverter.ui.descMillimeter'), system: t('tools.unitConverter.ui.systemMetric') },
+        { id: 'centimeter', name: t('tools.unitConverter.ui.unitCentimeter'), symbol: 'cm', factor: 0.01, description: t('tools.unitConverter.ui.descCentimeter'), system: t('tools.unitConverter.ui.systemMetric') },
+        { id: 'meter', name: t('tools.unitConverter.ui.unitMeter'), symbol: 'm', factor: 1, description: t('tools.unitConverter.ui.descMeter'), system: t('tools.unitConverter.ui.systemMetric') },
+        { id: 'kilometer', name: t('tools.unitConverter.ui.unitKilometer'), symbol: 'km', factor: 1000, description: t('tools.unitConverter.ui.descKilometer'), system: t('tools.unitConverter.ui.systemMetric') },
+        { id: 'inch', name: t('tools.unitConverter.ui.unitInch'), symbol: 'in', factor: 0.0254, description: t('tools.unitConverter.ui.descInch'), system: t('tools.unitConverter.ui.systemImperial') },
+        { id: 'foot', name: t('tools.unitConverter.ui.unitFoot'), symbol: 'ft', factor: 0.3048, description: t('tools.unitConverter.ui.descFoot'), system: t('tools.unitConverter.ui.systemImperial') },
+        { id: 'yard', name: t('tools.unitConverter.ui.unitYard'), symbol: 'yd', factor: 0.9144, description: t('tools.unitConverter.ui.descYard'), system: t('tools.unitConverter.ui.systemImperial') },
+        { id: 'mile', name: t('tools.unitConverter.ui.unitMile'), symbol: 'mi', factor: 1609.344, description: t('tools.unitConverter.ui.descMile'), system: t('tools.unitConverter.ui.systemImperial') }
       ],
       weight: [
         { id: 'milligram', name: '毫克', symbol: 'mg', factor: 0.000001, description: '极小的重量单位', system: '公制' },
@@ -265,37 +294,37 @@ export default {
         { id: 'horsepower', name: '马力', symbol: 'hp', factor: 745.7, description: '机械功率单位', system: '英制' },
         { id: 'btu_per_hour', name: 'BTU每小时', symbol: 'BTU/h', factor: 0.293071, description: '制冷功率单位', system: '英制' }
       ]
-    }
+    }))
     
-    const quickActions = {
+    const quickActions = computed(() => ({
       length: [
-        { name: '米转千米', from: 'meter', to: 'kilometer' },
-        { name: '厘米转英寸', from: 'centimeter', to: 'inch' },
-        { name: '英尺转米', from: 'foot', to: 'meter' },
-        { name: '英里转千米', from: 'mile', to: 'kilometer' }
+        { name: t('tools.unitConverter.ui.quickMeterToKm'), from: 'meter', to: 'kilometer' },
+        { name: t('tools.unitConverter.ui.quickCmToInch'), from: 'centimeter', to: 'inch' },
+        { name: t('tools.unitConverter.ui.quickFootToMeter'), from: 'foot', to: 'meter' },
+        { name: t('tools.unitConverter.ui.quickMileToKm'), from: 'mile', to: 'kilometer' }
       ],
       weight: [
-        { name: '克转磅', from: 'gram', to: 'pound' },
-        { name: '千克转磅', from: 'kilogram', to: 'pound' },
-        { name: '磅转千克', from: 'pound', to: 'kilogram' },
-        { name: '吨转磅', from: 'ton', to: 'pound' }
+        { name: t('tools.unitConverter.ui.quickGramToPound'), from: 'gram', to: 'pound' },
+        { name: t('tools.unitConverter.ui.quickKgToPound'), from: 'kilogram', to: 'pound' },
+        { name: t('tools.unitConverter.ui.quickPoundToKg'), from: 'pound', to: 'kilogram' },
+        { name: t('tools.unitConverter.ui.quickTonToPound'), from: 'ton', to: 'pound' }
       ],
       temperature: [
-        { name: '摄氏转华氏', from: 'celsius', to: 'fahrenheit' },
-        { name: '华氏转摄氏', from: 'fahrenheit', to: 'celsius' },
-        { name: '摄氏转开尔文', from: 'celsius', to: 'kelvin' },
-        { name: '开尔文转摄氏', from: 'kelvin', to: 'celsius' }
+        { name: t('tools.unitConverter.ui.quickCelsiusToFahrenheit'), from: 'celsius', to: 'fahrenheit' },
+        { name: t('tools.unitConverter.ui.quickFahrenheitToCelsius'), from: 'fahrenheit', to: 'celsius' },
+        { name: t('tools.unitConverter.ui.quickCelsiusToKelvin'), from: 'celsius', to: 'kelvin' },
+        { name: t('tools.unitConverter.ui.quickKelvinToCelsius'), from: 'kelvin', to: 'celsius' }
       ],
       time: [
-        { name: '小时转分钟', from: 'hour', to: 'minute' },
-        { name: '天转小时', from: 'day', to: 'hour' },
-        { name: '周转天', from: 'week', to: 'day' },
-        { name: '年转天', from: 'year', to: 'day' }
+        { name: t('tools.unitConverter.ui.quickHourToMinute'), from: 'hour', to: 'minute' },
+        { name: t('tools.unitConverter.ui.quickDayToHour'), from: 'day', to: 'hour' },
+        { name: t('tools.unitConverter.ui.quickWeekToDay'), from: 'week', to: 'day' },
+        { name: t('tools.unitConverter.ui.quickYearToDay'), from: 'year', to: 'day' }
       ]
-    }
+    }))
     
-    const currentUnits = computed(() => units[selectedCategory.value] || [])
-    const currentQuickActions = computed(() => quickActions[selectedCategory.value] || [])
+    const currentUnits = computed(() => units.value[selectedCategory.value] || [])
+    const currentQuickActions = computed(() => quickActions.value[selectedCategory.value] || [])
     
     const conversionFormula = computed(() => {
       if (!inputValue.value || !fromUnit.value || !toUnit.value) return ''

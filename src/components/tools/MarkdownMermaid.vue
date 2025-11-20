@@ -2,19 +2,19 @@
   <div class="tool-container">
     <div class="tool-header">
       <div class="header-icon">🧜‍♀️</div>
-      <h2>Mermaid 图表预览</h2>
-      <p>实时预览Mermaid图表语法，支持流程图、时序图、甘特图等多种图表类型</p>
+      <h2>{{ $t('tools.markdownMermaid.ui.title') }}</h2>
+      <p>{{ $t('tools.markdownMermaid.ui.description') }}</p>
       
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.markdownMermaid.ui.quickStart') }}</span>
         <button @click="loadExample('flowchart')" class="example-btn">
-          <i class="fas fa-project-diagram"></i> 流程图
+          <i class="fas fa-project-diagram"></i> {{ $t('tools.markdownMermaid.ui.flowchart') }}
         </button>
         <button @click="loadExample('sequence')" class="example-btn">
-          <i class="fas fa-exchange-alt"></i> 时序图
+          <i class="fas fa-exchange-alt"></i> {{ $t('tools.markdownMermaid.ui.sequence') }}
         </button>
         <button @click="loadExample('gantt')" class="example-btn">
-          <i class="fas fa-chart-gantt"></i> 甘特图
+          <i class="fas fa-chart-gantt"></i> {{ $t('tools.markdownMermaid.ui.gantt') }}
         </button>
       </div>
     </div>
@@ -22,16 +22,16 @@
     <div class="editor-layout">
       <div class="editor-card">
         <div class="card-header">
-          <h3><i class="fas fa-code"></i> Mermaid 代码</h3>
+          <h3><i class="fas fa-code"></i> {{ $t('tools.markdownMermaid.ui.mermaidCode') }}</h3>
           <div class="header-actions">
             <select v-model="selectedTemplate" @change="loadTemplate" class="template-select">
-              <option value="">选择模板</option>
-              <option value="flowchart">流程图</option>
-              <option value="sequence">时序图</option>
-              <option value="gantt">甘特图</option>
-              <option value="pie">饼图</option>
-              <option value="gitgraph">Git图</option>
-              <option value="class">类图</option>
+              <option value="">{{ $t('tools.markdownMermaid.ui.selectTemplate') }}</option>
+              <option value="flowchart">{{ $t('tools.markdownMermaid.ui.flowchart') }}</option>
+              <option value="sequence">{{ $t('tools.markdownMermaid.ui.sequence') }}</option>
+              <option value="gantt">{{ $t('tools.markdownMermaid.ui.gantt') }}</option>
+              <option value="pie">{{ $t('tools.markdownMermaid.ui.pieChart') }}</option>
+              <option value="gitgraph">{{ $t('tools.markdownMermaid.ui.gitGraph') }}</option>
+              <option value="class">{{ $t('tools.markdownMermaid.ui.classDiagram') }}</option>
             </select>
           </div>
         </div>
@@ -39,14 +39,14 @@
         <div class="editor-section">
           <textarea
             v-model="mermaidCode"
-            placeholder="在此输入Mermaid代码..."
+            :placeholder="$t('tools.markdownMermaid.ui.mermaidPlaceholder')"
             class="code-editor"
             @input="debouncedRender"
           ></textarea>
           
           <div class="editor-stats">
-            <span>行数: {{ lineCount }}</span>
-            <span>字符数: {{ charCount }}</span>
+            <span>{{ $t('tools.markdownMermaid.ui.lines') }} {{ lineCount }}</span>
+            <span>{{ $t('tools.markdownMermaid.ui.characters') }} {{ charCount }}</span>
             <span class="syntax-status" :class="{ valid: isValidSyntax, invalid: !isValidSyntax && mermaidCode.trim() }">
               <i :class="isValidSyntax ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
               {{ syntaxMessage }}
@@ -57,16 +57,16 @@
 
       <div class="preview-card">
         <div class="card-header">
-          <h3><i class="fas fa-eye"></i> 实时预览</h3>
+          <h3><i class="fas fa-eye"></i> {{ $t('tools.markdownMermaid.ui.realtimePreview') }}</h3>
           <div class="preview-actions">
             <button @click="downloadSvg" class="action-btn" :disabled="!isValidSyntax">
-              <i class="fas fa-download"></i> 下载SVG
+              <i class="fas fa-download"></i> {{ $t('tools.markdownMermaid.ui.downloadSvg') }}
             </button>
             <button @click="copyCode" class="action-btn">
-              <i class="fas fa-copy"></i> 复制代码
+              <i class="fas fa-copy"></i> {{ $t('tools.markdownMermaid.ui.copyCode') }}
             </button>
             <button @click="fullscreen" class="action-btn">
-              <i class="fas fa-expand"></i> 全屏
+              <i class="fas fa-expand"></i> {{ $t('tools.markdownMermaid.ui.fullscreen') }}
             </button>
           </div>
         </div>
@@ -74,12 +74,12 @@
         <div class="preview-container" :class="{ fullscreen: isFullscreen }">
           <div v-if="!mermaidCode.trim()" class="preview-placeholder">
             <i class="fas fa-diagram-project"></i>
-            <p>在左侧输入Mermaid代码查看预览</p>
+            <p>{{ $t('tools.markdownMermaid.ui.inputCodeToPreview') }}</p>
           </div>
           
           <div v-else-if="!isValidSyntax" class="preview-error">
             <i class="fas fa-exclamation-triangle"></i>
-            <p>代码语法错误</p>
+            <p>{{ $t('tools.markdownMermaid.ui.syntaxError') }}</p>
             <span>{{ errorMessage }}</span>
           </div>
           
@@ -99,17 +99,17 @@
     </div>
 
     <div class="help-card">
-      <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.markdownMermaid.ui.usageInstructions') }}</h4>
       <div class="help-content">
         <div class="help-section">
-          <h5>支持的图表类型：</h5>
+          <h5>{{ $t('tools.markdownMermaid.ui.supportedChartTypes') }}</h5>
           <ul>
-            <li><strong>流程图</strong> - 描述过程和决策流程</li>
-            <li><strong>时序图</strong> - 展示对象间的交互时序</li>
-            <li><strong>甘特图</strong> - 项目进度管理图表</li>
-            <li><strong>饼图</strong> - 数据占比可视化</li>
-            <li><strong>类图</strong> - UML类关系图</li>
-            <li><strong>Git图</strong> - 代码分支流程图</li>
+            <li><strong>{{ $t('tools.markdownMermaid.ui.flowchart') }}</strong> - {{ $t('tools.markdownMermaid.ui.flowchartDesc') }}</li>
+            <li><strong>{{ $t('tools.markdownMermaid.ui.sequence') }}</strong> - {{ $t('tools.markdownMermaid.ui.sequenceDesc') }}</li>
+            <li><strong>{{ $t('tools.markdownMermaid.ui.gantt') }}</strong> - {{ $t('tools.markdownMermaid.ui.ganttDesc') }}</li>
+            <li><strong>{{ $t('tools.markdownMermaid.ui.pieChart') }}</strong> - {{ $t('tools.markdownMermaid.ui.pieChartDesc') }}</li>
+            <li><strong>{{ $t('tools.markdownMermaid.ui.classDiagram') }}</strong> - {{ $t('tools.markdownMermaid.ui.classDiagramDesc') }}</li>
+            <li><strong>{{ $t('tools.markdownMermaid.ui.gitGraph') }}</strong> - {{ $t('tools.markdownMermaid.ui.gitGraphDesc') }}</li>
           </ul>
         </div>
         
@@ -143,10 +143,12 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'MarkdownMermaid',
   setup() {
+    const { t } = useI18n()
     const mermaidCode = ref('')
     const selectedTemplate = ref('')
     const renderedSvg = ref('')
@@ -161,8 +163,8 @@ export default {
     const charCount = computed(() => mermaidCode.value.length)
     
     const syntaxMessage = computed(() => {
-      if (!mermaidCode.value.trim()) return '等待输入'
-      return isValidSyntax.value ? '语法正确' : '语法错误'
+      if (!mermaidCode.value.trim()) return t('tools.markdownMermaid.ui.waitingInput')
+      return isValidSyntax.value ? t('tools.markdownMermaid.ui.syntaxValid') : t('tools.markdownMermaid.ui.syntaxInvalid')
     })
 
     const templates = {
@@ -409,13 +411,13 @@ export default {
       a.click()
       URL.revokeObjectURL(url)
       
-      success.value = 'SVG图表已下载'
+      success.value = t('tools.markdownMermaid.ui.svgDownloaded')
       setTimeout(() => success.value = '', 3000)
     }
 
     const copyCode = () => {
       navigator.clipboard.writeText(mermaidCode.value)
-      success.value = 'Mermaid代码已复制到剪贴板'
+      success.value = t('tools.markdownMermaid.ui.codeCopied')
       setTimeout(() => success.value = '', 3000)
     }
 
@@ -449,7 +451,8 @@ export default {
       downloadSvg,
       copyCode,
       fullscreen,
-      exitFullscreen
+      exitFullscreen,
+      t
     }
   }
 }

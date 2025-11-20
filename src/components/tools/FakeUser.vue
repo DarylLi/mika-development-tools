@@ -1,66 +1,66 @@
 <template>
   <div class="fake-user-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-user-friends"></i> 虚拟人员资料生成器</h3>
-      <p>生成完整的虚拟人员资料，适用于开发测试、设计原型等场景</p>
+      <h3><i class="fas fa-user-friends"></i> {{ $t('tools.fakeUser.ui.title') }}</h3>
+      <p>{{ $t('tools.fakeUser.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="generation-options">
         <div class="option-group">
-          <label for="locale">国家/地区</label>
+          <label for="locale">{{ $t('tools.fakeUser.ui.locale') }}</label>
           <select id="locale" v-model="locale">
-            <option value="zh">中国</option>
-            <option value="us">美国</option>
-            <option value="uk">英国</option>
-            <option value="jp">日本</option>
-            <option value="kr">韩国</option>
+            <option value="zh">{{ $t('tools.fakeUser.ui.countryZh') }}</option>
+            <option value="us">{{ $t('tools.fakeUser.ui.countryUs') }}</option>
+            <option value="uk">{{ $t('tools.fakeUser.ui.countryUk') }}</option>
+            <option value="jp">{{ $t('tools.fakeUser.ui.countryJp') }}</option>
+            <option value="kr">{{ $t('tools.fakeUser.ui.countryKr') }}</option>
           </select>
         </div>
         
         <div class="option-group">
-          <label for="gender">性别</label>
+          <label for="gender">{{ $t('tools.fakeUser.ui.gender') }}</label>
           <select id="gender" v-model="gender">
-            <option value="random">随机</option>
-            <option value="male">男性</option>
-            <option value="female">女性</option>
+            <option value="random">{{ $t('tools.fakeUser.ui.genderRandom') }}</option>
+            <option value="male">{{ $t('tools.fakeUser.ui.genderMale') }}</option>
+            <option value="female">{{ $t('tools.fakeUser.ui.genderFemale') }}</option>
           </select>
         </div>
         
         <div class="option-group">
-          <label for="count">生成数量</label>
+          <label for="count">{{ $t('tools.fakeUser.ui.count') }}</label>
           <input type="number" id="count" v-model.number="count" min="1" max="50" />
         </div>
         
         <div class="option-group">
-          <label for="fields">包含字段</label>
+          <label for="fields">{{ $t('tools.fakeUser.ui.fields') }}</label>
           <div class="checkbox-group">
-            <label><input type="checkbox" v-model="includeFields.basic" /> 基本信息</label>
-            <label><input type="checkbox" v-model="includeFields.contact" /> 联系方式</label>
-            <label><input type="checkbox" v-model="includeFields.work" /> 工作信息</label>
-            <label><input type="checkbox" v-model="includeFields.finance" /> 财务信息</label>
-            <label><input type="checkbox" v-model="includeFields.social" /> 社交媒体</label>
+            <label><input type="checkbox" v-model="includeFields.basic" /> {{ $t('tools.fakeUser.ui.fieldBasic') }}</label>
+            <label><input type="checkbox" v-model="includeFields.contact" /> {{ $t('tools.fakeUser.ui.fieldContact') }}</label>
+            <label><input type="checkbox" v-model="includeFields.work" /> {{ $t('tools.fakeUser.ui.fieldWork') }}</label>
+            <label><input type="checkbox" v-model="includeFields.finance" /> {{ $t('tools.fakeUser.ui.fieldFinance') }}</label>
+            <label><input type="checkbox" v-model="includeFields.social" /> {{ $t('tools.fakeUser.ui.fieldSocial') }}</label>
           </div>
         </div>
       </div>
 
       <div class="actions">
         <button @click="generateUsers" class="btn-primary">
-          <i class="fas fa-user-plus"></i> 生成用户
+          <i class="fas fa-user-plus"></i> {{ $t('tools.fakeUser.ui.generateUsers') }}
         </button>
         <button @click="exportJSON" class="btn-secondary" :disabled="!users.length">
-          <i class="fas fa-file-download"></i> 导出JSON
+          <i class="fas fa-file-download"></i> {{ $t('tools.fakeUser.ui.exportJSON') }}
         </button>
         <button @click="exportCSV" class="btn-secondary" :disabled="!users.length">
-          <i class="fas fa-file-csv"></i> 导出CSV
+          <i class="fas fa-file-csv"></i> {{ $t('tools.fakeUser.ui.exportCSV') }}
         </button>
         <button @click="copyAllUsers" class="btn-secondary" :disabled="!users.length">
-          <i class="fas fa-copy"></i> 复制全部
+          <i class="fas fa-copy"></i> {{ $t('tools.fakeUser.ui.copyAll') }}
         </button>
       </div>
 
       <div class="users-list" v-if="users.length">
-        <h4>生成的用户 ({{ users.length }})</h4>
+        <h4>{{ $t('tools.fakeUser.ui.generatedUsers') }} ({{ users.length }})</h4>
         <div class="user-cards">
           <div v-for="(user, index) in users" :key="index" class="user-card">
             <div class="user-header">
@@ -69,50 +69,50 @@
               </div>
               <div class="user-basic">
                 <h5>{{ user.name }}</h5>
-                <p>{{ user.age }}岁 {{ user.gender === 'male' ? '男' : '女' }}</p>
+                <p>{{ user.age }}{{ $t('tools.fakeUser.ui.ageUnit') }} {{ user.gender === 'male' ? $t('tools.fakeUser.ui.genderMale') : $t('tools.fakeUser.ui.genderFemale') }}</p>
               </div>
-              <button @click="copyUser(user)" class="copy-btn" title="复制此用户">
+              <button @click="copyUser(user)" class="copy-btn" :title="$t('tools.fakeUser.ui.copyUser')">
                 <i class="fas fa-copy"></i>
               </button>
             </div>
             
             <div class="user-details">
               <div v-if="includeFields.basic" class="detail-section">
-                <h6>基本信息</h6>
-                <p><strong>姓名:</strong> {{ user.name }}</p>
-                <p><strong>年龄:</strong> {{ user.age }}岁</p>
-                <p><strong>性别:</strong> {{ user.gender === 'male' ? '男' : '女' }}</p>
-                <p><strong>生日:</strong> {{ user.birthday }}</p>
-                <p><strong>身份证:</strong> {{ user.idCard }}</p>
+                <h6>{{ $t('tools.fakeUser.ui.basicInfo') }}</h6>
+                <p><strong>{{ $t('tools.fakeUser.ui.name') }}</strong> {{ user.name }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.age') }}</strong> {{ user.age }}{{ $t('tools.fakeUser.ui.ageUnit') }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.genderLabel') }}</strong> {{ user.gender === 'male' ? $t('tools.fakeUser.ui.genderMale') : $t('tools.fakeUser.ui.genderFemale') }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.birthday') }}</strong> {{ user.birthday }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.idCard') }}</strong> {{ user.idCard }}</p>
               </div>
               
               <div v-if="includeFields.contact" class="detail-section">
-                <h6>联系方式</h6>
-                <p><strong>手机:</strong> {{ user.phone }}</p>
-                <p><strong>邮箱:</strong> {{ user.email }}</p>
-                <p><strong>地址:</strong> {{ user.address }}</p>
+                <h6>{{ $t('tools.fakeUser.ui.contactInfo') }}</h6>
+                <p><strong>{{ $t('tools.fakeUser.ui.phone') }}</strong> {{ user.phone }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.email') }}</strong> {{ user.email }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.address') }}</strong> {{ user.address }}</p>
               </div>
               
               <div v-if="includeFields.work" class="detail-section">
-                <h6>工作信息</h6>
-                <p><strong>公司:</strong> {{ user.company }}</p>
-                <p><strong>职位:</strong> {{ user.job }}</p>
-                <p><strong>部门:</strong> {{ user.department }}</p>
-                <p><strong>薪资:</strong> {{ user.salary }}</p>
+                <h6>{{ $t('tools.fakeUser.ui.workInfo') }}</h6>
+                <p><strong>{{ $t('tools.fakeUser.ui.company') }}</strong> {{ user.company }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.job') }}</strong> {{ user.job }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.department') }}</strong> {{ user.department }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.salary') }}</strong> {{ user.salary }}</p>
               </div>
               
               <div v-if="includeFields.finance" class="detail-section">
-                <h6>财务信息</h6>
-                <p><strong>银行卡:</strong> {{ user.bankCard }}</p>
-                <p><strong>支付宝:</strong> {{ user.alipay }}</p>
-                <p><strong>信用额度:</strong> {{ user.creditLimit }}</p>
+                <h6>{{ $t('tools.fakeUser.ui.financeInfo') }}</h6>
+                <p><strong>{{ $t('tools.fakeUser.ui.bankCard') }}</strong> {{ user.bankCard }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.alipay') }}</strong> {{ user.alipay }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.creditLimit') }}</strong> {{ user.creditLimit }}</p>
               </div>
               
               <div v-if="includeFields.social" class="detail-section">
-                <h6>社交媒体</h6>
-                <p><strong>微信:</strong> {{ user.wechat }}</p>
-                <p><strong>QQ:</strong> {{ user.qq }}</p>
-                <p><strong>微博:</strong> {{ user.weibo }}</p>
+                <h6>{{ $t('tools.fakeUser.ui.socialInfo') }}</h6>
+                <p><strong>{{ $t('tools.fakeUser.ui.wechat') }}</strong> {{ user.wechat }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.qq') }}</strong> {{ user.qq }}</p>
+                <p><strong>{{ $t('tools.fakeUser.ui.weibo') }}</strong> {{ user.weibo }}</p>
               </div>
             </div>
           </div>
@@ -123,12 +123,14 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'FakeUser',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const locale = ref('zh')
     const gender = ref('random')
     const count = ref(5)
@@ -265,18 +267,18 @@ export default {
     const copyUser = async (user) => {
       try {
         await navigator.clipboard.writeText(JSON.stringify(user, null, 2))
-        instance.proxy.$message.success('用户信息已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.fakeUser.ui.copyFailed') + ':', error)
       }
     }
 
     const copyAllUsers = async () => {
       try {
         await navigator.clipboard.writeText(JSON.stringify(users.value, null, 2))
-        instance.proxy.$message.success('所有用户信息已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.fakeUser.ui.copyFailed') + ':', error)
       }
     }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="ip-info-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-globe-americas"></i> IP 信息查询</h3>
-      <p>查询 IP 地址的地理位置和网络信息</p>
+      <h3><i class="fas fa-globe-americas"></i> {{ $t('tools.ipInfo.ui.title') }}</h3>
+      <p>{{ $t('tools.ipInfo.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
@@ -11,22 +11,22 @@
           <input
             v-model="ipAddress"
             type="text"
-            placeholder="输入 IP 地址 (留空查询当前 IP)"
+            :placeholder="$t('tools.ipInfo.ui.ipPlaceholder')"
             class="ip-input"
             @keyup.enter="queryIP"
           />
           <button @click="queryIP" class="query-btn" :disabled="loading">
             <i class="fas fa-search" v-if="!loading"></i>
             <i class="fas fa-spinner fa-spin" v-else></i>
-            查询
+            {{ $t('tools.ipInfo.ui.query') }}
           </button>
         </div>
         <div class="quick-actions">
           <button @click="getCurrentIP" class="action-btn">
-            <i class="fas fa-map-marker-alt"></i> 查询当前 IP
+            <i class="fas fa-map-marker-alt"></i> {{ $t('tools.ipInfo.ui.queryCurrentIP') }}
           </button>
           <button @click="loadExample" class="action-btn">
-            <i class="fas fa-lightbulb"></i> 示例 IP
+            <i class="fas fa-lightbulb"></i> {{ $t('tools.ipInfo.ui.exampleIP') }}
           </button>
         </div>
       </div>
@@ -34,67 +34,67 @@
       <div v-if="ipInfo" class="results-section">
         <div class="info-cards">
           <div class="info-card">
-            <h4><i class="fas fa-network-wired"></i> 网络信息</h4>
+            <h4><i class="fas fa-network-wired"></i> {{ $t('tools.ipInfo.ui.networkInfo') }}</h4>
             <div class="info-item">
-              <span class="label">IP 地址:</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.ipAddress') }}</span>
               <span class="value">{{ ipInfo.ip }}</span>
             </div>
             <div class="info-item">
-              <span class="label">IP 版本:</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.ipVersion') }}</span>
               <span class="value">{{ ipInfo.version }}</span>
             </div>
             <div class="info-item">
-              <span class="label">ISP:</span>
-              <span class="value">{{ ipInfo.isp || '未知' }}</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.isp') }}</span>
+              <span class="value">{{ ipInfo.isp || $t('tools.ipInfo.ui.unknown') }}</span>
             </div>
             <div class="info-item">
-              <span class="label">组织:</span>
-              <span class="value">{{ ipInfo.org || '未知' }}</span>
-            </div>
-          </div>
-
-          <div class="info-card">
-            <h4><i class="fas fa-map-marked-alt"></i> 地理位置</h4>
-            <div class="info-item">
-              <span class="label">国家:</span>
-              <span class="value">{{ ipInfo.country || '未知' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">地区:</span>
-              <span class="value">{{ ipInfo.region || '未知' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">城市:</span>
-              <span class="value">{{ ipInfo.city || '未知' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="label">时区:</span>
-              <span class="value">{{ ipInfo.timezone || '未知' }}</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.org') }}</span>
+              <span class="value">{{ ipInfo.org || $t('tools.ipInfo.ui.unknown') }}</span>
             </div>
           </div>
 
           <div class="info-card">
-            <h4><i class="fas fa-shield-alt"></i> 安全信息</h4>
+            <h4><i class="fas fa-map-marked-alt"></i> {{ $t('tools.ipInfo.ui.location') }}</h4>
             <div class="info-item">
-              <span class="label">是否代理:</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.country') }}</span>
+              <span class="value">{{ ipInfo.country || $t('tools.ipInfo.ui.unknown') }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">{{ $t('tools.ipInfo.ui.region') }}</span>
+              <span class="value">{{ ipInfo.region || $t('tools.ipInfo.ui.unknown') }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">{{ $t('tools.ipInfo.ui.city') }}</span>
+              <span class="value">{{ ipInfo.city || $t('tools.ipInfo.ui.unknown') }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">{{ $t('tools.ipInfo.ui.timezone') }}</span>
+              <span class="value">{{ ipInfo.timezone || $t('tools.ipInfo.ui.unknown') }}</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h4><i class="fas fa-shield-alt"></i> {{ $t('tools.ipInfo.ui.securityInfo') }}</h4>
+            <div class="info-item">
+              <span class="label">{{ $t('tools.ipInfo.ui.isProxy') }}</span>
               <span class="value" :class="ipInfo.proxy ? 'warning' : 'safe'">
-                {{ ipInfo.proxy ? '是' : '否' }}
+                {{ ipInfo.proxy ? $t('tools.ipInfo.ui.yes') : $t('tools.ipInfo.ui.no') }}
               </span>
             </div>
             <div class="info-item">
-              <span class="label">是否 VPN:</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.isVPN') }}</span>
               <span class="value" :class="ipInfo.vpn ? 'warning' : 'safe'">
-                {{ ipInfo.vpn ? '是' : '否' }}
+                {{ ipInfo.vpn ? $t('tools.ipInfo.ui.yes') : $t('tools.ipInfo.ui.no') }}
               </span>
             </div>
             <div class="info-item">
-              <span class="label">是否 Tor:</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.isTor') }}</span>
               <span class="value" :class="ipInfo.tor ? 'danger' : 'safe'">
-                {{ ipInfo.tor ? '是' : '否' }}
+                {{ ipInfo.tor ? $t('tools.ipInfo.ui.yes') : $t('tools.ipInfo.ui.no') }}
               </span>
             </div>
             <div class="info-item">
-              <span class="label">威胁等级:</span>
+              <span class="label">{{ $t('tools.ipInfo.ui.threatLevel') }}</span>
               <span class="value" :class="getThreatClass(ipInfo.threat)">
                 {{ getThreatLevel(ipInfo.threat) }}
               </span>
@@ -104,9 +104,9 @@
 
         <div class="json-section">
           <div class="section-header">
-            <h4><i class="fas fa-code"></i> 完整信息 (JSON)</h4>
+            <h4><i class="fas fa-code"></i> {{ $t('tools.ipInfo.ui.fullInfo') }}</h4>
             <button @click="copyJSON" class="copy-btn">
-              <i class="fas fa-copy"></i> 复制
+              <i class="fas fa-copy"></i> {{ $t('tools.ipInfo.ui.copy') }}
             </button>
           </div>
           <pre class="json-output">{{ formatJSON(ipInfo) }}</pre>
@@ -116,7 +116,7 @@
       <div v-if="loading" class="loading-section">
         <div class="loading-spinner">
           <i class="fas fa-spinner fa-spin"></i>
-          <p>正在查询 IP 信息...</p>
+          <p>{{ $t('tools.ipInfo.ui.querying') }}</p>
         </div>
       </div>
 
@@ -124,7 +124,7 @@
         <div class="error-message">
           <i class="fas fa-exclamation-triangle"></i>
           <p>{{ error }}</p>
-          <button @click="clearError" class="clear-error-btn">清除错误</button>
+          <button @click="clearError" class="clear-error-btn">{{ $t('tools.ipInfo.ui.clearError') }}</button>
         </div>
       </div>
     </div>
@@ -133,10 +133,12 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'IpInfo',
   setup() {
+    const { t } = useI18n()
     const ipAddress = ref('')
     const loading = ref(false)
     const ipInfo = ref(null)
@@ -165,7 +167,7 @@ export default {
         const result = await simulateIPLookup(ipAddress.value.trim())
         ipInfo.value = result
       } catch (err) {
-        error.value = err.message || 'IP 查询失败'
+        error.value = err.message || t('tools.ipInfo.ui.queryFailed')
       } finally {
         loading.value = false
       }
@@ -183,7 +185,7 @@ export default {
 
       // 验证 IP 格式
       if (!isValidIP(ip)) {
-        throw new Error('无效的 IP 地址格式')
+        throw new Error(t('tools.ipInfo.ui.invalidIPFormat'))
       }
 
       // 模拟返回数据
@@ -268,10 +270,10 @@ export default {
     }
 
     function getThreatLevel(threat) {
-      if (threat === 0) return '安全'
-      if (threat <= 2) return '低风险'
-      if (threat <= 3) return '中风险'
-      return '高风险'
+      if (threat === 0) return t('tools.ipInfo.ui.safe')
+      if (threat <= 2) return t('tools.ipInfo.ui.lowRisk')
+      if (threat <= 3) return t('tools.ipInfo.ui.mediumRisk')
+      return t('tools.ipInfo.ui.highRisk')
     }
 
     function getThreatClass(threat) {
@@ -289,7 +291,7 @@ export default {
       try {
         await navigator.clipboard.writeText(formatJSON(ipInfo.value))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.ipInfo.ui.copyFailed') + ':', err)
       }
     }
 

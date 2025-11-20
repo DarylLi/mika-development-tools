@@ -18,15 +18,15 @@
 
       <!-- X是Y的百分之几 -->
       <div v-if="selectedType === 'percentage-of'" class="calc-section">
-        <h3><i class="fas fa-percent"></i> X是Y的百分之几？</h3>
+        <h3><i class="fas fa-percent"></i> {{ $t('tools.percentageCalc.ui.questionXIsYPercent') }}</h3>
         <div class="input-row">
           <div class="input-group">
-            <label>数值X</label>
-            <input v-model="inputs.x" type="number" placeholder="如：25" @input="calculatePercentageOf">
+            <label>{{ $t('tools.percentageCalc.ui.labelValueX') }}</label>
+            <input v-model="inputs.x" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderX')" @input="calculatePercentageOf">
           </div>
           <div class="input-group">
-            <label>数值Y</label>
-            <input v-model="inputs.y" type="number" placeholder="如：100" @input="calculatePercentageOf">
+            <label>{{ $t('tools.percentageCalc.ui.labelValueY') }}</label>
+            <input v-model="inputs.y" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderY')" @input="calculatePercentageOf">
           </div>
         </div>
         <div v-if="results.percentageOf" class="result-box">
@@ -39,16 +39,16 @@
 
       <!-- Y的X%是多少 -->
       <div v-if="selectedType === 'percent-of-number'" class="calc-section">
-        <h3><i class="fas fa-calculator"></i> Y的X%是多少？</h3>
+        <h3><i class="fas fa-calculator"></i> {{ $t('tools.percentageCalc.ui.questionYPercentX') }}</h3>
         <div class="input-row">
           <div class="input-group">
-            <label>百分比X</label>
-            <input v-model="inputs.percent" type="number" placeholder="如：15" @input="calculatePercentOfNumber">
-            <span class="input-suffix">%</span>
+            <label>{{ $t('tools.percentageCalc.ui.labelPercentX') }}</label>
+            <input v-model="inputs.percent" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderPercent')" @input="calculatePercentOfNumber">
+            <span class="input-suffix">{{ $t('tools.percentageCalc.ui.suffixPercent') }}</span>
           </div>
           <div class="input-group">
-            <label>数值Y</label>
-            <input v-model="inputs.number" type="number" placeholder="如：200" @input="calculatePercentOfNumber">
+            <label>{{ $t('tools.percentageCalc.ui.labelNumberY') }}</label>
+            <input v-model="inputs.number" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderNumber')" @input="calculatePercentOfNumber">
           </div>
         </div>
         <div v-if="results.percentOfNumber" class="result-box">
@@ -61,15 +61,15 @@
 
       <!-- 百分比增减 -->
       <div v-if="selectedType === 'percentage-change'" class="calc-section">
-        <h3><i class="fas fa-chart-line"></i> 百分比增减计算</h3>
+        <h3><i class="fas fa-chart-line"></i> {{ $t('tools.percentageCalc.ui.questionPercentageChange') }}</h3>
         <div class="input-row">
           <div class="input-group">
-            <label>原始值</label>
-            <input v-model="inputs.originalValue" type="number" placeholder="如：80" @input="calculatePercentageChange">
+            <label>{{ $t('tools.percentageCalc.ui.labelOriginalValue') }}</label>
+            <input v-model="inputs.originalValue" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderOriginal')" @input="calculatePercentageChange">
           </div>
           <div class="input-group">
-            <label>新值</label>
-            <input v-model="inputs.newValue" type="number" placeholder="如：100" @input="calculatePercentageChange">
+            <label>{{ $t('tools.percentageCalc.ui.labelNewValue') }}</label>
+            <input v-model="inputs.newValue" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderNew')" @input="calculatePercentageChange">
           </div>
         </div>
         <div v-if="results.percentageChange !== null" class="result-box">
@@ -82,34 +82,34 @@
             ({{ inputs.newValue }} - {{ inputs.originalValue }}) ÷ {{ inputs.originalValue }} × 100% = {{ results.percentageChange }}%
           </div>
           <div class="change-description">
-            {{ results.percentageChange > 0 ? '增长' : results.percentageChange < 0 ? '下降' : '无变化' }}了 {{ Math.abs(results.percentageChange) }}%
+            {{ results.percentageChange > 0 ? $t('tools.percentageCalc.ui.changeIncrease') : results.percentageChange < 0 ? $t('tools.percentageCalc.ui.changeDecrease') : $t('tools.percentageCalc.ui.changeNoChange') }} {{ Math.abs(results.percentageChange) }}{{ $t('tools.percentageCalc.ui.suffixPercent') }}
           </div>
         </div>
       </div>
 
       <!-- 折扣计算 -->
       <div v-if="selectedType === 'discount'" class="calc-section">
-        <h3><i class="fas fa-tag"></i> 折扣价格计算</h3>
+        <h3><i class="fas fa-tag"></i> {{ $t('tools.percentageCalc.ui.questionDiscount') }}</h3>
         <div class="input-row">
           <div class="input-group">
-            <label>原价</label>
-            <input v-model="inputs.originalPrice" type="number" placeholder="如：100" @input="calculateDiscount">
-            <span class="input-suffix">元</span>
+            <label>{{ $t('tools.percentageCalc.ui.labelOriginalPrice') }}</label>
+            <input v-model="inputs.originalPrice" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderPrice')" @input="calculateDiscount">
+            <span class="input-suffix">{{ $t('tools.percentageCalc.ui.suffixYuan') }}</span>
           </div>
           <div class="input-group">
-            <label>折扣</label>
-            <input v-model="inputs.discount" type="number" placeholder="如：20" @input="calculateDiscount">
-            <span class="input-suffix">%</span>
+            <label>{{ $t('tools.percentageCalc.ui.labelDiscount') }}</label>
+            <input v-model="inputs.discount" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderDiscount')" @input="calculateDiscount">
+            <span class="input-suffix">{{ $t('tools.percentageCalc.ui.suffixPercent') }}</span>
           </div>
         </div>
         <div v-if="results.discountPrice !== null" class="result-box">
           <div class="result-grid">
             <div class="result-item">
-              <label>折后价</label>
+              <label>{{ $t('tools.percentageCalc.ui.resultAfterDiscount') }}</label>
               <span class="result-value">¥{{ results.discountPrice }}</span>
             </div>
             <div class="result-item">
-              <label>优惠金额</label>
+              <label>{{ $t('tools.percentageCalc.ui.resultSavings') }}</label>
               <span class="result-value">¥{{ results.savings }}</span>
             </div>
           </div>
@@ -121,41 +121,41 @@
 
       <!-- 税费计算 -->
       <div v-if="selectedType === 'tax'" class="calc-section">
-        <h3><i class="fas fa-receipt"></i> 税费计算</h3>
+        <h3><i class="fas fa-receipt"></i> {{ $t('tools.percentageCalc.ui.questionTax') }}</h3>
         <div class="calc-mode-toggle">
           <button 
             @click="taxMode = 'add'"
             :class="{ active: taxMode === 'add' }"
             class="mode-btn">
-            加税（税前→税后）
+            {{ $t('tools.percentageCalc.ui.modeAddTax') }}
           </button>
           <button 
             @click="taxMode = 'remove'"
             :class="{ active: taxMode === 'remove' }"
             class="mode-btn">
-            去税（税后→税前）
+            {{ $t('tools.percentageCalc.ui.modeRemoveTax') }}
           </button>
         </div>
         <div class="input-row">
           <div class="input-group">
-            <label>{{ taxMode === 'add' ? '税前金额' : '税后金额' }}</label>
-            <input v-model="inputs.taxAmount" type="number" placeholder="如：100" @input="calculateTax">
-            <span class="input-suffix">元</span>
+            <label>{{ taxMode === 'add' ? $t('tools.percentageCalc.ui.labelTaxAmount') : $t('tools.percentageCalc.ui.labelAfterTaxAmount') }}</label>
+            <input v-model="inputs.taxAmount" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderTax')" @input="calculateTax">
+            <span class="input-suffix">{{ $t('tools.percentageCalc.ui.suffixYuan') }}</span>
           </div>
           <div class="input-group">
-            <label>税率</label>
-            <input v-model="inputs.taxRate" type="number" placeholder="如：13" @input="calculateTax">
-            <span class="input-suffix">%</span>
+            <label>{{ $t('tools.percentageCalc.ui.labelTaxRate') }}</label>
+            <input v-model="inputs.taxRate" type="number" :placeholder="$t('tools.percentageCalc.ui.placeholderTaxRate')" @input="calculateTax">
+            <span class="input-suffix">{{ $t('tools.percentageCalc.ui.suffixPercent') }}</span>
           </div>
         </div>
         <div v-if="results.finalAmount !== null" class="result-box">
           <div class="result-grid">
             <div class="result-item">
-              <label>{{ taxMode === 'add' ? '税后金额' : '税前金额' }}</label>
+              <label>{{ taxMode === 'add' ? $t('tools.percentageCalc.ui.labelAfterTaxAmount') : $t('tools.percentageCalc.ui.labelTaxAmount') }}</label>
               <span class="result-value">¥{{ results.finalAmount }}</span>
             </div>
             <div class="result-item">
-              <label>税费</label>
+              <label>{{ $t('tools.percentageCalc.ui.labelTaxFee') }}</label>
               <span class="result-value">¥{{ results.taxFee }}</span>
             </div>
           </div>
@@ -169,7 +169,7 @@
 
       <!-- 快速计算卡片 -->
       <div class="quick-calc-section">
-        <h3><i class="fas fa-zap"></i> 快速计算</h3>
+        <h3><i class="fas fa-zap"></i> {{ $t('tools.percentageCalc.ui.quickCalc') }}</h3>
         <div class="quick-calc-grid">
           <div v-for="quick in quickCalcs" :key="quick.label" class="quick-calc-card">
             <div class="quick-label">{{ quick.label }}</div>
@@ -180,27 +180,27 @@
 
       <!-- 百分比常识 -->
       <div class="tips-section">
-        <h3><i class="fas fa-lightbulb"></i> 百分比常识</h3>
+        <h3><i class="fas fa-lightbulb"></i> {{ $t('tools.percentageCalc.ui.percentageTips') }}</h3>
         <div class="tips-grid">
           <div class="tip-card">
             <i class="fas fa-info-circle"></i>
             <div>
-              <strong>百分比基础</strong>
-              <p>百分比表示一个数占另一个数的比例，1% = 0.01 = 1/100</p>
+              <strong>{{ $t('tools.percentageCalc.ui.tipBasic') }}</strong>
+              <p>{{ $t('tools.percentageCalc.ui.tipBasicDesc') }}</p>
             </div>
           </div>
           <div class="tip-card">
             <i class="fas fa-chart-pie"></i>
             <div>
-              <strong>百分点 vs 百分比</strong>
-              <p>从20%增加到25%，增长了5个百分点，增长率为25%</p>
+              <strong>{{ $t('tools.percentageCalc.ui.tipPointVsPercent') }}</strong>
+              <p>{{ $t('tools.percentageCalc.ui.tipPointVsPercentDesc') }}</p>
             </div>
           </div>
           <div class="tip-card">
             <i class="fas fa-calculator"></i>
             <div>
-              <strong>快速计算技巧</strong>
-              <p>10% = 1/10，25% = 1/4，50% = 1/2，75% = 3/4</p>
+              <strong>{{ $t('tools.percentageCalc.ui.tipQuickCalc') }}</strong>
+              <p>{{ $t('tools.percentageCalc.ui.tipQuickCalcDesc') }}</p>
             </div>
           </div>
         </div>
@@ -211,10 +211,12 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'PercentageCalc',
   setup() {
+    const { t } = useI18n()
     const selectedType = ref('percentage-of')
     const taxMode = ref('add')
     
@@ -241,13 +243,13 @@ export default {
       taxFee: null
     })
     
-    const calcTypes = [
-      { id: 'percentage-of', name: 'X是Y的几%', icon: 'fas fa-percent' },
-      { id: 'percent-of-number', name: 'Y的X%', icon: 'fas fa-calculator' },
-      { id: 'percentage-change', name: '百分比变化', icon: 'fas fa-chart-line' },
-      { id: 'discount', name: '折扣计算', icon: 'fas fa-tag' },
-      { id: 'tax', name: '税费计算', icon: 'fas fa-receipt' }
-    ]
+    const calcTypes = computed(() => [
+      { id: 'percentage-of', name: t('tools.percentageCalc.ui.typeXIsYPercent'), icon: 'fas fa-percent' },
+      { id: 'percent-of-number', name: t('tools.percentageCalc.ui.typeYPercentX'), icon: 'fas fa-calculator' },
+      { id: 'percentage-change', name: t('tools.percentageCalc.ui.typePercentageChange'), icon: 'fas fa-chart-line' },
+      { id: 'discount', name: t('tools.percentageCalc.ui.typeDiscount'), icon: 'fas fa-tag' },
+      { id: 'tax', name: t('tools.percentageCalc.ui.typeTax'), icon: 'fas fa-receipt' }
+    ])
     
     const calculatePercentageOf = () => {
       const x = parseFloat(inputs.value.x)

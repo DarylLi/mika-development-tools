@@ -1,8 +1,8 @@
 <template>
   <div class="image-convert-container">
     <div class="tool-header">
-      <h3>图片格式转换</h3>
-      <p>PNG ↔ WebP ↔ JPG 互相转换，保持最佳质量</p>
+      <h3>{{ $t('tools.imageConvert.ui.title') }}</h3>
+      <p>{{ $t('tools.imageConvert.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -24,8 +24,8 @@
         />
         <div class="upload-content">
           <div class="upload-icon">🔄</div>
-          <p>点击选择或拖拽图片文件</p>
-          <small>支持 JPG、PNG、WebP、GIF、BMP 格式</small>
+          <p>{{ $t('tools.imageConvert.ui.uploadText') }}</p>
+          <small>{{ $t('tools.imageConvert.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
     <div class="format-section" v-if="images.length > 0">
       <div class="format-controls">
         <div class="target-format">
-          <label>目标格式</label>
+          <label>{{ $t('tools.imageConvert.ui.targetFormat') }}</label>
           <div class="format-options">
             <button 
               v-for="format in outputFormats"
@@ -47,7 +47,7 @@
         </div>
 
         <div class="quality-control" v-if="outputFormat !== 'png'">
-          <label>输出质量</label>
+          <label>{{ $t('tools.imageConvert.ui.outputQuality') }}</label>
           <div class="quality-slider">
             <input 
               type="range" class="modern-slider" 
@@ -62,12 +62,12 @@
 
         <div class="batch-actions">
           <button @click="convertAll" class="convert-all-btn" :disabled="converting">
-            {{ converting ? '转换中...' : '批量转换' }}
+            {{ converting ? $t('tools.imageConvert.ui.converting') : $t('tools.imageConvert.ui.batchConvert') }}
           </button>
           <button @click="downloadAll" class="download-all-btn" v-if="convertedImages.length > 0">
-            下载全部
+            {{ $t('tools.imageConvert.ui.downloadAll') }}
           </button>
-          <button @click="clearAll" class="clear-btn">清空</button>
+          <button @click="clearAll" class="clear-btn">{{ $t('tools.imageConvert.ui.clear') }}</button>
         </div>
       </div>
     </div>
@@ -84,7 +84,7 @@
             <div class="format-badge">{{ image.format.toUpperCase() }}</div>
             <div class="image-overlay" v-if="image.converting">
               <div class="loading-spinner"></div>
-              <span>转换中...</span>
+              <span>{{ $t('tools.imageConvert.ui.converting') }}</span>
             </div>
           </div>
           
@@ -94,9 +94,9 @@
               <span>{{ image.format.toUpperCase() }} → {{ outputFormat.toUpperCase() }}</span>
             </div>
             <div class="size-info">
-              <span>原始: {{ formatFileSize(image.originalSize) }}</span>
+              <span>{{ $t('tools.imageConvert.ui.original') }}: {{ formatFileSize(image.originalSize) }}</span>
               <span v-if="image.convertedSize">
-                转换后: {{ formatFileSize(image.convertedSize) }}
+                {{ $t('tools.imageConvert.ui.converted') }}: {{ formatFileSize(image.convertedSize) }}
               </span>
             </div>
             <div class="compression-info" v-if="image.convertedSize">
@@ -112,32 +112,32 @@
               class="convert-btn"
               :disabled="image.converting"
             >
-              {{ image.converting ? '转换中' : '转换' }}
+              {{ image.converting ? $t('tools.imageConvert.ui.convertingSingle') : $t('tools.imageConvert.ui.convert') }}
             </button>
             <button 
               @click="downloadImage(index)" 
               class="download-btn"
               v-if="image.converted"
             >
-              下载
+              {{ $t('tools.imageConvert.ui.download') }}
             </button>
-            <button @click="removeImage(index)" class="remove-btn">删除</button>
+            <button @click="removeImage(index)" class="remove-btn">{{ $t('tools.imageConvert.ui.remove') }}</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="tips-section">
-      <h4>💡 格式说明</h4>
+      <h4>💡 {{ $t('tools.imageConvert.ui.formatTips') }}</h4>
       <div class="format-tips">
         <div class="tip-item">
-          <strong>JPEG:</strong> 适合照片，文件小，有损压缩
+          <strong>JPEG:</strong> {{ $t('tools.imageConvert.ui.jpegTip') }}
         </div>
         <div class="tip-item">
-          <strong>PNG:</strong> 支持透明，无损压缩，适合图标
+          <strong>PNG:</strong> {{ $t('tools.imageConvert.ui.pngTip') }}
         </div>
         <div class="tip-item">
-          <strong>WebP:</strong> 现代格式，压缩比最好，支持透明
+          <strong>WebP:</strong> {{ $t('tools.imageConvert.ui.webpTip') }}
         </div>
       </div>
     </div>
@@ -225,8 +225,8 @@ export default {
           blob: convertedBlob
         })
       } catch (error) {
-        console.error('转换失败:', error)
-        this.$message.success('转换失败: ' + error.message)
+        console.error(this.$t('tools.imageConvert.ui.convertFailed'), error)
+        this.$message.success(this.$t('tools.imageConvert.ui.convertFailed') + ': ' + error.message)
       } finally {
         image.converting = false
       }
@@ -258,7 +258,7 @@ export default {
               if (blob) {
                 resolve(blob)
               } else {
-                reject(new Error('转换失败'))
+                reject(new Error(this.$t('tools.imageConvert.ui.convertFailed')))
               }
             }, mimeType, quality)
           } catch (error) {
@@ -266,7 +266,7 @@ export default {
           }
         }
 
-        img.onerror = () => reject(new Error('图片加载失败'))
+        img.onerror = () => reject(new Error(this.$t('tools.imageConvert.ui.imageLoadFailed')))
         img.src = URL.createObjectURL(file)
       })
     },
@@ -330,7 +330,7 @@ export default {
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
       } catch (error) {
-        this.$message.success('批量下载失败，请逐个下载')
+        this.$message.success(this.$t('tools.imageConvert.ui.batchDownloadFailed'))
       }
     },
 
@@ -364,11 +364,11 @@ export default {
       const percent = Math.round(Math.abs(diff) / originalSize * 100)
       
       if (diff > 0) {
-        return `减少 ${percent}%`
+        return `${this.$t('tools.imageConvert.ui.sizeDecreased')} ${percent}%`
       } else if (diff < 0) {
-        return `增加 ${percent}%`
+        return `${this.$t('tools.imageConvert.ui.sizeIncreased')} ${percent}%`
       } else {
-        return '大小相同'
+        return this.$t('tools.imageConvert.ui.sizeSame')
       }
     },
 
@@ -479,114 +479,6 @@ export default {
   gap: 15px;
 }
 
-.quality-slider input[type="range"].modern-slider {
-  flex: 1;
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  outline: none;
-  appearance: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.quality-slider input[type="range"].modern-slider:hover {
-  height: 10px;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-}
-
-.quality-slider input[type="range"].modern-slider:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-}
-
-.quality-slider input[type="range"].modern-slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  background: var(--primary-color);
-  border: 3px solid var(--bg-primary);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 2;
-}
-
-.quality-slider input[type="range"].modern-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-
-.quality-slider input[type="range"].modern-slider::-webkit-slider-track {
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  border: none;
-}
-
-.quality-slider input[type="range"].modern-slider::-webkit-slider-runnable-track {
-  height: 8px;
-  background: linear-gradient(to right, 
-    var(--primary-color) 0%, 
-    var(--primary-color) var(--value, 0%), 
-    var(--border-color) var(--value, 0%), 
-    var(--border-color) 100%);
-  border-radius: 4px;
-}
-
-/* Firefox样式 */
-.quality-slider input[type="range"].modern-slider::-moz-range-track {
-  height: 8px;
-  background: var(--border-color);
-  border-radius: 4px;
-  border: none;
-}
-
-.quality-slider input[type="range"].modern-slider::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  background: var(--primary-color);
-  border: 3px solid var(--bg-primary);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-.quality-slider input[type="range"].modern-slider::-moz-range-progress {
-  height: 8px;
-  background: var(--primary-color);
-  border-radius: 4px;
-}
-
-/* Edge样式 */
-.quality-slider input[type="range"].modern-slider::-ms-track {
-  height: 8px;
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
-}
-
-.quality-slider input[type="range"].modern-slider::-ms-fill-lower {
-  background: var(--primary-color);
-  border-radius: 4px;
-}
-
-.quality-slider input[type="range"].modern-slider::-ms-fill-upper {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-
-.quality-slider input[type="range"].modern-slider::-ms-thumb {
-  width: 22px;
-  height: 22px;
-  background: var(--primary-color);
-  border: 3px solid var(--bg-primary);
-  border-radius: 50%;
-  cursor: pointer;
-}
 
 .batch-actions {
   display: flex;

@@ -1,28 +1,28 @@
 <template>
   <div class="unix-timestamp-tool">
-    <h2>Unix 时间戳转换</h2>
-    <p>时间戳与日期时间的相互转换工具</p>
+    <h2>{{ $t('tools.unixTimestamp.ui.title') }}</h2>
+    <p>{{ $t('tools.unixTimestamp.ui.description') }}</p>
 
     <!-- 当前时间戳 -->
     <div class="current-time-section">
-      <h3>当前时间戳</h3>
+      <h3>{{ $t('tools.unixTimestamp.ui.currentTimestampSection') }}</h3>
       <div class="current-time-display">
         <div class="timestamp-group">
-          <label>Unix 时间戳（秒）</label>
+          <label>{{ $t('tools.unixTimestamp.ui.unixTimestampSeconds') }}</label>
           <div class="timestamp-value" @click="copyToClipboard(currentTimestamp.toString())">
             {{ currentTimestamp }}
             <i class="fas fa-copy"></i>
           </div>
         </div>
         <div class="timestamp-group">
-          <label>Unix 时间戳（毫秒）</label>
+          <label>{{ $t('tools.unixTimestamp.ui.unixTimestampMs') }}</label>
           <div class="timestamp-value" @click="copyToClipboard(currentTimestampMs.toString())">
             {{ currentTimestampMs }}
             <i class="fas fa-copy"></i>
           </div>
         </div>
         <div class="timestamp-group">
-          <label>当前时间</label>
+          <label>{{ $t('tools.unixTimestamp.ui.currentTime') }}</label>
           <div class="datetime-value">
             {{ currentDateTime }}
           </div>
@@ -32,42 +32,42 @@
 
     <!-- 时间戳转日期 -->
     <div class="conversion-section">
-      <h3>时间戳转日期</h3>
+      <h3>{{ $t('tools.unixTimestamp.ui.timestampToDateSection') }}</h3>
       <div class="form-group">
-        <label>输入时间戳</label>
+        <label>{{ $t('tools.unixTimestamp.ui.inputTimestamp') }}</label>
         <div class="input-with-buttons">
           <input 
             type="text" 
             v-model="inputTimestamp" 
-            placeholder="输入Unix时间戳（支持秒或毫秒）"
+            :placeholder="$t('tools.unixTimestamp.ui.inputTimestampPlaceholder')"
             @input="convertTimestampToDate"
           >
           <button @click="useCurrentTimestamp" class="secondary-btn">
-            <i class="fas fa-clock"></i> 当前
+            <i class="fas fa-clock"></i> {{ $t('tools.unixTimestamp.ui.current') }}
           </button>
         </div>
         <div class="timestamp-detection" v-if="inputTimestamp">
           <span :class="['detection-tag', timestampType]">
-            {{ timestampType === 'seconds' ? '秒级时间戳' : '毫秒级时间戳' }}
+            {{ timestampType === 'seconds' ? $t('tools.unixTimestamp.ui.secondsTimestamp') : $t('tools.unixTimestamp.ui.millisecondsTimestamp') }}
           </span>
         </div>
       </div>
 
       <div class="results-grid" v-if="convertedDate">
         <div class="result-item">
-          <label>本地时间</label>
+          <label>{{ $t('tools.unixTimestamp.ui.localTime') }}</label>
           <div class="result-value">{{ convertedDate.local }}</div>
         </div>
         <div class="result-item">
-          <label>UTC时间</label>
+          <label>{{ $t('tools.unixTimestamp.ui.utcTime') }}</label>
           <div class="result-value">{{ convertedDate.utc }}</div>
         </div>
         <div class="result-item">
-          <label>ISO 8601</label>
+          <label>{{ $t('tools.unixTimestamp.ui.iso8601') }}</label>
           <div class="result-value">{{ convertedDate.iso }}</div>
         </div>
         <div class="result-item">
-          <label>相对时间</label>
+          <label>{{ $t('tools.unixTimestamp.ui.relativeTime') }}</label>
           <div class="result-value">{{ convertedDate.relative }}</div>
         </div>
       </div>
@@ -75,10 +75,10 @@
 
     <!-- 日期转时间戳 -->
     <div class="conversion-section">
-      <h3>日期转时间戳</h3>
+      <h3>{{ $t('tools.unixTimestamp.ui.dateToTimestampSection') }}</h3>
       <div class="date-input-grid">
         <div class="form-group">
-          <label>选择日期</label>
+          <label>{{ $t('tools.unixTimestamp.ui.selectDate') }}</label>
           <input 
             type="date" 
             v-model="inputDate"
@@ -86,7 +86,7 @@
           >
         </div>
         <div class="form-group">
-          <label>选择时间</label>
+          <label>{{ $t('tools.unixTimestamp.ui.selectTime') }}</label>
           <input 
             type="time" 
             v-model="inputTime"
@@ -98,33 +98,33 @@
 
       <div class="quick-actions">
         <button @click="setToNow" class="secondary-btn">
-          <i class="fas fa-clock"></i> 设为现在
+          <i class="fas fa-clock"></i> {{ $t('tools.unixTimestamp.ui.setToNow') }}
         </button>
         <button @click="setToStartOfDay" class="secondary-btn">
-          <i class="fas fa-sunrise"></i> 今日0点
+          <i class="fas fa-sunrise"></i> {{ $t('tools.unixTimestamp.ui.setToStartOfDay') }}
         </button>
         <button @click="setToEndOfDay" class="secondary-btn">
-          <i class="fas fa-sunset"></i> 今日24点
+          <i class="fas fa-sunset"></i> {{ $t('tools.unixTimestamp.ui.setToEndOfDay') }}
         </button>
       </div>
 
       <div class="results-grid" v-if="convertedTimestamp">
         <div class="result-item">
-          <label>Unix时间戳（秒）</label>
+          <label>{{ $t('tools.unixTimestamp.ui.unixTimestampSeconds') }}</label>
           <div class="result-value copyable" @click="copyToClipboard(convertedTimestamp.seconds.toString())">
             {{ convertedTimestamp.seconds }}
             <i class="fas fa-copy"></i>
           </div>
         </div>
         <div class="result-item">
-          <label>Unix时间戳（毫秒）</label>
+          <label>{{ $t('tools.unixTimestamp.ui.unixTimestampMs') }}</label>
           <div class="result-value copyable" @click="copyToClipboard(convertedTimestamp.milliseconds.toString())">
             {{ convertedTimestamp.milliseconds }}
             <i class="fas fa-copy"></i>
           </div>
         </div>
         <div class="result-item">
-          <label>选择的时间</label>
+          <label>{{ $t('tools.unixTimestamp.ui.selectedTime') }}</label>
           <div class="result-value">{{ convertedTimestamp.formatted }}</div>
         </div>
       </div>
@@ -132,7 +132,7 @@
 
     <!-- 常用时间戳 -->
     <div class="presets-section">
-      <h3>常用时间戳</h3>
+      <h3>{{ $t('tools.unixTimestamp.ui.commonTimestamps') }}</h3>
       <div class="presets-grid">
         <div 
           v-for="preset in timePresets" 
@@ -177,32 +177,32 @@ export default {
 
       return [
         {
-          name: '今日0点',
+          name: this.$t('tools.unixTimestamp.ui.presetToday0'),
           timestamp: Math.floor(today.getTime() / 1000),
           date: today.toLocaleDateString()
         },
         {
-          name: '昨日0点',
+          name: this.$t('tools.unixTimestamp.ui.presetYesterday0'),
           timestamp: Math.floor(yesterday.getTime() / 1000),
           date: yesterday.toLocaleDateString()
         },
         {
-          name: '明日0点',
+          name: this.$t('tools.unixTimestamp.ui.presetTomorrow0'),
           timestamp: Math.floor(tomorrow.getTime() / 1000),
           date: tomorrow.toLocaleDateString()
         },
         {
-          name: '一周前',
+          name: this.$t('tools.unixTimestamp.ui.presetWeekAgo'),
           timestamp: Math.floor(weekAgo.getTime() / 1000),
           date: weekAgo.toLocaleDateString()
         },
         {
-          name: '一月前',
+          name: this.$t('tools.unixTimestamp.ui.presetMonthAgo'),
           timestamp: Math.floor(monthAgo.getTime() / 1000),
           date: monthAgo.toLocaleDateString()
         },
         {
-          name: 'Unix 元年',
+          name: this.$t('tools.unixTimestamp.ui.presetUnixEpoch'),
           timestamp: 0,
           date: '1970-01-01'
         }
@@ -329,13 +329,21 @@ export default {
       const diffDays = Math.floor(diffHours / 24)
 
       if (Math.abs(diffSeconds) < 60) {
-        return diffSeconds >= 0 ? `${diffSeconds}秒前` : `${Math.abs(diffSeconds)}秒后`
+        return diffSeconds >= 0 
+          ? `${diffSeconds}${this.$t('tools.unixTimestamp.ui.secondsAgo')}` 
+          : `${Math.abs(diffSeconds)}${this.$t('tools.unixTimestamp.ui.secondsLater')}`
       } else if (Math.abs(diffMinutes) < 60) {
-        return diffMinutes >= 0 ? `${diffMinutes}分钟前` : `${Math.abs(diffMinutes)}分钟后`
+        return diffMinutes >= 0 
+          ? `${diffMinutes}${this.$t('tools.unixTimestamp.ui.minutesAgo')}` 
+          : `${Math.abs(diffMinutes)}${this.$t('tools.unixTimestamp.ui.minutesLater')}`
       } else if (Math.abs(diffHours) < 24) {
-        return diffHours >= 0 ? `${diffHours}小时前` : `${Math.abs(diffHours)}小时后`
+        return diffHours >= 0 
+          ? `${diffHours}${this.$t('tools.unixTimestamp.ui.hoursAgo')}` 
+          : `${Math.abs(diffHours)}${this.$t('tools.unixTimestamp.ui.hoursLater')}`
       } else {
-        return diffDays >= 0 ? `${diffDays}天前` : `${Math.abs(diffDays)}天后`
+        return diffDays >= 0 
+          ? `${diffDays}${this.$t('tools.unixTimestamp.ui.daysAgo')}` 
+          : `${Math.abs(diffDays)}${this.$t('tools.unixTimestamp.ui.daysLater')}`
       }
     },
 
@@ -344,7 +352,7 @@ export default {
         await navigator.clipboard.writeText(text)
         // 可以添加复制成功提示
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(this.$t('tools.unixTimestamp.ui.copyFailed'), err)
       }
     }
   }

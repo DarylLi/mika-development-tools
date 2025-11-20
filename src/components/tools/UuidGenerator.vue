@@ -1,17 +1,17 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-fingerprint"></i> UUID v4 生成器</h2>
-    <p>生成全球唯一标识符 (UUID Version 4)，基于随机数算法</p>
+    <h2><i class="fas fa-fingerprint"></i> {{ $t('tools.uuidGenerator.ui.title') }}</h2>
+    <p>{{ $t('tools.uuidGenerator.ui.description') }}</p>
     
     <div class="example-section">
       <button class="example-btn" @click="generateUUID">
-        <i class="fas fa-magic"></i> 生成 UUID
+        <i class="fas fa-magic"></i> {{ $t('tools.uuidGenerator.ui.generateUuid') }}
       </button>
     </div>
 
     <div class="generator-controls">
       <div class="quantity-control">
-        <label for="quantity">生成数量:</label>
+        <label for="quantity">{{ $t('tools.uuidGenerator.ui.quantity') }}</label>
         <input 
           id="quantity"
           v-model.number="quantity" 
@@ -19,27 +19,28 @@
           min="1" 
           max="20"
           class="quantity-input"
+          style="margin-bottom: 0px;"
         >
-        <button @click="generateMultiple">生成多个</button>
+        <button @click="generateMultiple">{{ $t('tools.uuidGenerator.ui.generateMultiple') }}</button>
       </div>
       
       <div class="format-options">
-        <label class="checkbox-label">
+        <label class="check-box-label">
           <input v-model="includeHyphens" type="checkbox">
-          <span>包含连字符</span>
+          <span>{{ $t('tools.uuidGenerator.ui.includeHyphens') }}</span>
         </label>
-        <label class="checkbox-label">
+        <label class="check-box-label">
           <input v-model="uppercase" type="checkbox">
-          <span>大写字母</span>
+          <span>{{ $t('tools.uuidGenerator.ui.uppercase') }}</span>
         </label>
       </div>
     </div>
 
     <div v-if="uuids.length" class="result-display">
       <div class="results-header">
-        <h4>生成的 UUID ({{ uuids.length }})</h4>
+        <h4>{{ $t('tools.uuidGenerator.ui.generatedUuids', { count: uuids.length }) }}</h4>
         <button @click="copyAllUUIDs" class="copy-all-btn">
-          <i class="fas fa-copy"></i> 复制全部
+          <i class="fas fa-copy"></i> {{ $t('tools.uuidGenerator.ui.copyAll') }}
         </button>
       </div>
 
@@ -54,10 +55,10 @@
     </div>
 
     <div class="info-section">
-      <h4><i class="fas fa-info-circle"></i> 关于 UUID v4</h4>
-      <p><strong>UUID</strong> 是一个128位的数字，用于唯一标识信息。Version 4 使用随机数生成，碰撞概率极低。</p>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.uuidGenerator.ui.aboutUuid') }}</h4>
+      <p><strong>UUID</strong> {{ $t('tools.uuidGenerator.ui.uuidInfo') }}</p>
       <div class="format-example">
-        <strong>格式:</strong> <code>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</code>
+        <strong>{{ $t('tools.uuidGenerator.ui.format') }}</strong> <code>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</code>
       </div>
     </div>
   </div>
@@ -65,6 +66,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'UuidGenerator',
@@ -72,6 +74,7 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const quantity = ref(1)
     const includeHyphens = ref(true)
     const uppercase = ref(false)
@@ -117,7 +120,7 @@ export default {
       try {
         await navigator.clipboard.writeText(formatUUID(uuid))
       } catch (e) {
-        console.error('复制失败:', e)
+        console.error(t('tools.uuidGenerator.ui.copyFailed'), e)
       }
     }
 
@@ -127,7 +130,7 @@ export default {
         const formatted = uuids.value.map(uuid => formatUUID(uuid)).join('\n')
         await navigator.clipboard.writeText(formatted)
       } catch (e) {
-        console.error('复制失败:', e)
+        console.error(t('tools.uuidGenerator.ui.copyFailed'), e)
       }
     }
 

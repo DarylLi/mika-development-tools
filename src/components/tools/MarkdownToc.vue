@@ -4,14 +4,14 @@
       <div class="header-icon">
         <i class="fab fa-markdown"></i>
       </div>
-      <h2>Markdown 目录生成器</h2>
-      <p>自动解析Markdown文档标题，生成层级化目录结构，支持多种输出格式</p>
+      <h2>{{ $t('tools.markdownToc.ui.title') }}</h2>
+      <p>{{ $t('tools.markdownToc.ui.description') }}</p>
       
       <!-- 快速示例按钮 -->
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.markdownToc.ui.quickStart') }}</span>
         <button @click="loadExample" class="example-btn">
-          <i class="fas fa-magic"></i> 加载示例文档
+          <i class="fas fa-magic"></i> {{ $t('tools.markdownToc.ui.loadExample') }}
         </button>
       </div>
     </div>
@@ -19,19 +19,19 @@
     <div class="tool-content">
       <!-- 配置选项卡片 -->
       <div class="config-card">
-        <h3><i class="fas fa-cog"></i> 配置选项</h3>
+        <h3><i class="fas fa-cog"></i> {{ $t('tools.markdownToc.ui.configOptions') }}</h3>
         <div class="options-grid">
           <div class="option-item">
-            <label>目录格式</label>
+            <label>{{ $t('tools.markdownToc.ui.tocFormat') }}</label>
             <select v-model="tocFormat" class="styled-select">
-              <option value="md">Markdown链接</option>
-              <option value="html">HTML列表</option>
-              <option value="plain">纯文本</option>
-              <option value="numbered">带编号</option>
+              <option value="md">{{ $t('tools.markdownToc.ui.formatMd') }}</option>
+              <option value="html">{{ $t('tools.markdownToc.ui.formatHtml') }}</option>
+              <option value="plain">{{ $t('tools.markdownToc.ui.formatPlain') }}</option>
+              <option value="numbered">{{ $t('tools.markdownToc.ui.formatNumbered') }}</option>
             </select>
           </div>
           <div class="option-item">
-            <label>最大深度</label>
+            <label>{{ $t('tools.markdownToc.ui.maxDepth') }}</label>
             <select v-model="maxDepth" class="styled-select">
               <option value="2">H1-H2</option>
               <option value="3">H1-H3</option>
@@ -44,14 +44,14 @@
             <label class="checkbox-label">
               <input type="checkbox" v-model="includeNumbers" />
               <span class="checkmark"></span>
-              包含编号
+              {{ $t('tools.markdownToc.ui.includeNumbers') }}
             </label>
           </div>
           <div class="option-item">
             <label class="checkbox-label">
               <input type="checkbox" v-model="smoothScroll" />
               <span class="checkmark"></span>
-              平滑滚动
+              {{ $t('tools.markdownToc.ui.smoothScroll') }}
             </label>
           </div>
         </div>
@@ -60,7 +60,7 @@
       <!-- 输入区域 -->
       <div class="input-card">
         <div class="card-header">
-          <h3><i class="fas fa-edit"></i> Markdown 文档输入</h3>
+          <h3><i class="fas fa-edit"></i> {{ $t('tools.markdownToc.ui.markdownInput') }}</h3>
           <div class="upload-area">
             <input
               type="file"
@@ -71,7 +71,7 @@
             />
             <button @click="$refs.fileInput.click()" class="upload-btn">
               <i class="fas fa-file-upload"></i>
-              选择文件
+              {{ $t('tools.markdownToc.ui.selectFile') }}
             </button>
             <span class="file-info" v-if="fileName">
               <i class="fab fa-markdown"></i>
@@ -83,13 +83,7 @@
         <div class="input-area">
           <textarea
             v-model="markdownText"
-            placeholder="在此粘贴或输入Markdown文档内容...
-
-# 示例标题 1
-## 子标题 1.1  
-### 子标题 1.1.1
-## 子标题 1.2
-# 示例标题 2"
+            :placeholder="$t('tools.markdownToc.ui.markdownPlaceholder')"
             class="styled-textarea"
             rows="12"
           ></textarea>
@@ -98,11 +92,11 @@
           <div class="input-hints" v-if="!markdownText.trim()">
             <div class="hint-item">
               <i class="fas fa-lightbulb"></i>
-              <span>支持 H1-H6 所有标题级别</span>
+              <span>{{ $t('tools.markdownToc.ui.hintLevels') }}</span>
             </div>
             <div class="hint-item">
               <i class="fas fa-info-circle"></i>
-              <span>自动识别 # 和 --- 格式标题</span>
+              <span>{{ $t('tools.markdownToc.ui.hintFormats') }}</span>
             </div>
           </div>
         </div>
@@ -117,30 +111,30 @@
           :class="{ 'loading': isGenerating }"
         >
           <i :class="isGenerating ? 'fas fa-spinner fa-spin' : 'fas fa-list'"></i>
-          {{ isGenerating ? '生成中...' : '生成目录' }}
+          {{ isGenerating ? $t('tools.markdownToc.ui.generating') : $t('tools.markdownToc.ui.generateToc') }}
         </button>
         <button @click="clearAll" class="secondary-btn">
           <i class="fas fa-trash"></i>
-          清空
+          {{ $t('tools.markdownToc.ui.clear') }}
         </button>
       </div>
 
       <!-- 输出区域 -->
       <div class="output-card" v-if="tocResult">
         <div class="card-header">
-          <h3><i class="fas fa-list-ul"></i> 目录结果</h3>
+          <h3><i class="fas fa-list-ul"></i> {{ $t('tools.markdownToc.ui.tocResult') }}</h3>
           <div class="output-actions">
             <span class="result-info">
               <i class="fas fa-check-circle"></i>
-              发现 {{ headingCount }} 个标题
+              {{ $t('tools.markdownToc.ui.foundHeadings', { count: headingCount }) }}
             </span>
-            <button @click="copyToc" class="action-btn" :class="{ 'success': copyText === '已复制!' }">
-              <i :class="copyText === '已复制!' ? 'fas fa-check' : 'fas fa-copy'"></i>
+            <button @click="copyToc" class="action-btn" :class="{ 'success': copyText === t('tools.markdownToc.ui.copied') }">
+              <i :class="copyText === t('tools.markdownToc.ui.copied') ? 'fas fa-check' : 'fas fa-copy'"></i>
               {{ copyText }}
             </button>
             <button @click="downloadToc" class="action-btn">
               <i class="fas fa-download"></i>
-              下载
+              {{ $t('tools.markdownToc.ui.download') }}
             </button>
           </div>
         </div>
@@ -163,7 +157,7 @@
           
           <!-- 可视化预览 -->
           <div class="preview-section" v-if="headings.length > 0">
-            <h4><i class="fas fa-eye"></i> 可视化预览</h4>
+            <h4><i class="fas fa-eye"></i> {{ $t('tools.markdownToc.ui.visualPreview') }}</h4>
             <div class="toc-preview">
               <div 
                 v-for="(heading, index) in headings" 
@@ -185,22 +179,22 @@
       <div v-if="error" class="error-card">
         <i class="fas fa-exclamation-triangle"></i>
         <div>
-          <strong>处理失败</strong>
+          <strong>{{ $t('tools.markdownToc.ui.processFailed') }}</strong>
           <p>{{ error }}</p>
         </div>
       </div>
 
       <!-- 使用说明 -->
       <div class="help-card">
-        <h3><i class="fas fa-question-circle"></i> 使用说明</h3>
+        <h3><i class="fas fa-question-circle"></i> {{ $t('tools.markdownToc.ui.usageInstructions') }}</h3>
         <div class="help-grid">
           <div class="help-item">
             <div class="help-icon">
               <i class="fab fa-markdown"></i>
             </div>
             <div class="help-content">
-              <h4>标题格式</h4>
-              <p>支持 # 语法和 === 下划线</p>
+              <h4>{{ $t('tools.markdownToc.ui.headingFormat') }}</h4>
+              <p>{{ $t('tools.markdownToc.ui.headingFormatDesc') }}</p>
             </div>
           </div>
           <div class="help-item">
@@ -208,8 +202,8 @@
               <i class="fas fa-layer-group"></i>
             </div>
             <div class="help-content">
-              <h4>多级目录</h4>
-              <p>自动处理1-6级标题层次</p>
+              <h4>{{ $t('tools.markdownToc.ui.multiLevel') }}</h4>
+              <p>{{ $t('tools.markdownToc.ui.multiLevelDesc') }}</p>
             </div>
           </div>
           <div class="help-item">
@@ -217,8 +211,8 @@
               <i class="fas fa-code"></i>
             </div>
             <div class="help-content">
-              <h4>多种格式</h4>
-              <p>输出Markdown、HTML等格式</p>
+              <h4>{{ $t('tools.markdownToc.ui.multipleFormats') }}</h4>
+              <p>{{ $t('tools.markdownToc.ui.multipleFormatsDesc') }}</p>
             </div>
           </div>
         </div>
@@ -229,10 +223,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'MarkdownToc',
   setup() {
+    const { t } = useI18n()
     const markdownText = ref('')
     const tocResult = ref('')
     const fileName = ref('')
@@ -241,17 +237,17 @@ export default {
     const includeNumbers = ref(true)
     const smoothScroll = ref(true)
     const error = ref('')
-    const copyText = ref('复制')
+    const copyText = ref(t('tools.markdownToc.ui.copy'))
     const isGenerating = ref(false)
     const headings = ref([])
     const activeFormat = ref('md')
 
-    const formats = [
+    const formats = computed(() => [
       { key: 'md', name: 'Markdown', icon: 'fab fa-markdown' },
       { key: 'html', name: 'HTML', icon: 'fab fa-html5' },
-      { key: 'plain', name: '纯文本', icon: 'fas fa-align-left' },
-      { key: 'numbered', name: '编号', icon: 'fas fa-list-ol' }
-    ]
+      { key: 'plain', name: t('tools.markdownToc.ui.plainText'), icon: 'fas fa-align-left' },
+      { key: 'numbered', name: t('tools.markdownToc.ui.numbered'), icon: 'fas fa-list-ol' }
+    ])
 
     const headingCount = computed(() => headings.value.length)
 
@@ -490,20 +486,20 @@ Vue.js 是一个功能强大且易于学习的前端框架。`
             headings.value = parseHeadings(markdownText.value)
             
             if (headings.value.length === 0) {
-              error.value = '未发现任何标题，请检查Markdown格式'
+              error.value = t('tools.markdownToc.ui.noHeadingsFound')
               tocResult.value = ''
             } else {
               tocResult.value = getFormattedToc()
             }
           } catch (err) {
-            error.value = '生成目录失败: ' + err.message
+            error.value = t('tools.markdownToc.ui.generateFailed') + ': ' + err.message
             tocResult.value = ''
           } finally {
             isGenerating.value = false
           }
         }, 300)
       } catch (err) {
-        error.value = '生成目录失败: ' + err.message
+        error.value = t('tools.markdownToc.ui.generateFailed') + ': ' + err.message
         tocResult.value = ''
         isGenerating.value = false
       }
@@ -512,8 +508,8 @@ Vue.js 是一个功能强大且易于学习的前端框架。`
     const copyToc = () => {
       const textToCopy = getFormattedToc()
       navigator.clipboard.writeText(textToCopy).then(() => {
-        copyText.value = '已复制!'
-        setTimeout(() => copyText.value = '复制', 2000)
+        copyText.value = t('tools.markdownToc.ui.copied')
+        setTimeout(() => copyText.value = t('tools.markdownToc.ui.copy'), 2000)
       })
     }
 
@@ -542,7 +538,7 @@ Vue.js 是一个功能强大且易于学习的前端框架。`
       tocResult.value = ''
       fileName.value = ''
       error.value = ''
-      copyText.value = '复制'
+      copyText.value = t('tools.markdownToc.ui.copy')
       headings.value = []
     }
 

@@ -1,32 +1,32 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-key"></i> JWT Decoder</h2>
-    <p>解析 JWT Token，查看头部、载荷和签名信息</p>
+    <h2><i class="fas fa-key"></i> {{ $t('tools.jwtDecoder.ui.title') }}</h2>
+    <p>{{ $t('tools.jwtDecoder.ui.description') }}</p>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.jwtDecoder.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="jwtToken" @input="decodeJWT" placeholder="粘贴你的 JWT token 到这里..." rows="4"></textarea>
+    <textarea v-model="jwtToken" @input="decodeJWT" :placeholder="$t('tools.jwtDecoder.ui.placeholder')" rows="4"></textarea>
     
     <div v-if="decodedJWT" class="result-display">
       <div class="jwt-parts">
         <div class="jwt-part">
-          <h4>Header (头部)</h4>
+          <h4>{{ $t('tools.jwtDecoder.ui.header') }}</h4>
           <pre class="json-output">{{ formatJSON(decodedJWT.header) }}</pre>
         </div>
         
         <div class="jwt-part">
-          <h4>Payload (载荷)</h4>
+          <h4>{{ $t('tools.jwtDecoder.ui.payload') }}</h4>
           <pre class="json-output">{{ formatJSON(decodedJWT.payload) }}</pre>
         </div>
         
         <div class="jwt-part">
-          <h4>Signature (签名)</h4>
+          <h4>{{ $t('tools.jwtDecoder.ui.signature') }}</h4>
           <div class="signature-info">
-            <p>签名需要密钥验证，这里仅显示Base64编码结果</p>
+            <p>{{ $t('tools.jwtDecoder.ui.signatureInfo') }}</p>
             <code>{{ decodedJWT.signature }}</code>
           </div>
         </div>
@@ -42,6 +42,7 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'JwtDecoder',
@@ -49,6 +50,7 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const jwtToken = ref('')
     const decodedJWT = ref(null)
     const error = ref('')
@@ -62,7 +64,7 @@ export default {
         }
         return atob(str)
       } catch (e) {
-        throw new Error('Base64URL解码失败')
+        throw new Error(t('tools.jwtDecoder.ui.base64UrlDecodeFailed'))
       }
     }
 
@@ -77,7 +79,7 @@ export default {
         const parts = jwtToken.value.split('.')
         
         if (parts.length !== 3) {
-          throw new Error('JWT格式错误：应包含3个由点分隔的部分')
+          throw new Error(t('tools.jwtDecoder.ui.jwtFormatError'))
         }
         
         const header = JSON.parse(base64URLDecode(parts[0]))
@@ -90,7 +92,7 @@ export default {
           signature
         }
       } catch (e) {
-        error.value = e.message || 'JWT解析失败'
+        error.value = e.message || t('tools.jwtDecoder.ui.jwtDecodeFailed')
       }
     }
 

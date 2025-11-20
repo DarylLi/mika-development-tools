@@ -1,15 +1,15 @@
 <template>
   <div class="week-number-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-calendar-week"></i> 周数计算器</h3>
-      <p>查询日期对应的周数，计算年份周数统计和周日期范围</p>
+      <h3><i class="fas fa-calendar-week"></i> {{ $t('tools.weekNumber.ui.title') }}</h3>
+      <p>{{ $t('tools.weekNumber.ui.description') }}</p>
     </div>
 
     <!-- 主要查询区域 -->
     <div class="main-query-section">
       <div class="date-input-row">
         <div class="input-group">
-          <label>选择日期</label>
+          <label>{{ $t('tools.weekNumber.ui.selectDate') }}</label>
           <input 
             type="date" 
             v-model="selectedDate" 
@@ -17,31 +17,31 @@
           >
         </div>
         <div class="input-group">
-          <label>周数计算标准</label>
+          <label>{{ $t('tools.weekNumber.ui.weekStandard') }}</label>
           <select v-model="weekStandard" class="standard-select">
-            <option value="ISO">ISO 8601标准</option>
-            <option value="US">美国标准</option>
-            <option value="CN">中国标准</option>
+            <option value="ISO">{{ $t('tools.weekNumber.ui.iso8601') }}</option>
+            <option value="US">{{ $t('tools.weekNumber.ui.usStandard') }}</option>
+            <option value="CN">{{ $t('tools.weekNumber.ui.cnStandard') }}</option>
           </select>
         </div>
         <button @click="setToday" class="today-btn">
-          <i class="fas fa-calendar-day"></i> 今天
+          <i class="fas fa-calendar-day"></i> {{ $t('tools.weekNumber.ui.today') }}
         </button>
       </div>
     </div>
 
     <!-- 周数结果显示 -->
     <div class="week-result-section" v-if="weekResult">
-      <h4><i class="fas fa-hashtag"></i> 周数信息</h4>
+      <h4><i class="fas fa-hashtag"></i> {{ $t('tools.weekNumber.ui.weekInfo') }}</h4>
       <div class="result-cards">
         <div class="result-card main-week">
           <div class="card-header">
             <i class="fas fa-calendar-week"></i>
-            <span>第 {{ weekResult.weekNumber }} 周</span>
+            <span>{{ $t('tools.weekNumber.ui.week') }} {{ weekResult.weekNumber }} {{ $t('tools.weekNumber.ui.weekUnit') }}</span>
           </div>
           <div class="card-content">
             <div class="week-info">
-              <span class="year">{{ weekResult.year }}年</span>
+              <span class="year">{{ weekResult.year }}{{ $t('tools.weekNumber.ui.year') }}</span>
               <span class="standard">{{ getStandardName(weekStandard) }}</span>
             </div>
           </div>
@@ -50,12 +50,12 @@
         <div class="result-card">
           <div class="card-header">
             <i class="fas fa-calendar-alt"></i>
-            <span>周日期范围</span>
+            <span>{{ $t('tools.weekNumber.ui.weekDateRange') }}</span>
           </div>
           <div class="card-content">
             <div class="date-range">
               <span class="start-date">{{ weekResult.weekStart }}</span>
-              <span class="separator">至</span>
+              <span class="separator">{{ $t('tools.weekNumber.ui.to') }}</span>
               <span class="end-date">{{ weekResult.weekEnd }}</span>
             </div>
           </div>
@@ -64,12 +64,12 @@
         <div class="result-card">
           <div class="card-header">
             <i class="fas fa-clock"></i>
-            <span>星期信息</span>
+            <span>{{ $t('tools.weekNumber.ui.dayOfWeek') }}</span>
           </div>
           <div class="card-content">
             <div class="day-info">
               <span class="day-name">{{ weekResult.dayName }}</span>
-              <span class="day-number">第{{ weekResult.dayOfWeek }}天</span>
+              <span class="day-number">{{ $t('tools.weekNumber.ui.dayNumber') }}{{ weekResult.dayOfWeek }}{{ $t('tools.weekNumber.ui.dayUnit') }}</span>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
         <div class="result-card">
           <div class="card-header">
             <i class="fas fa-chart-line"></i>
-            <span>年度进度</span>
+            <span>{{ $t('tools.weekNumber.ui.yearProgress') }}</span>
           </div>
           <div class="card-content">
             <div class="progress-info">
@@ -93,39 +93,39 @@
 
     <!-- 年度周数统计 -->
     <div class="year-stats-section">
-      <h4><i class="fas fa-chart-bar"></i> {{ selectedYear }}年周数统计</h4>
+      <h4><i class="fas fa-chart-bar"></i> {{ selectedYear }}{{ $t('tools.weekNumber.ui.year') }}{{ $t('tools.weekNumber.ui.yearWeekStats') }}</h4>
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-number">{{ yearStats.totalWeeks }}</div>
-          <div class="stat-label">总周数</div>
+          <div class="stat-label">{{ $t('tools.weekNumber.ui.totalWeeks') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">{{ yearStats.currentWeek }}</div>
-          <div class="stat-label">当前周</div>
+          <div class="stat-label">{{ $t('tools.weekNumber.ui.currentWeek') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">{{ yearStats.remainingWeeks }}</div>
-          <div class="stat-label">剩余周数</div>
+          <div class="stat-label">{{ $t('tools.weekNumber.ui.remainingWeeks') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">{{ yearStats.workWeeks }}</div>
-          <div class="stat-label">工作周数</div>
+          <div class="stat-label">{{ $t('tools.weekNumber.ui.workWeeks') }}</div>
         </div>
       </div>
     </div>
 
     <!-- 周历视图 -->
     <div class="week-calendar-section">
-      <h4><i class="fas fa-calendar"></i> 周历视图</h4>
+      <h4><i class="fas fa-calendar"></i> {{ $t('tools.weekNumber.ui.weekCalendar') }}</h4>
       <div class="calendar-controls">
         <button @click="changeWeek(-1)" class="nav-btn">
-          <i class="fas fa-chevron-left"></i> 上一周
+          <i class="fas fa-chevron-left"></i> {{ $t('tools.weekNumber.ui.previousWeek') }}
         </button>
         <span class="current-week-info">
-          {{ selectedYear }}年第{{ weekResult ? weekResult.weekNumber : 1 }}周
+          {{ selectedYear }}{{ $t('tools.weekNumber.ui.year') }}{{ $t('tools.weekNumber.ui.week') }}{{ weekResult ? weekResult.weekNumber : 1 }}{{ $t('tools.weekNumber.ui.weekUnit') }}
         </span>
         <button @click="changeWeek(1)" class="nav-btn">
-          <i class="fas fa-chevron-right"></i> 下一周
+          <i class="fas fa-chevron-right"></i> {{ $t('tools.weekNumber.ui.nextWeek') }}
         </button>
       </div>
       
@@ -133,7 +133,7 @@
         <div class="week-header">
           <div class="week-info">
             <span class="week-range">{{ weekCalendar.start }} - {{ weekCalendar.end }}</span>
-            <span class="week-number">第{{ weekCalendar.weekNumber }}周</span>
+            <span class="week-number">{{ $t('tools.weekNumber.ui.week') }}{{ weekCalendar.weekNumber }}{{ $t('tools.weekNumber.ui.weekUnit') }}</span>
           </div>
         </div>
         <div class="days-grid">
@@ -159,48 +159,48 @@
 
     <!-- 快速查询 -->
     <div class="quick-queries-section">
-      <h4><i class="fas fa-bolt"></i> 快速查询</h4>
+      <h4><i class="fas fa-bolt"></i> {{ $t('tools.weekNumber.ui.quickQuery') }}</h4>
       <div class="quick-buttons">
         <button @click="quickQuery('year-start')" class="quick-btn">
           <i class="fas fa-calendar-plus"></i>
-          年初第一周
+          {{ $t('tools.weekNumber.ui.yearStartWeek') }}
         </button>
         <button @click="quickQuery('year-end')" class="quick-btn">
           <i class="fas fa-calendar-minus"></i>
-          年末最后一周
+          {{ $t('tools.weekNumber.ui.yearEndWeek') }}
         </button>
         <button @click="quickQuery('quarter-start')" class="quick-btn">
           <i class="fas fa-calendar-check"></i>
-          季度开始
+          {{ $t('tools.weekNumber.ui.quarterStart') }}
         </button>
         <button @click="quickQuery('month-start')" class="quick-btn">
           <i class="fas fa-calendar"></i>
-          月初第一周
+          {{ $t('tools.weekNumber.ui.monthStartWeek') }}
         </button>
         <button @click="quickQuery('week-53')" class="quick-btn">
           <i class="fas fa-star"></i>
-          第53周查询
+          {{ $t('tools.weekNumber.ui.week53') }}
         </button>
         <button @click="quickQuery('leap-year')" class="quick-btn">
           <i class="fas fa-calendar-plus"></i>
-          闰年周数
+          {{ $t('tools.weekNumber.ui.leapYearWeeks') }}
         </button>
       </div>
     </div>
 
     <!-- 不同标准对比 -->
     <div class="standards-comparison-section">
-      <h4><i class="fas fa-balance-scale"></i> 不同标准对比</h4>
+      <h4><i class="fas fa-balance-scale"></i> {{ $t('tools.weekNumber.ui.standardComparison') }}</h4>
       <div class="comparison-table">
         <div class="table-header">
-          <div>标准</div>
-          <div>周数</div>
-          <div>周起始日</div>
-          <div>第一周定义</div>
+          <div>{{ $t('tools.weekNumber.ui.standard') }}</div>
+          <div>{{ $t('tools.weekNumber.ui.weekNumber') }}</div>
+          <div>{{ $t('tools.weekNumber.ui.weekStartDay') }}</div>
+          <div>{{ $t('tools.weekNumber.ui.firstWeekDefinition') }}</div>
         </div>
         <div v-for="standard in comparisonData" :key="standard.code" class="table-row">
           <div class="standard-name">{{ standard.name }}</div>
-          <div class="week-number">第{{ standard.weekNumber }}周</div>
+          <div class="week-number">{{ $t('tools.weekNumber.ui.week') }}{{ standard.weekNumber }}{{ $t('tools.weekNumber.ui.weekUnit') }}</div>
           <div class="start-day">{{ standard.startDay }}</div>
           <div class="definition">{{ standard.definition }}</div>
         </div>
@@ -300,22 +300,22 @@ export default {
           code: 'ISO',
           name: 'ISO 8601',
           weekNumber: this.calculateWeekNumber(date, 'ISO').weekNumber,
-          startDay: '星期一',
-          definition: '包含1月4日的周为第1周'
+          startDay: this.$t('tools.weekNumber.ui.monday'),
+          definition: this.$t('tools.weekNumber.ui.containsJan4')
         },
         {
           code: 'US',
-          name: '美国标准',
+          name: this.$t('tools.weekNumber.ui.usStandard'),
           weekNumber: this.calculateWeekNumber(date, 'US').weekNumber,
-          startDay: '星期日',
-          definition: '1月1日所在周为第1周'
+          startDay: this.$t('tools.weekNumber.ui.sunday'),
+          definition: this.$t('tools.weekNumber.ui.jan1Week1')
         },
         {
           code: 'CN',
-          name: '中国标准',
+          name: this.$t('tools.weekNumber.ui.cnStandard'),
           weekNumber: this.calculateWeekNumber(date, 'CN').weekNumber,
-          startDay: '星期一',
-          definition: '1月1日所在周为第1周'
+          startDay: this.$t('tools.weekNumber.ui.monday'),
+          definition: this.$t('tools.weekNumber.ui.jan1Week1')
         }
       ]
     }

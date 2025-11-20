@@ -1,8 +1,8 @@
 <template>
   <div class="svg-minify-container">
     <div class="tool-header">
-      <h3>SVG 压缩优化器</h3>
-      <p>移除冗余代码，优化SVG文件大小，保持质量</p>
+      <h3>{{ $t('tools.svgMinify.ui.title') }}</h3>
+      <p>{{ $t('tools.svgMinify.ui.description') }}</p>
     </div>
 
     <div class="input-section">
@@ -12,19 +12,19 @@
             @click="inputMethod = 'upload'"
             :class="['tab-btn', { active: inputMethod === 'upload' }]"
           >
-            📁 上传文件
+            📁 {{ $t('tools.svgMinify.ui.uploadFile') }}
           </button>
           <button 
             @click="inputMethod = 'paste'"
             :class="['tab-btn', { active: inputMethod === 'paste' }]"
           >
-            📋 粘贴代码
+            📋 {{ $t('tools.svgMinify.ui.pasteCode') }}
           </button>
           <button 
             @click="inputMethod = 'url'"
             :class="['tab-btn', { active: inputMethod === 'url' }]"
           >
-            🔗 URL 链接
+            🔗 {{ $t('tools.svgMinify.ui.urlLink') }}
           </button>
         </div>
 
@@ -48,8 +48,8 @@
               />
               <div class="upload-content">
                 <div class="upload-icon">📁</div>
-                <p>点击选择或拖拽 SVG 文件</p>
-                <small>支持批量处理多个文件</small>
+                <p>{{ $t('tools.svgMinify.ui.uploadText') }}</p>
+                <small>{{ $t('tools.svgMinify.ui.uploadHint') }}</small>
               </div>
             </div>
           </div>
@@ -57,12 +57,12 @@
           <div v-if="inputMethod === 'paste'" class="paste-area">
             <textarea 
               v-model="pastedSvg"
-              placeholder="粘贴 SVG 代码..."
+              :placeholder="$t('tools.svgMinify.ui.pastePlaceholder')"
               class="svg-textarea"
               @input="processPastedSvg"
             ></textarea>
             <button @click="processPastedSvg" class="process-btn" :disabled="!pastedSvg.trim()">
-              处理 SVG
+              {{ $t('tools.svgMinify.ui.processSvg') }}
             </button>
           </div>
 
@@ -71,12 +71,12 @@
               <input 
                 v-model="svgUrl"
                 type="url"
-                placeholder="输入 SVG 文件的 URL..."
+                :placeholder="$t('tools.svgMinify.ui.urlPlaceholder')"
                 class="url-input"
                 @keyup.enter="fetchSvgFromUrl"
               />
               <button @click="fetchSvgFromUrl" class="fetch-btn" :disabled="!svgUrl.trim() || loading">
-                {{ loading ? '加载中...' : '获取 SVG' }}
+                {{ loading ? $t('tools.svgMinify.ui.loading') : $t('tools.svgMinify.ui.fetchSvg') }}
               </button>
             </div>
           </div>
@@ -85,58 +85,58 @@
     </div>
 
     <div class="optimization-settings" v-if="svgFiles.length > 0">
-      <h4>优化选项</h4>
+      <h4>{{ $t('tools.svgMinify.ui.optimizationOptions') }}</h4>
       <div class="settings-grid">
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeComments" />
-          <span>移除注释</span>
+          <span>{{ $t('tools.svgMinify.ui.removeComments') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeMetadata" />
-          <span>移除元数据</span>
+          <span>{{ $t('tools.svgMinify.ui.removeMetadata') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeEditorsData" />
-          <span>移除编辑器数据</span>
+          <span>{{ $t('tools.svgMinify.ui.removeEditorsData') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeEmptyAttrs" />
-          <span>移除空属性</span>
+          <span>{{ $t('tools.svgMinify.ui.removeEmptyAttrs') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeEmptyText" />
-          <span>移除空文本</span>
+          <span>{{ $t('tools.svgMinify.ui.removeEmptyText') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeEmptyContainers" />
-          <span>移除空容器</span>
+          <span>{{ $t('tools.svgMinify.ui.removeEmptyContainers') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.minifyStyles" />
-          <span>压缩样式</span>
+          <span>{{ $t('tools.svgMinify.ui.minifyStyles') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeUnusedNS" />
-          <span>移除未使用命名空间</span>
+          <span>{{ $t('tools.svgMinify.ui.removeUnusedNS') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.sortAttrs" />
-          <span>排序属性</span>
+          <span>{{ $t('tools.svgMinify.ui.sortAttrs') }}</span>
         </label>
         <label class="setting-item">
           <input type="checkbox" v-model="options.removeDimensions" />
-          <span>移除宽高属性</span>
+          <span>{{ $t('tools.svgMinify.ui.removeDimensions') }}</span>
         </label>
       </div>
       
       <div class="batch-actions">
         <button @click="optimizeAll" class="optimize-all-btn" :disabled="processing">
-          {{ processing ? '优化中...' : '批量优化' }}
+          {{ processing ? $t('tools.svgMinify.ui.processing') : $t('tools.svgMinify.ui.batchOptimize') }}
         </button>
         <button @click="downloadAll" class="download-all-btn" v-if="optimizedFiles.length > 0">
-          下载全部
+          {{ $t('tools.svgMinify.ui.downloadAll') }}
         </button>
-        <button @click="clearAll" class="clear-btn">清空</button>
+        <button @click="clearAll" class="clear-btn">{{ $t('tools.svgMinify.ui.clear') }}</button>
       </div>
     </div>
 
@@ -153,21 +153,21 @@
             </div>
             <div class="processing-overlay" v-if="file.processing">
               <div class="loading-spinner"></div>
-              <span>优化中...</span>
+              <span>{{ $t('tools.svgMinify.ui.processing') }}</span>
             </div>
           </div>
           
           <div class="file-info">
             <h5>{{ file.name }}</h5>
             <div class="size-info">
-              <span>原始: {{ formatFileSize(file.originalSize) }}</span>
+              <span>{{ $t('tools.svgMinify.ui.original') }}: {{ formatFileSize(file.originalSize) }}</span>
               <span v-if="file.optimizedSize">
-                优化后: {{ formatFileSize(file.optimizedSize) }}
+                {{ $t('tools.svgMinify.ui.optimizedSize') }}: {{ formatFileSize(file.optimizedSize) }}
               </span>
             </div>
             <div class="compression-info" v-if="file.optimizedSize">
               <span class="reduction-percentage">
-                减少 {{ calculateReduction(file.originalSize, file.optimizedSize) }}%
+                {{ $t('tools.svgMinify.ui.reduced') }} {{ calculateReduction(file.originalSize, file.optimizedSize) }}%
               </span>
             </div>
           </div>
@@ -178,22 +178,22 @@
               class="optimize-btn"
               :disabled="file.processing || file.optimized"
             >
-              {{ file.processing ? '优化中' : (file.optimized ? '已优化' : '优化') }}
+              {{ file.processing ? $t('tools.svgMinify.ui.optimizing') : (file.optimized ? $t('tools.svgMinify.ui.optimized') : $t('tools.svgMinify.ui.optimize')) }}
             </button>
             <button 
               @click="previewFile(index)" 
               class="preview-btn"
             >
-              预览
+              {{ $t('tools.svgMinify.ui.preview') }}
             </button>
             <button 
               @click="downloadFile(index)" 
               class="download-btn"
               v-if="file.optimized"
             >
-              下载
+              {{ $t('tools.svgMinify.ui.download') }}
             </button>
-            <button @click="removeFile(index)" class="remove-btn">删除</button>
+            <button @click="removeFile(index)" class="remove-btn">{{ $t('tools.svgMinify.ui.remove') }}</button>
           </div>
         </div>
       </div>
@@ -217,27 +217,27 @@
               @click="previewModal.tab = 'code'"
               :class="['tab-btn', { active: previewModal.tab === 'code' }]"
             >
-              代码对比
+              {{ $t('tools.svgMinify.ui.codeComparison') }}
             </button>
           </div>
           <div class="preview-content">
             <div v-if="previewModal.tab === 'visual'" class="visual-preview">
               <div class="preview-item">
-                <h5>原始</h5>
+                <h5>{{ $t('tools.svgMinify.ui.original') }}</h5>
                 <div v-html="previewModal.original" class="svg-display"></div>
               </div>
               <div class="preview-item" v-if="previewModal.optimized">
-                <h5>优化后</h5>
+                <h5>{{ $t('tools.svgMinify.ui.optimized') }}</h5>
                 <div v-html="previewModal.optimized" class="svg-display"></div>
               </div>
             </div>
             <div v-if="previewModal.tab === 'code'" class="code-preview">
               <div class="code-item">
-                <h5>原始代码 ({{ formatFileSize(previewModal.originalSize) }})</h5>
+                <h5>{{ $t('tools.svgMinify.ui.originalCode') }} ({{ formatFileSize(previewModal.originalSize) }})</h5>
                 <pre><code>{{ previewModal.original }}</code></pre>
               </div>
               <div class="code-item" v-if="previewModal.optimized">
-                <h5>优化后代码 ({{ formatFileSize(previewModal.optimizedSize) }})</h5>
+                <h5>{{ $t('tools.svgMinify.ui.optimizedCode') }} ({{ formatFileSize(previewModal.optimizedSize) }})</h5>
                 <pre><code>{{ previewModal.optimized }}</code></pre>
               </div>
             </div>
@@ -247,30 +247,30 @@
     </div>
 
     <div class="tips-section">
-      <h4>💡 优化说明</h4>
+      <h4>💡 {{ $t('tools.svgMinify.ui.optimizationTips') }}</h4>
       <div class="optimization-tips">
         <div class="tip-category">
-          <h5>基础优化</h5>
+          <h5>{{ $t('tools.svgMinify.ui.basicOptimization') }}</h5>
           <ul>
-            <li>移除注释和元数据</li>
-            <li>清理空白字符</li>
-            <li>删除无用属性</li>
+            <li>{{ $t('tools.svgMinify.ui.removeCommentsAndMetadata') }}</li>
+            <li>{{ $t('tools.svgMinify.ui.cleanWhitespace') }}</li>
+            <li>{{ $t('tools.svgMinify.ui.removeUnusedAttrs') }}</li>
           </ul>
         </div>
         <div class="tip-category">
-          <h5>高级优化</h5>
+          <h5>{{ $t('tools.svgMinify.ui.advancedOptimization') }}</h5>
           <ul>
-            <li>合并重复路径</li>
-            <li>简化数值精度</li>
-            <li>优化变换属性</li>
+            <li>{{ $t('tools.svgMinify.ui.mergeDuplicatePaths') }}</li>
+            <li>{{ $t('tools.svgMinify.ui.simplifyNumericPrecision') }}</li>
+            <li>{{ $t('tools.svgMinify.ui.optimizeTransformAttrs') }}</li>
           </ul>
         </div>
         <div class="tip-category">
-          <h5>注意事项</h5>
+          <h5>{{ $t('tools.svgMinify.ui.notes') }}</h5>
           <ul>
-            <li>优化可能影响动画效果</li>
-            <li>建议保留原始文件备份</li>
-            <li>测试优化后的兼容性</li>
+            <li>{{ $t('tools.svgMinify.ui.optimizationMayAffectAnimation') }}</li>
+            <li>{{ $t('tools.svgMinify.ui.suggestKeepBackup') }}</li>
+            <li>{{ $t('tools.svgMinify.ui.testCompatibility') }}</li>
           </ul>
         </div>
       </div>
@@ -376,7 +376,7 @@ export default {
       try {
         const response = await fetch(this.svgUrl)
         if (!response.ok) {
-          throw new Error('无法获取 SVG 文件')
+          throw new Error(this.$t('tools.svgMinify.ui.fetchSvgFailed'))
         }
         
         const content = await response.text()
@@ -388,7 +388,7 @@ export default {
         await this.addSvgFile(file)
         this.svgUrl = ''
       } catch (error) {
-        this.$message.success('获取 SVG 失败: ' + error.message)
+        this.$message.success(this.$t('tools.svgMinify.ui.getSvgFailed') + ': ' + error.message)
       } finally {
         this.loading = false
       }
@@ -409,8 +409,8 @@ export default {
           content: optimizedContent
         })
       } catch (error) {
-        console.error('优化失败:', error)
-        this.$message.success('优化失败: ' + error.message)
+        console.error(this.$t('tools.svgMinify.ui.optimizeFailed'), error)
+        this.$message.success(this.$t('tools.svgMinify.ui.optimizeFailed') + ': ' + error.message)
       } finally {
         file.processing = false
       }
@@ -546,7 +546,7 @@ export default {
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
       } catch (error) {
-        this.$message.success('批量下载失败，请逐个下载')
+        this.$message.success(this.$t('tools.svgMinify.ui.batchDownloadFailed'))
       }
     },
 

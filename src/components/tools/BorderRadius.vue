@@ -1,57 +1,57 @@
 <template>
   <div class="border-radius-container">
     <div class="tool-header">
-      <h2>📐 Radius Preview</h2>
-      <p>圆角可视化工具</p>
+      <h2>📐 {{ $t('tools.borderRadius.ui.title') }}</h2>
+      <p>{{ $t('tools.borderRadius.ui.description') }}</p>
     </div>
 
     <div class="preview-section">
       <div class="preview-box" :style="{ borderRadius: borderRadiusCSS }">
-        圆角预览
+        {{ $t('tools.borderRadius.ui.previewText') }}
       </div>
     </div>
 
     <div class="radius-controls">
       <div class="control-group">
-        <label>左上角 ({{ topLeft }}px)</label>
+        <label>{{ $t('tools.borderRadius.ui.topLeft') }} ({{ topLeft }}px)</label>
         <input type="range" v-model="topLeft" min="0" max="100" @input="updateRadius" class="modern-slider">
       </div>
 
       <div class="control-group">
-        <label>右上角 ({{ topRight }}px)</label>
+        <label>{{ $t('tools.borderRadius.ui.topRight') }} ({{ topRight }}px)</label>
         <input type="range" v-model="topRight" min="0" max="100" @input="updateRadius" class="modern-slider">
       </div>
 
       <div class="control-group">
-        <label>左下角 ({{ bottomLeft }}px)</label>
+        <label>{{ $t('tools.borderRadius.ui.bottomLeft') }} ({{ bottomLeft }}px)</label>
         <input type="range" v-model="bottomLeft" min="0" max="100" @input="updateRadius" class="modern-slider">
       </div>
 
       <div class="control-group">
-        <label>右下角 ({{ bottomRight }}px)</label>
+        <label>{{ $t('tools.borderRadius.ui.bottomRight') }} ({{ bottomRight }}px)</label>
         <input type="range" v-model="bottomRight" min="0" max="100" @input="updateRadius" class="modern-slider">
       </div>
 
       <div class="control-group span-2">
         <label>
           <input type="checkbox" v-model="syncAll" @change="syncCorners">
-          同步所有角
+          {{ $t('tools.borderRadius.ui.syncAll') }}
         </label>
       </div>
     </div>
 
     <div class="css-output">
-      <label>CSS 代码</label>
+      <label>{{ $t('tools.borderRadius.ui.cssCode') }}</label>
       <textarea v-model="borderRadiusCSS" readonly class="css-textarea" @click="copyCSS"></textarea>
-      <button @click="copyCSS" class="copy-btn">📋 复制CSS</button>
+      <button @click="copyCSS" class="copy-btn">📋 {{ $t('tools.borderRadius.ui.copyCSS') }}</button>
     </div>
 
     <div class="radius-presets">
-      <h3>预设形状</h3>
+      <h3>{{ $t('tools.borderRadius.ui.radiusPresets') }}</h3>
       <div class="presets-grid">
         <div 
           v-for="preset in radiusPresets" 
-          :key="preset.name"
+          :key="preset.key"
           class="preset-item"
           @click="loadPreset(preset)"
         >
@@ -65,28 +65,30 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'BorderRadius',
   setup() {
+    const { t } = useI18n()
     const topLeft = ref(0)
     const topRight = ref(0)
     const bottomLeft = ref(0)
     const bottomRight = ref(0)
     const syncAll = ref(false)
 
-    const radiusPresets = [
-      { name: '无圆角', radius: '0px' },
-      { name: '小圆角', radius: '4px' },
-      { name: '中圆角', radius: '8px' },
-      { name: '大圆角', radius: '16px' },
-      { name: '圆形', radius: '50%' },
-      { name: '胶囊', radius: '100px' },
-      { name: '左圆', radius: '50px 0 0 50px' },
-      { name: '右圆', radius: '0 50px 50px 0' },
-      { name: '上圆', radius: '50px 50px 0 0' },
-      { name: '下圆', radius: '0 0 50px 50px' }
-    ]
+    const radiusPresets = computed(() => [
+      { key: 'none', name: t('tools.borderRadius.ui.presetNone'), radius: '0px' },
+      { key: 'small', name: t('tools.borderRadius.ui.presetSmall'), radius: '4px' },
+      { key: 'medium', name: t('tools.borderRadius.ui.presetMedium'), radius: '8px' },
+      { key: 'large', name: t('tools.borderRadius.ui.presetLarge'), radius: '16px' },
+      { key: 'circle', name: t('tools.borderRadius.ui.presetCircle'), radius: '50%' },
+      { key: 'capsule', name: t('tools.borderRadius.ui.presetCapsule'), radius: '100px' },
+      { key: 'left', name: t('tools.borderRadius.ui.presetLeft'), radius: '50px 0 0 50px' },
+      { key: 'right', name: t('tools.borderRadius.ui.presetRight'), radius: '0 50px 50px 0' },
+      { key: 'top', name: t('tools.borderRadius.ui.presetTop'), radius: '50px 50px 0 0' },
+      { key: 'bottom', name: t('tools.borderRadius.ui.presetBottom'), radius: '0 0 50px 50px' }
+    ])
 
     const borderRadiusCSS = computed(() => {
       const tl = topLeft.value
@@ -167,9 +169,9 @@ export default {
     const copyCSS = async () => {
       try {
         await navigator.clipboard.writeText(`border-radius: ${borderRadiusCSS.value};`)
-        console.log('CSS已复制')
+        console.log(t('tools.borderRadius.ui.cssCopied'))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.borderRadius.ui.copyFailed'), err)
       }
     }
 

@@ -1,20 +1,20 @@
 <template>
   <div class="qr-generator-tool">
     <div class="tool-header">
-      <h2><i class="fas fa-qrcode"></i> 二维码生成器</h2>
-      <p>快速生成各种内容的二维码</p>
+      <h2><i class="fas fa-qrcode"></i> {{ $t('tools.qrGenerator.ui.title') }}</h2>
+      <p>{{ $t('tools.qrGenerator.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="section">
-        <h3><i class="fas fa-edit"></i> 输入内容</h3>
+        <h3><i class="fas fa-edit"></i> {{ $t('tools.qrGenerator.ui.inputContent') }}</h3>
         
         <div class="input-group">
-          <label for="qrText">要生成二维码的内容：</label>
+          <label for="qrText">{{ $t('tools.qrGenerator.ui.qrContent') }}</label>
           <textarea 
             id="qrText"
             v-model="qrText" 
-            placeholder="输入文本、URL、邮箱、电话号码等..."
+            :placeholder="$t('tools.qrGenerator.ui.placeholder')"
             class="text-input"
             rows="4"
           ></textarea>
@@ -22,37 +22,37 @@
 
         <div class="options-group">
           <div class="option-item">
-            <label for="qrSize">尺寸：</label>
+            <label for="qrSize">{{ $t('tools.qrGenerator.ui.size') }}</label>
             <select id="qrSize" v-model="qrSize" class="size-select">
-              <option value="200">小 (200x200)</option>
-              <option value="300">中 (300x300)</option>
-              <option value="400">大 (400x400)</option>
+              <option value="200">{{ $t('tools.qrGenerator.ui.sizeSmall') }}</option>
+              <option value="300">{{ $t('tools.qrGenerator.ui.sizeMedium') }}</option>
+              <option value="400">{{ $t('tools.qrGenerator.ui.sizeLarge') }}</option>
             </select>
           </div>
           
           <div class="option-item">
-            <label for="errorLevel">容错级别：</label>
+            <label for="errorLevel">{{ $t('tools.qrGenerator.ui.errorLevel') }}</label>
             <select id="errorLevel" v-model="errorLevel" class="error-select">
-              <option value="L">低 (L)</option>
-              <option value="M">中 (M)</option>
-              <option value="Q">高 (Q)</option>
-              <option value="H">最高 (H)</option>
+              <option value="L">{{ $t('tools.qrGenerator.ui.errorLevelL') }}</option>
+              <option value="M">{{ $t('tools.qrGenerator.ui.errorLevelM') }}</option>
+              <option value="Q">{{ $t('tools.qrGenerator.ui.errorLevelQ') }}</option>
+              <option value="H">{{ $t('tools.qrGenerator.ui.errorLevelH') }}</option>
             </select>
           </div>
         </div>
 
         <div class="action-buttons">
           <button @click="generateQR" class="generate-btn" :disabled="!qrText.trim()">
-            <i class="fas fa-magic"></i> 生成二维码
+            <i class="fas fa-magic"></i> {{ $t('tools.qrGenerator.ui.generateQr') }}
           </button>
           <button @click="loadExample" class="example-btn">
-            <i class="fas fa-lightbulb"></i> 加载示例
+            <i class="fas fa-lightbulb"></i> {{ $t('tools.qrGenerator.ui.loadExample') }}
           </button>
         </div>
       </div>
 
       <div class="section" v-if="qrDataUrl">
-        <h3><i class="fas fa-image"></i> 生成结果</h3>
+        <h3><i class="fas fa-image"></i> {{ $t('tools.qrGenerator.ui.generationResult') }}</h3>
         
         <div class="qr-result">
           <div class="qr-display">
@@ -61,32 +61,32 @@
           
           <div class="download-section">
             <button @click="downloadQR" class="download-btn">
-              <i class="fas fa-download"></i> 下载二维码
+              <i class="fas fa-download"></i> {{ $t('tools.qrGenerator.ui.downloadQr') }}
             </button>
           </div>
         </div>
       </div>
 
       <div class="section">
-        <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
+        <h3><i class="fas fa-info-circle"></i> {{ $t('tools.qrGenerator.ui.usageInstructions') }}</h3>
         <div class="info-content">
           <div class="info-card">
-            <h4>支持内容类型</h4>
+            <h4>{{ $t('tools.qrGenerator.ui.supportedContentTypes') }}</h4>
             <ul>
-              <li>网址链接 (http://...)</li>
-              <li>邮箱地址 (mailto:...)</li>
-              <li>电话号码 (tel:...)</li>
-              <li>WiFi信息</li>
-              <li>纯文本内容</li>
+              <li>{{ $t('tools.qrGenerator.ui.urlLink') }}</li>
+              <li>{{ $t('tools.qrGenerator.ui.email') }}</li>
+              <li>{{ $t('tools.qrGenerator.ui.phone') }}</li>
+              <li>{{ $t('tools.qrGenerator.ui.wifi') }}</li>
+              <li>{{ $t('tools.qrGenerator.ui.plainText') }}</li>
             </ul>
           </div>
           <div class="info-card">
-            <h4>容错级别说明</h4>
+            <h4>{{ $t('tools.qrGenerator.ui.errorLevelDescription') }}</h4>
             <ul>
-              <li>L: 约可纠正 7% 的数据码字</li>
-              <li>M: 约可纠正 15% 的数据码字</li>
-              <li>Q: 约可纠正 25% 的数据码字</li>
-              <li>H: 约可纠正 30% 的数据码字</li>
+              <li>{{ $t('tools.qrGenerator.ui.errorLevelLDesc') }}</li>
+              <li>{{ $t('tools.qrGenerator.ui.errorLevelMDesc') }}</li>
+              <li>{{ $t('tools.qrGenerator.ui.errorLevelQDesc') }}</li>
+              <li>{{ $t('tools.qrGenerator.ui.errorLevelHDesc') }}</li>
             </ul>
           </div>
         </div>
@@ -96,7 +96,9 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 import QRCode from 'qrcode'
 
 export default {
@@ -105,7 +107,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const qrText = ref('')
     const qrSize = ref(300)
     const errorLevel = ref('M')
@@ -126,7 +128,7 @@ https://tools.example.com
       const text = qrText.value.trim()
       
       if (!text) {
-        instance.proxy.$message.success('请输入要生成二维码的内容！')
+        messageService.warning(t('common.warning'))
         return
       }
       
@@ -146,8 +148,8 @@ https://tools.example.com
         
         qrDataUrl.value = dataUrl
       } catch (error) {
-        console.error('二维码生成失败:', error)
-        instance.proxy.$message.success('二维码生成失败: ' + error.message)
+        console.error(t('tools.qrGenerator.ui.generationFailed'), error)
+        messageService.error(t('tools.qrGenerator.ui.generationFailed') + error.message)
       }
     }
 

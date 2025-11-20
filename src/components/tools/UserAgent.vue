@@ -1,23 +1,23 @@
 <template>
   <div class="user-agent-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-laptop"></i> User Agent 解析器</h3>
-      <p>解析 User Agent 字符串，获取浏览器、操作系统等信息</p>
+      <h3><i class="fas fa-laptop"></i> {{ $t('tools.userAgent.ui.title') }}</h3>
+      <p>{{ $t('tools.userAgent.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
         <div class="section-header">
-          <label for="ua-input">User Agent 字符串</label>
+          <label for="ua-input">{{ $t('tools.userAgent.ui.userAgentString') }}</label>
           <div class="header-actions">
             <button @click="detectUserAgent" class="action-btn">
-              <i class="fas fa-search"></i> 检测当前
+              <i class="fas fa-search"></i> {{ $t('tools.userAgent.ui.detectCurrent') }}
             </button>
             <button @click="loadExample" class="action-btn">
-              <i class="fas fa-lightbulb"></i> 示例
+              <i class="fas fa-lightbulb"></i> {{ $t('tools.userAgent.ui.example') }}
             </button>
             <button @click="clearInput" class="action-btn">
-              <i class="fas fa-eraser"></i> 清空
+              <i class="fas fa-eraser"></i> {{ $t('tools.userAgent.ui.clear') }}
             </button>
           </div>
         </div>
@@ -25,7 +25,7 @@
           id="ua-input"
           v-model="userAgent"
           @input="parseUserAgent"
-          placeholder="在此输入或粘贴 User Agent 字符串..."
+          :placeholder="$t('tools.userAgent.ui.placeholder')"
           class="ua-input"
         ></textarea>
       </div>
@@ -33,59 +33,59 @@
       <div class="results-section" v-if="parsed">
         <div class="result-grid">
           <div class="result-card">
-            <h4><i class="fas fa-globe"></i> 浏览器</h4>
+            <h4><i class="fas fa-globe"></i> {{ $t('tools.userAgent.ui.browser') }}</h4>
             <div class="result-item">
-              <span class="label">名称:</span>
-              <span class="value">{{ parsed.browser.name || '未知' }}</span>
+              <span class="label">{{ $t('tools.userAgent.ui.name') }}</span>
+              <span class="value">{{ parsed.browser.name || $t('tools.userAgent.ui.unknown') }}</span>
             </div>
             <div class="result-item">
-              <span class="label">版本:</span>
-              <span class="value">{{ parsed.browser.version || '未知' }}</span>
+              <span class="label">{{ $t('tools.userAgent.ui.version') }}</span>
+              <span class="value">{{ parsed.browser.version || $t('tools.userAgent.ui.unknown') }}</span>
             </div>
             <div class="result-item">
-              <span class="label">引擎:</span>
-              <span class="value">{{ parsed.engine.name || '未知' }}</span>
-            </div>
-          </div>
-
-          <div class="result-card">
-            <h4><i class="fas fa-desktop"></i> 操作系统</h4>
-            <div class="result-item">
-              <span class="label">系统:</span>
-              <span class="value">{{ parsed.os.name || '未知' }}</span>
-            </div>
-            <div class="result-item">
-              <span class="label">版本:</span>
-              <span class="value">{{ parsed.os.version || '未知' }}</span>
-            </div>
-            <div class="result-item">
-              <span class="label">架构:</span>
-              <span class="value">{{ parsed.cpu.architecture || '未知' }}</span>
+              <span class="label">{{ $t('tools.userAgent.ui.engine') }}</span>
+              <span class="value">{{ parsed.engine.name || $t('tools.userAgent.ui.unknown') }}</span>
             </div>
           </div>
 
           <div class="result-card">
-            <h4><i class="fas fa-mobile"></i> 设备</h4>
+            <h4><i class="fas fa-desktop"></i> {{ $t('tools.userAgent.ui.operatingSystem') }}</h4>
             <div class="result-item">
-              <span class="label">类型:</span>
+              <span class="label">{{ $t('tools.userAgent.ui.system') }}</span>
+              <span class="value">{{ parsed.os.name || $t('tools.userAgent.ui.unknown') }}</span>
+            </div>
+            <div class="result-item">
+              <span class="label">{{ $t('tools.userAgent.ui.version') }}</span>
+              <span class="value">{{ parsed.os.version || $t('tools.userAgent.ui.unknown') }}</span>
+            </div>
+            <div class="result-item">
+              <span class="label">{{ $t('tools.userAgent.ui.architecture') }}</span>
+              <span class="value">{{ parsed.cpu.architecture || $t('tools.userAgent.ui.unknown') }}</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <h4><i class="fas fa-mobile"></i> {{ $t('tools.userAgent.ui.device') }}</h4>
+            <div class="result-item">
+              <span class="label">{{ $t('tools.userAgent.ui.type') }}</span>
               <span class="value">{{ getDeviceType() }}</span>
             </div>
             <div class="result-item">
-              <span class="label">厂商:</span>
-              <span class="value">{{ parsed.device.vendor || '未知' }}</span>
+              <span class="label">{{ $t('tools.userAgent.ui.vendor') }}</span>
+              <span class="value">{{ parsed.device.vendor || $t('tools.userAgent.ui.unknown') }}</span>
             </div>
             <div class="result-item">
-              <span class="label">型号:</span>
-              <span class="value">{{ parsed.device.model || '未知' }}</span>
+              <span class="label">{{ $t('tools.userAgent.ui.model') }}</span>
+              <span class="value">{{ parsed.device.model || $t('tools.userAgent.ui.unknown') }}</span>
             </div>
           </div>
         </div>
 
         <div class="json-output">
           <div class="section-header">
-            <label>解析结果 (JSON)</label>
+            <label>{{ $t('tools.userAgent.ui.parseResult') }}</label>
             <button @click="copyResult" class="action-btn">
-              <i class="fas fa-copy"></i> 复制
+              <i class="fas fa-copy"></i> {{ $t('tools.userAgent.ui.copy') }}
             </button>
           </div>
           <pre class="json-code">{{ formatJSON(parsed) }}</pre>
@@ -93,7 +93,7 @@
       </div>
 
       <div class="examples-section">
-        <h4><i class="fas fa-list"></i> 常见 User Agent 示例</h4>
+        <h4><i class="fas fa-list"></i> {{ $t('tools.userAgent.ui.commonExamples') }}</h4>
         <div class="examples-grid">
           <div 
             v-for="example in examples" 
@@ -115,10 +115,12 @@
 
 <script>
 import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'UserAgent',
   setup() {
+    const { t } = useI18n()
     const userAgent = ref('')
     const parsed = ref(null)
 
@@ -273,7 +275,7 @@ export default {
     }
 
     function getDeviceType() {
-      if (!parsed.value) return '未知'
+      if (!parsed.value) return t('tools.userAgent.ui.unknown')
       if (parsed.value.device.type) return parsed.value.device.type
       
       const ua = userAgent.value.toLowerCase()
@@ -291,7 +293,7 @@ export default {
       try {
         await navigator.clipboard.writeText(formatJSON(parsed.value))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.userAgent.ui.copyFailed') + ':', err)
       }
     }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="tailwind-cheatsheet-container">
     <div class="tool-header">
-      <h3>Tailwind CSS 类名速查</h3>
-      <p>快速查找和复制 Tailwind CSS 类名</p>
+      <h3>{{ $t('tools.tailwindCheatsheet.ui.title') }}</h3>
+      <p>{{ $t('tools.tailwindCheatsheet.ui.description') }}</p>
     </div>
     
     <div class="search-section">
@@ -10,7 +10,7 @@
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="搜索类名或描述..."
+          :placeholder="$t('tools.tailwindCheatsheet.ui.searchPlaceholder')"
           class="search-input"
         />
         <button @click="searchQuery = ''" class="clear-btn" v-if="searchQuery">
@@ -47,7 +47,7 @@
           >
             <code class="class-name">{{ classItem.class }}</code>
             <span class="class-description">{{ classItem.description }}</span>
-            <div class="copy-indicator" v-if="copiedClass === classItem.class">已复制!</div>
+            <div class="copy-indicator" v-if="copiedClass === classItem.class">{{ $t('tools.tailwindCheatsheet.ui.copied') }}</div>
           </div>
         </div>
         </div>
@@ -55,7 +55,7 @@
     </div>
 
     <div v-if="filteredCategories.every(cat => cat.classes.length === 0)" class="no-results">
-      <p>没有找到匹配的类名</p>
+      <p>{{ $t('tools.tailwindCheatsheet.ui.noResults') }}</p>
     </div>
   </div>
 </template>
@@ -68,45 +68,55 @@ export default {
       searchQuery: '',
       selectedCategories: [],
       copiedClass: '',
-      categories: [
+      categoryData: [
         {
           id: 'layout',
-          name: '布局',
+          nameKey: 'categoryLayout',
           classes: [
-            { class: 'container', description: '容器' },
-            { class: 'box-border', description: '边框盒模型' },
-            { class: 'box-content', description: '内容盒模型' },
-            { class: 'block', description: '块级元素' },
-            { class: 'inline-block', description: '行内块元素' },
-            { class: 'inline', description: '行内元素' },
-            { class: 'flex', description: '弹性布局' },
-            { class: 'inline-flex', description: '行内弹性布局' },
-            { class: 'grid', description: '网格布局' },
-            { class: 'inline-grid', description: '行内网格布局' },
-            { class: 'table', description: '表格显示' },
-            { class: 'hidden', description: '隐藏元素' },
+            { class: 'container', descKey: 'classContainer' },
+            { class: 'box-border', descKey: 'classBoxBorder' },
+            { class: 'box-content', descKey: 'classBoxContent' },
+            { class: 'block', descKey: 'classBlock' },
+            { class: 'inline-block', descKey: 'classInlineBlock' },
+            { class: 'inline', descKey: 'classInline' },
+            { class: 'flex', descKey: 'classFlex' },
+            { class: 'inline-flex', descKey: 'classInlineFlex' },
+            { class: 'grid', descKey: 'classGrid' },
+            { class: 'inline-grid', descKey: 'classInlineGrid' },
+            { class: 'table', descKey: 'classTable' },
+            { class: 'hidden', descKey: 'classHidden' },
           ]
         },
         {
           id: 'spacing',
-          name: '间距',
+          nameKey: 'categorySpacing',
           classes: [
-            { class: 'm-0', description: '外边距 0' },
-            { class: 'm-1', description: '外边距 0.25rem' },
-            { class: 'm-2', description: '外边距 0.5rem' },
-            { class: 'm-4', description: '外边距 1rem' },
-            { class: 'p-0', description: '内边距 0' },
-            { class: 'p-1', description: '内边距 0.25rem' },
-            { class: 'p-2', description: '内边距 0.5rem' },
-            { class: 'p-4', description: '内边距 1rem' },
-            { class: 'mx-auto', description: '水平居中' },
-            { class: 'space-x-4', description: '子元素水平间距' },
+            { class: 'm-0', descKey: 'classM0' },
+            { class: 'm-1', descKey: 'classM1' },
+            { class: 'm-2', descKey: 'classM2' },
+            { class: 'm-4', descKey: 'classM4' },
+            { class: 'p-0', descKey: 'classP0' },
+            { class: 'p-1', descKey: 'classP1' },
+            { class: 'p-2', descKey: 'classP2' },
+            { class: 'p-4', descKey: 'classP4' },
+            { class: 'mx-auto', descKey: 'classMxAuto' },
+            { class: 'space-x-4', descKey: 'classSpaceX4' },
           ]
         }
       ]
     }
   },
   computed: {
+    categories() {
+      return this.categoryData.map(cat => ({
+        ...cat,
+        name: this.$t(`tools.tailwindCheatsheet.ui.${cat.nameKey}`),
+        classes: cat.classes.map(classItem => ({
+          ...classItem,
+          description: this.$t(`tools.tailwindCheatsheet.ui.${classItem.descKey}`)
+        }))
+      }))
+    },
     filteredCategories() {
       let categories = this.categories;
       
@@ -145,7 +155,7 @@ export default {
           this.copiedClass = '';
         }, 1000);
       } catch (err) {
-        console.error('复制失败:', err);
+        console.error(this.$t('tools.tailwindCheatsheet.ui.copyFailed'), err);
       }
     }
   }

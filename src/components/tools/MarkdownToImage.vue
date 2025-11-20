@@ -1,90 +1,63 @@
 <template>
   <div class="tool-card">
     <!-- 渐变色头部 -->
-    <div
-      class="tool-header"
-      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-    >
+    <div class="tool-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
       <div class="tool-icon">
         <i class="fab fa-markdown"></i>
       </div>
       <div class="tool-title">
-        <h2>Markdown转图片工具</h2>
-        <p>将Markdown文本渲染为PNG/JPG图片</p>
+        <h2>{{ $t('tools.markdownToImage.ui.title') }}</h2>
+        <p>{{ $t('tools.markdownToImage.ui.description') }}</p>
       </div>
     </div>
 
     <!-- 示例按钮 -->
-    <div class="example-section">
+    <div class="example-section" style="display: flex;justify-content: space-between;width: 520px;">
       <button @click="loadExample" class="example-btn">
-        <i class="fas fa-magic"></i> 加载示例
+        <i class="fas fa-magic"></i> {{ $t('tools.markdownToImage.ui.loadExample') }}
       </button>
       <button @click="loadTemplate('readme')" class="example-btn">
-        <i class="fas fa-file"></i> README模板
+        <i class="fas fa-file"></i> {{ $t('tools.markdownToImage.ui.readmeTemplate') }}
       </button>
       <button @click="loadTemplate('blog')" class="example-btn">
-        <i class="fas fa-blog"></i> 博客模板
+        <i class="fas fa-blog"></i> {{ $t('tools.markdownToImage.ui.blogTemplate') }}
       </button>
     </div>
 
     <!-- Markdown输入区域 -->
     <div class="input-section">
-      <h3><i class="fab fa-markdown"></i> Markdown 内容</h3>
+      <h3><i class="fab fa-markdown"></i> {{ $t('tools.markdownToImage.ui.markdownContent') }}</h3>
       <div class="editor-container">
         <div class="editor-toolbar">
-          <button @click="insertText('# ')" class="toolbar-btn" title="标题">
+          <button @click="insertText('# ')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarHeading')">
             <i class="fas fa-heading"></i>
           </button>
-          <button
-            @click="insertText('**', '**')"
-            class="toolbar-btn"
-            title="粗体"
-          >
+          <button @click="insertText('**', '**')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarBold')">
             <i class="fas fa-bold"></i>
           </button>
-          <button
-            @click="insertText('*', '*')"
-            class="toolbar-btn"
-            title="斜体"
-          >
+          <button @click="insertText('*', '*')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarItalic')">
             <i class="fas fa-italic"></i>
           </button>
-          <button
-            @click="insertText('`', '`')"
-            class="toolbar-btn"
-            title="代码"
-          >
+          <button @click="insertText('`', '`')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarCode')">
             <i class="fas fa-code"></i>
           </button>
-          <button @click="insertText('- ')" class="toolbar-btn" title="列表">
+          <button @click="insertText('- ')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarList')">
             <i class="fas fa-list"></i>
           </button>
-          <button
-            @click="insertText('[', ']()')"
-            class="toolbar-btn"
-            title="链接"
-          >
+          <button @click="insertText('[', ']()')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarLink')">
             <i class="fas fa-link"></i>
           </button>
-          <button
-            @click="insertText('![', ']()')"
-            class="toolbar-btn"
-            title="图片"
-          >
+          <button @click="insertText('![', ']()')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarImage')">
             <i class="fas fa-image"></i>
           </button>
-          <button
-            @click="insertText('```\n', '\n```')"
-            class="toolbar-btn"
-            title="代码块"
-          >
+          <button @click="insertText('```\n', '\n```')" class="toolbar-btn" :title="$t('tools.markdownToImage.ui.toolbarCodeBlock')">
             <i class="fas fa-code"></i>
           </button>
         </div>
-        <textarea
+        <textarea 
           ref="markdownInput"
-          v-model="markdownContent"
-          placeholder="在此输入Markdown内容..."
+          v-model="markdownContent" 
+          :placeholder="$t('tools.markdownToImage.ui.placeholder')"
           rows="15"
           @input="updatePreview"
         ></textarea>
@@ -93,7 +66,7 @@
 
     <!-- 预览区域 -->
     <div class="preview-section">
-      <h3><i class="fas fa-eye"></i> 实时预览</h3>
+      <h3><i class="fas fa-eye"></i> {{ $t('tools.markdownToImage.ui.realtimePreview') }}</h3>
       <div class="preview-container" ref="previewContainer">
         <div class="markdown-preview" v-html="renderedMarkdown"></div>
       </div>
@@ -101,10 +74,10 @@
 
     <!-- 图片设置 -->
     <div class="settings-section">
-      <h3><i class="fas fa-cog"></i> 图片设置</h3>
+      <h3><i class="fas fa-cog"></i> {{ $t('tools.markdownToImage.ui.imageSettings') }}</h3>
       <div class="settings-grid">
         <div class="form-group">
-          <label>输出格式</label>
+          <label>{{ $t('tools.markdownToImage.ui.outputFormat') }}</label>
           <select v-model="imageSettings.format">
             <option value="png">PNG</option>
             <option value="jpeg">JPEG</option>
@@ -113,50 +86,34 @@
         </div>
 
         <div class="form-group">
-          <label>图片宽度 (px)</label>
-          <input
-            v-model.number="imageSettings.width"
-            type="number"
-            min="300"
-            max="2000"
-            step="50"
-          />
+          <label>{{ $t('tools.markdownToImage.ui.imageWidth') }}</label>
+          <input v-model.number="imageSettings.width" type="number" min="300" max="2000" step="50">
         </div>
 
         <div class="form-group">
-          <label>缩放比例</label>
+          <label>{{ $t('tools.markdownToImage.ui.scale') }}</label>
           <select v-model="imageSettings.scale">
-            <option value="1">1x</option>
-            <option value="2">2x (高清)</option>
-            <option value="3">3x (超高清)</option>
+            <option value="1">{{ $t('tools.markdownToImage.ui.scale1x') }}</option>
+            <option value="2">{{ $t('tools.markdownToImage.ui.scale2x') }}</option>
+            <option value="3">{{ $t('tools.markdownToImage.ui.scale3x') }}</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label>背景颜色</label>
+          <label>{{ $t('tools.markdownToImage.ui.backgroundColor') }}</label>
           <div class="color-input-group">
-            <input v-model="imageSettings.backgroundColor" type="color" />
-            <input
-              v-model="imageSettings.backgroundColor"
-              type="text"
-              placeholder="#ffffff"
-            />
+            <input v-model="imageSettings.backgroundColor" type="color">
+            <input v-model="imageSettings.backgroundColor" type="text" placeholder="#ffffff">
           </div>
         </div>
 
         <div class="form-group">
-          <label>内边距 (px)</label>
-          <input
-            v-model.number="imageSettings.padding"
-            type="number"
-            min="0"
-            max="100"
-            step="5"
-          />
+          <label>{{ $t('tools.markdownToImage.ui.padding') }}</label>
+          <input v-model.number="imageSettings.padding" type="number" min="0" max="100" step="5">
         </div>
 
         <div class="form-group">
-          <label>主题样式</label>
+          <label>{{ $t('tools.markdownToImage.ui.theme') }}</label>
           <select v-model="imageSettings.theme" @change="updatePreview">
             <option value="github">GitHub</option>
             <option value="github-dark">GitHub Dark</option>
@@ -169,44 +126,37 @@
 
       <!-- 高级选项 -->
       <div class="advanced-options">
-        <h4><i class="fas fa-sliders-h"></i> 高级选项</h4>
+        <h4><i class="fas fa-sliders-h"></i> {{ $t('tools.markdownToImage.ui.advancedOptions') }}</h4>
         <div class="checkbox-group">
           <label>
-            <input
-              type="checkbox"
-              v-model="imageSettings.enableSyntaxHighlight"
-            />
-            <span>代码语法高亮</span>
+            <input type="checkbox" v-model="imageSettings.enableSyntaxHighlight">
+            <span>{{ $t('tools.markdownToImage.ui.syntaxHighlight') }}</span>
           </label>
           <label>
-            <input type="checkbox" v-model="imageSettings.enableMath" />
-            <span>数学公式支持</span>
+            <input type="checkbox" v-model="imageSettings.enableMath">
+            <span>{{ $t('tools.markdownToImage.ui.mathSupport') }}</span>
           </label>
           <label>
-            <input type="checkbox" v-model="imageSettings.enableMermaid" />
-            <span>Mermaid图表</span>
+            <input type="checkbox" v-model="imageSettings.enableMermaid">
+            <span>{{ $t('tools.markdownToImage.ui.mermaidCharts') }}</span>
           </label>
           <label>
-            <input type="checkbox" v-model="imageSettings.autoWidth" />
-            <span>自适应宽度</span>
+            <input type="checkbox" v-model="imageSettings.autoWidth">
+            <span>{{ $t('tools.markdownToImage.ui.autoWidth') }}</span>
           </label>
         </div>
       </div>
 
       <!-- 生成按钮 -->
-      <button
-        @click="generateImage"
-        class="generate-btn"
-        :disabled="generating || !markdownContent.trim()"
-      >
+      <button @click="generateImage" class="generate-btn" :disabled="generating || !markdownContent.trim()">
         <i class="fas fa-image"></i>
-        {{ generating ? "生成中..." : "生成图片" }}
+        {{ generating ? $t('tools.markdownToImage.ui.generating') : $t('tools.markdownToImage.ui.generateImage') }}
       </button>
     </div>
 
     <!-- 生成进度 -->
     <div v-if="generating" class="progress-section">
-      <h3><i class="fas fa-spinner fa-spin"></i> 生成进度</h3>
+      <h3><i class="fas fa-spinner fa-spin"></i> {{ $t('tools.markdownToImage.ui.generationProgress') }}</h3>
       <div class="progress-bar">
         <div class="progress-fill" :style="{ width: progress + '%' }"></div>
       </div>
@@ -215,42 +165,32 @@
 
     <!-- 结果展示 -->
     <div v-if="generatedImage" class="result-section">
-      <h3><i class="fas fa-image"></i> 生成结果</h3>
-
+      <h3><i class="fas fa-image"></i> {{ $t('tools.markdownToImage.ui.generationResult') }}</h3>
+      
       <div class="image-result">
         <div class="image-container">
-          <img
-            :src="generatedImage.dataUrl"
-            alt="Generated Markdown Image"
-            class="result-image"
-          />
+          <img :src="generatedImage.dataUrl" alt="Generated Markdown Image" class="result-image">
           <div class="image-overlay">
             <div class="image-info">
-              <span class="image-size"
-                >{{ generatedImage.width }} × {{ generatedImage.height }}</span
-              >
-              <span class="image-format">{{
-                imageSettings.format.toUpperCase()
-              }}</span>
-              <span class="file-size">{{
-                formatFileSize(generatedImage.size)
-              }}</span>
+              <span class="image-size">{{ generatedImage.width }} × {{ generatedImage.height }}</span>
+              <span class="image-format">{{ imageSettings.format.toUpperCase() }}</span>
+              <span class="file-size">{{ formatFileSize(generatedImage.size) }}</span>
             </div>
           </div>
         </div>
-
+        
         <div class="image-actions">
           <button @click="downloadImage" class="action-btn">
-            <i class="fas fa-download"></i> 下载图片
+            <i class="fas fa-download"></i> {{ $t('tools.markdownToImage.ui.downloadImage') }}
           </button>
           <button @click="copyImageToClipboard" class="action-btn">
-            <i class="fas fa-copy"></i> 复制图片
+            <i class="fas fa-copy"></i> {{ $t('tools.markdownToImage.ui.copyImage') }}
           </button>
           <button @click="copyDataUrl" class="action-btn">
-            <i class="fas fa-link"></i> 复制链接
+            <i class="fas fa-link"></i> {{ $t('tools.markdownToImage.ui.copyLink') }}
           </button>
           <button @click="openInNewTab" class="action-btn">
-            <i class="fas fa-external-link-alt"></i> 新窗口查看
+            <i class="fas fa-external-link-alt"></i> {{ $t('tools.markdownToImage.ui.openInNewTab') }}
           </button>
         </div>
       </div>
@@ -264,164 +204,148 @@
 
     <!-- 使用说明 -->
     <div class="help-section">
-      <h3><i class="fas fa-question-circle"></i> 使用说明</h3>
+      <h3><i class="fas fa-question-circle"></i> {{ $t('tools.markdownToImage.ui.usageInstructions') }}</h3>
       <ul>
-        <li>
-          <strong>Markdown语法：</strong
-          >支持标准Markdown语法，包括标题、列表、链接、图片等
-        </li>
-        <li><strong>代码高亮：</strong>支持多种编程语言的语法高亮显示</li>
-        <li><strong>数学公式：</strong>支持LaTeX格式的数学公式渲染</li>
-        <li><strong>图表支持：</strong>支持Mermaid流程图、时序图等图表类型</li>
-        <li>
-          <strong>高分辨率：</strong>支持2x、3x高分辨率输出，适合打印和展示
-        </li>
-        <li>
-          <strong>多种主题：</strong>提供GitHub、Material等多种预设主题样式
-        </li>
+        <li><strong>{{ $t('tools.markdownToImage.ui.markdownSyntax').split('：')[0] }}：</strong>{{ $t('tools.markdownToImage.ui.markdownSyntax').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.markdownToImage.ui.codeHighlight').split('：')[0] }}：</strong>{{ $t('tools.markdownToImage.ui.codeHighlight').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.markdownToImage.ui.mathFormulas').split('：')[0] }}：</strong>{{ $t('tools.markdownToImage.ui.mathFormulas').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.markdownToImage.ui.chartSupport').split('：')[0] }}：</strong>{{ $t('tools.markdownToImage.ui.chartSupport').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.markdownToImage.ui.highResolution').split('：')[0] }}：</strong>{{ $t('tools.markdownToImage.ui.highResolution').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.markdownToImage.ui.multipleThemes').split('：')[0] }}：</strong>{{ $t('tools.markdownToImage.ui.multipleThemes').split('：')[1] }}</li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, reactive, nextTick, getCurrentInstance } from "vue";
+import { ref, reactive, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
-  name: "MarkdownToImage",
+  name: 'MarkdownToImage',
   setup() {
-    const instance = getCurrentInstance();
+    const { t } = useI18n()
     // 响应式数据
-    const markdownInput = ref(null);
-    const previewContainer = ref(null);
-    const markdownContent = ref("");
-    const renderedMarkdown = ref("");
-    const generating = ref(false);
-    const progress = ref(0);
-    const progressText = ref("");
-    const generatedImage = ref(null);
-    const errorMessage = ref("");
+    const markdownInput = ref(null)
+    const previewContainer = ref(null)
+    const markdownContent = ref('')
+    const renderedMarkdown = ref('')
+    const generating = ref(false)
+    const progress = ref(0)
+    const progressText = ref('')
+    const generatedImage = ref(null)
+    const errorMessage = ref('')
 
     // 图片设置
     const imageSettings = reactive({
-      format: "png",
+      format: 'png',
       width: 800,
       scale: 2,
-      backgroundColor: "#ffffff",
+      backgroundColor: '#ffffff',
       padding: 20,
-      theme: "github",
+      theme: 'github',
       enableSyntaxHighlight: true,
       enableMath: false,
       enableMermaid: false,
-      autoWidth: false,
-    });
+      autoWidth: false
+    })
 
     // 主题样式
     const themes = {
       github: {
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-        fontSize: "16px",
-        lineHeight: "1.5",
-        color: "#24292e",
-        backgroundColor: "#ffffff",
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+        fontSize: '16px',
+        lineHeight: '1.5',
+        color: '#24292e',
+        backgroundColor: '#ffffff'
       },
-      "github-dark": {
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-        fontSize: "16px",
-        lineHeight: "1.5",
-        color: "#e1e4e8",
-        backgroundColor: "#0d1117",
+      'github-dark': {
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+        fontSize: '16px',
+        lineHeight: '1.5',
+        color: '#e1e4e8',
+        backgroundColor: '#0d1117'
       },
       material: {
-        fontFamily: "Roboto, sans-serif",
-        fontSize: "16px",
-        lineHeight: "1.6",
-        color: "#212121",
-        backgroundColor: "#fafafa",
+        fontFamily: 'Roboto, sans-serif',
+        fontSize: '16px',
+        lineHeight: '1.6',
+        color: '#212121',
+        backgroundColor: '#fafafa'
       },
       minimal: {
-        fontFamily: "Georgia, serif",
-        fontSize: "18px",
-        lineHeight: "1.7",
-        color: "#333",
-        backgroundColor: "#fff",
+        fontFamily: 'Georgia, serif',
+        fontSize: '18px',
+        lineHeight: '1.7',
+        color: '#333',
+        backgroundColor: '#fff'
       },
       academic: {
-        fontFamily: "Times New Roman, serif",
-        fontSize: "16px",
-        lineHeight: "1.6",
-        color: "#000",
-        backgroundColor: "#fff",
-      },
-    };
+        fontFamily: 'Times New Roman, serif',
+        fontSize: '16px',
+        lineHeight: '1.6',
+        color: '#000',
+        backgroundColor: '#fff'
+      }
+    }
 
     // 格式化文件大小
     const formatFileSize = (bytes) => {
-      if (bytes === 0) return "0 Bytes";
-      const k = 1024;
-      const sizes = ["Bytes", "KB", "MB"];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-    };
+      if (bytes === 0) return '0 Bytes'
+      const k = 1024
+      const sizes = ['Bytes', 'KB', 'MB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    }
 
     // 插入文本
-    const insertText = (before, after = "") => {
-      const textarea = markdownInput.value;
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = markdownContent.value.substring(start, end);
-
-      const newText = before + selectedText + after;
-      markdownContent.value =
-        markdownContent.value.substring(0, start) +
-        newText +
-        markdownContent.value.substring(end);
-
+    const insertText = (before, after = '') => {
+      const textarea = markdownInput.value
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+      const selectedText = markdownContent.value.substring(start, end)
+      
+      const newText = before + selectedText + after
+      markdownContent.value = markdownContent.value.substring(0, start) + newText + markdownContent.value.substring(end)
+      
       nextTick(() => {
-        textarea.focus();
-        textarea.setSelectionRange(
-          start + before.length,
-          start + before.length + selectedText.length
-        );
-      });
-
-      updatePreview();
-    };
+        textarea.focus()
+        textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length)
+      })
+      
+      updatePreview()
+    }
 
     // 更新预览
     const updatePreview = () => {
       // 简单的Markdown渲染（实际项目中建议使用marked或其他Markdown库）
       let html = markdownContent.value
         // 标题
-        .replace(/^### (.*$)/gim, "<h3>$1</h3>")
-        .replace(/^## (.*$)/gim, "<h2>$1</h2>")
-        .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
         // 粗体和斜体
-        .replace(/\*\*(.*)\*\*/gim, "<strong>$1</strong>")
-        .replace(/\*(.*)\*/gim, "<em>$1</em>")
+        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+        .replace(/\*(.*)\*/gim, '<em>$1</em>')
         // 行内代码
-        .replace(/`(.*?)`/gim, "<code>$1</code>")
+        .replace(/`(.*?)`/gim, '<code>$1</code>')
         // 链接
         .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>')
         // 图片
         .replace(/!\[([^\]]*)\]\(([^)]+)\)/gim, '<img src="$2" alt="$1">')
         // 列表
-        .replace(/^\- (.*$)/gim, "<li>$1</li>")
-        .replace(/(<li>.*<\/li>)/s, "<ul>$1</ul>")
+        .replace(/^\- (.*$)/gim, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
         // 代码块
-        .replace(
-          /```(\w+)?\n([\s\S]*?)```/gim,
-          '<pre><code class="language-$1">$2</code></pre>'
-        )
+        .replace(/```(\w+)?\n([\s\S]*?)```/gim, '<pre><code class="language-$1">$2</code></pre>')
         // 段落
-        .replace(/\n\n/gim, "</p><p>")
-        .replace(/^/, "<p>")
-        .replace(/$/, "</p>");
+        .replace(/\n\n/gim, '</p><p>')
+        .replace(/^/, '<p>')
+        .replace(/$/, '</p>')
 
-      renderedMarkdown.value = html;
-    };
+      renderedMarkdown.value = html
+    }
 
     // 加载示例
     const loadExample = () => {
@@ -457,10 +381,10 @@ function hello() {
 
 这个工具可以将任何Markdown文档转换为高质量的图片，适合制作海报、分享到社交媒体或保存为图片格式。
 
-> 💡 **提示**: 您可以调整右侧的设置来自定义输出图片的样式和格式。`;
+> 💡 **提示**: 您可以调整右侧的设置来自定义输出图片的样式和格式。`
 
-      updatePreview();
-    };
+      updatePreview()
+    }
 
     // 加载模板
     const loadTemplate = (type) => {
@@ -498,7 +422,7 @@ MIT License`,
 
         blog: `# 博客文章标题
 
-*发布日期: ${new Date().toLocaleDateString("zh-CN")}*
+*发布日期: ${new Date().toLocaleDateString('zh-CN')}*
 
 ## 引言
 
@@ -528,198 +452,183 @@ if __name__ == "__main__":
 
 ---
 
-*感谢阅读！如果觉得有用，请点赞和分享。*`,
-      };
+*感谢阅读！如果觉得有用，请点赞和分享。*`
+      }
 
-      markdownContent.value = templates[type] || templates.readme;
-      updatePreview();
-    };
+      markdownContent.value = templates[type] || templates.readme
+      updatePreview()
+    }
 
     // 生成图片
     const generateImage = async () => {
       if (!markdownContent.value.trim()) {
-        errorMessage.value = "请输入Markdown内容";
-        return;
+        errorMessage.value = t('tools.markdownToImage.ui.enterMarkdownContent')
+        return
       }
 
-      generating.value = true;
-      progress.value = 0;
-      progressText.value = "准备渲染...";
-      errorMessage.value = "";
+      generating.value = true
+      progress.value = 0
+      progressText.value = t('tools.markdownToImage.ui.preparingRender')
+      errorMessage.value = ''
 
       try {
-        await simulateGeneration();
-        await createImageFromHtml();
+        await simulateGeneration()
+        await createImageFromHtml()
+        
+        progressText.value = t('tools.markdownToImage.ui.generationComplete')
+        progress.value = 100
 
-        progressText.value = "生成完成！";
-        progress.value = 100;
       } catch (error) {
-        errorMessage.value = "图片生成失败: " + error.message;
+        errorMessage.value = t('tools.markdownToImage.ui.imageGenerationFailed') + error.message
       } finally {
-        generating.value = false;
+        generating.value = false
       }
-    };
+    }
 
     // 模拟生成过程
     const simulateGeneration = () => {
       return new Promise((resolve) => {
         const steps = [
-          { progress: 20, text: "解析Markdown语法..." },
-          { progress: 40, text: "应用主题样式..." },
-          { progress: 60, text: "渲染HTML内容..." },
-          { progress: 80, text: "生成图片..." },
-          { progress: 100, text: "处理完成！" },
-        ];
+          { progress: 20, text: t('tools.markdownToImage.ui.parsingMarkdown') },
+          { progress: 40, text: t('tools.markdownToImage.ui.applyingTheme') },
+          { progress: 60, text: t('tools.markdownToImage.ui.renderingHtml') },
+          { progress: 80, text: t('tools.markdownToImage.ui.generatingImage') },
+          { progress: 100, text: t('tools.markdownToImage.ui.processingComplete') }
+        ]
 
-        let currentStep = 0;
+        let currentStep = 0
         const interval = setInterval(() => {
           if (currentStep < steps.length) {
-            progress.value = steps[currentStep].progress;
-            progressText.value = steps[currentStep].text;
-            currentStep++;
+            progress.value = steps[currentStep].progress
+            progressText.value = steps[currentStep].text
+            currentStep++
           } else {
-            clearInterval(interval);
-            resolve();
+            clearInterval(interval)
+            resolve()
           }
-        }, 600);
-      });
-    };
+        }, 600)
+      })
+    }
 
     // 从HTML创建图片
     const createImageFromHtml = async () => {
       // 创建画布
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      
       // 设置画布尺寸
-      const width = imageSettings.autoWidth ? "auto" : imageSettings.width;
-      const height = "auto";
-      const scale = imageSettings.scale;
-
-      canvas.width = (typeof width === "number" ? width : 800) * scale;
-      canvas.height = 600 * scale; // 临时高度，后续会调整
-
+      const width = imageSettings.autoWidth ? 'auto' : imageSettings.width
+      const height = 'auto'
+      const scale = imageSettings.scale
+      
+      canvas.width = (typeof width === 'number' ? width : 800) * scale
+      canvas.height = 600 * scale // 临时高度，后续会调整
+      
       // 设置背景
-      ctx.fillStyle = imageSettings.backgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+      ctx.fillStyle = imageSettings.backgroundColor
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      
       // 设置字体和颜色
-      const theme = themes[imageSettings.theme];
-      ctx.fillStyle = theme.color;
-      ctx.font = `${parseInt(theme.fontSize) * scale}px ${theme.fontFamily}`;
-
+      const theme = themes[imageSettings.theme]
+      ctx.fillStyle = theme.color
+      ctx.font = `${parseInt(theme.fontSize) * scale}px ${theme.fontFamily}`
+      
       // 简单的文本渲染（实际实现需要更复杂的HTML到Canvas转换）
-      const text = markdownContent.value;
-      const lines = text.split("\n");
-      let y = imageSettings.padding * scale;
-
-      lines.forEach((line) => {
+      const text = markdownContent.value
+      const lines = text.split('\n')
+      let y = imageSettings.padding * scale
+      
+      lines.forEach(line => {
         if (line.trim()) {
           // 简单处理不同类型的文本
-          if (line.startsWith("#")) {
-            ctx.font = `bold ${(parseInt(theme.fontSize) + 8) * scale}px ${
-              theme.fontFamily
-            }`;
-            ctx.fillText(
-              line.replace(/^#+\s*/, ""),
-              imageSettings.padding * scale,
-              y
-            );
-            ctx.font = `${parseInt(theme.fontSize) * scale}px ${
-              theme.fontFamily
-            }`;
+          if (line.startsWith('#')) {
+            ctx.font = `bold ${(parseInt(theme.fontSize) + 8) * scale}px ${theme.fontFamily}`
+            ctx.fillText(line.replace(/^#+\s*/, ''), imageSettings.padding * scale, y)
+            ctx.font = `${parseInt(theme.fontSize) * scale}px ${theme.fontFamily}`
           } else {
-            ctx.fillText(line, imageSettings.padding * scale, y);
+            ctx.fillText(line, imageSettings.padding * scale, y)
           }
-          y += parseInt(theme.lineHeight) * parseInt(theme.fontSize) * scale;
+          y += parseInt(theme.lineHeight) * parseInt(theme.fontSize) * scale
         }
-      });
-
+      })
+      
       // 调整画布高度
-      canvas.height = y + imageSettings.padding * scale;
-
+      canvas.height = y + imageSettings.padding * scale
+      
       // 重新绘制（因为改变高度会清空画布）
-      ctx.fillStyle = imageSettings.backgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = theme.color;
-      ctx.font = `${parseInt(theme.fontSize) * scale}px ${theme.fontFamily}`;
-
-      y = imageSettings.padding * scale;
-      lines.forEach((line) => {
+      ctx.fillStyle = imageSettings.backgroundColor
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillStyle = theme.color
+      ctx.font = `${parseInt(theme.fontSize) * scale}px ${theme.fontFamily}`
+      
+      y = imageSettings.padding * scale
+      lines.forEach(line => {
         if (line.trim()) {
-          if (line.startsWith("#")) {
-            ctx.font = `bold ${(parseInt(theme.fontSize) + 8) * scale}px ${
-              theme.fontFamily
-            }`;
-            ctx.fillText(
-              line.replace(/^#+\s*/, ""),
-              imageSettings.padding * scale,
-              y
-            );
-            ctx.font = `${parseInt(theme.fontSize) * scale}px ${
-              theme.fontFamily
-            }`;
+          if (line.startsWith('#')) {
+            ctx.font = `bold ${(parseInt(theme.fontSize) + 8) * scale}px ${theme.fontFamily}`
+            ctx.fillText(line.replace(/^#+\s*/, ''), imageSettings.padding * scale, y)
+            ctx.font = `${parseInt(theme.fontSize) * scale}px ${theme.fontFamily}`
           } else {
-            ctx.fillText(line, imageSettings.padding * scale, y);
+            ctx.fillText(line, imageSettings.padding * scale, y)
           }
-          y += parseInt(theme.lineHeight) * parseInt(theme.fontSize) * scale;
+          y += parseInt(theme.lineHeight) * parseInt(theme.fontSize) * scale
         }
-      });
-
+      })
+      
       // 转换为图片
-      const dataUrl = canvas.toDataURL(`image/${imageSettings.format}`, 0.9);
-
+      const dataUrl = canvas.toDataURL(`image/${imageSettings.format}`, 0.9)
+      
       // 计算文件大小（估算）
-      const base64Length = dataUrl.split(",")[1].length;
-      const sizeInBytes = Math.round(base64Length * 0.75);
-
+      const base64Length = dataUrl.split(',')[1].length
+      const sizeInBytes = Math.round(base64Length * 0.75)
+      
       generatedImage.value = {
         dataUrl,
         width: canvas.width,
         height: canvas.height,
-        size: sizeInBytes,
-      };
-    };
+        size: sizeInBytes
+      }
+    }
 
     // 下载图片
     const downloadImage = () => {
-      if (!generatedImage.value) return;
+      if (!generatedImage.value) return
 
-      const link = document.createElement("a");
-      link.download = `markdown-image-${Date.now()}.${imageSettings.format}`;
-      link.href = generatedImage.value.dataUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    };
+      const link = document.createElement('a')
+      link.download = `markdown-image-${Date.now()}.${imageSettings.format}`
+      link.href = generatedImage.value.dataUrl
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
 
     // 复制图片到剪贴板
     const copyImageToClipboard = async () => {
       try {
-        const response = await fetch(generatedImage.value.dataUrl);
-        const blob = await response.blob();
+        const response = await fetch(generatedImage.value.dataUrl)
+        const blob = await response.blob()
         await navigator.clipboard.write([
-          new ClipboardItem({ [blob.type]: blob }),
-        ]);
-        instance.proxy.$message.success("图片已复制到剪贴板！");
+          new ClipboardItem({ [blob.type]: blob })
+        ])
+        messageService.success(t('common.copied'))
       } catch (error) {
-        instance.proxy.$message.success("复制失败，请使用下载功能");
+        messageService.error(t('common.error'))
       }
-    };
+    }
 
     // 复制图片链接
     const copyDataUrl = async () => {
       try {
-        await navigator.clipboard.writeText(generatedImage.value.dataUrl);
-        instance.proxy.$message.success("图片链接已复制到剪贴板！");
+        await navigator.clipboard.writeText(generatedImage.value.dataUrl)
+        messageService.success(t('common.copied'))
       } catch (error) {
-        instance.proxy.$message.success("复制失败");
+        messageService.error(t('common.error'))
       }
-    };
+    }
 
     // 新窗口查看
     const openInNewTab = () => {
-      const newWindow = window.open();
+      const newWindow = window.open()
       newWindow.document.write(`
         <html>
           <head><title>Markdown Image</title></head>
@@ -727,8 +636,8 @@ if __name__ == "__main__":
             <img src="${generatedImage.value.dataUrl}" style="max-width:100%;height:auto;">
           </body>
         </html>
-      `);
-    };
+      `)
+    }
 
     return {
       markdownInput,
@@ -750,16 +659,14 @@ if __name__ == "__main__":
       downloadImage,
       copyImageToClipboard,
       copyDataUrl,
-      openInNewTab,
-    };
-  },
-};
+      openInNewTab
+    }
+  }
+}
 </script>
 
 <style scoped>
-.input-section,
-.preview-section,
-.settings-section {
+.input-section, .preview-section, .settings-section {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 12px;
   padding: 1.5rem;
@@ -777,7 +684,7 @@ if __name__ == "__main__":
   padding: 0.5rem;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   flex-wrap: wrap;
 }
 
@@ -803,7 +710,7 @@ if __name__ == "__main__":
   border: 1px solid #dee2e6;
   border-radius: 8px;
   padding: 10px;
-  font-family: "Courier New", monospace;
+  font-family: 'Courier New', monospace;
   font-size: 0.9rem;
   line-height: 1.5;
   resize: vertical;
@@ -820,14 +727,11 @@ if __name__ == "__main__":
 }
 
 .markdown-preview {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   line-height: 1.6;
 }
 
-.markdown-preview h1,
-.markdown-preview h2,
-.markdown-preview h3 {
+.markdown-preview h1, .markdown-preview h2, .markdown-preview h3 {
   color: #2c3e50;
   margin-top: 1.5rem;
   margin-bottom: 10px;
@@ -837,7 +741,7 @@ if __name__ == "__main__":
   background: #f8f9fa;
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
-  font-family: "Courier New", monospace;
+  font-family: 'Courier New', monospace;
 }
 
 .markdown-preview pre {
@@ -877,7 +781,7 @@ if __name__ == "__main__":
   padding: 10px;
   border-radius: 8px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .checkbox-group {
@@ -956,21 +860,21 @@ if __name__ == "__main__":
   background: white;
   border-radius: 8px;
   padding: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .result-image {
   max-width: 100%;
   height: auto;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .image-overlay {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0,0,0,0.8);
   color: white;
   padding: 0.5rem;
   border-radius: 6px;
@@ -1034,7 +938,7 @@ if __name__ == "__main__":
 }
 
 .help-section li::before {
-  content: "•";
+  content: '•';
   color: #667eea;
   font-weight: bold;
   position: absolute;
@@ -1042,19 +946,18 @@ if __name__ == "__main__":
 }
 
 @media (max-width: 768px) {
-  .settings-grid,
-  .checkbox-group {
+  .settings-grid, .checkbox-group {
     grid-template-columns: 1fr;
   }
-
+  
   .editor-toolbar {
     justify-content: center;
   }
-
+  
   .image-actions {
     flex-direction: column;
   }
-
+  
   .image-result {
     align-items: center;
   }

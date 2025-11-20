@@ -1,13 +1,13 @@
 <template>
   <div class="contrast-checker-container">
     <div class="tool-header">
-      <h2>📊 Contrast Checker</h2>
-      <p>颜色对比度检测工具</p>
+      <h2>📊 {{ $t('tools.contrastChecker.ui.title') }}</h2>
+      <p>{{ $t('tools.contrastChecker.ui.description') }}</p>
     </div>
 
     <div class="color-inputs">
       <div class="color-input-group">
-        <label>前景色 (文字颜色)</label>
+        <label>{{ $t('tools.contrastChecker.ui.foregroundColorLabel') }}</label>
         <div class="color-control">
           <input type="color" v-model="foregroundColor" class="color-picker">
           <input type="text" v-model="foregroundColor" class="color-text">
@@ -15,7 +15,7 @@
       </div>
 
       <div class="color-input-group">
-        <label>背景色</label>
+        <label>{{ $t('tools.contrastChecker.ui.backgroundColorLabel') }}</label>
         <div class="color-control">
           <input type="color" v-model="backgroundColor" class="color-picker">
           <input type="text" v-model="backgroundColor" class="color-text">
@@ -25,10 +25,10 @@
 
     <div class="preview-section">
       <div class="preview-card" :style="{ backgroundColor: backgroundColor, color: foregroundColor }">
-        <h3>预览效果</h3>
-        <p>这是一段示例文本，用于预览颜色对比效果。</p>
-        <p style="font-size: 14px;">小号文字示例</p>
-        <p style="font-size: 18px; font-weight: bold;">大号粗体文字示例</p>
+        <h3>{{ $t('tools.contrastChecker.ui.previewEffect') }}</h3>
+        <p>{{ $t('tools.contrastChecker.ui.sampleText') }}</p>
+        <p style="font-size: 14px;">{{ $t('tools.contrastChecker.ui.smallTextSample') }}</p>
+        <p style="font-size: 18px; font-weight: bold;">{{ $t('tools.contrastChecker.ui.largeBoldTextSample') }}</p>
       </div>
     </div>
 
@@ -42,32 +42,32 @@
         <div class="compliance-item" :class="{ pass: wcagAANormal }">
           <span>{{ wcagAANormal ? '✅' : '❌' }}</span>
           <div>
-            <div>WCAG AA 普通文本</div>
-            <small>需要 4.5:1</small>
+            <div>{{ $t('tools.contrastChecker.ui.wcagAANormal') }}</div>
+            <small>{{ $t('tools.contrastChecker.ui.requires') }} 4.5:1</small>
           </div>
         </div>
 
         <div class="compliance-item" :class="{ pass: wcagAALarge }">
           <span>{{ wcagAALarge ? '✅' : '❌' }}</span>
           <div>
-            <div>WCAG AA 大文本</div>
-            <small>需要 3:1</small>
+            <div>{{ $t('tools.contrastChecker.ui.wcagAALarge') }}</div>
+            <small>{{ $t('tools.contrastChecker.ui.requires') }} 3:1</small>
           </div>
         </div>
 
         <div class="compliance-item" :class="{ pass: wcagAAANormal }">
           <span>{{ wcagAAANormal ? '✅' : '❌' }}</span>
           <div>
-            <div>WCAG AAA 普通文本</div>
-            <small>需要 7:1</small>
+            <div>{{ $t('tools.contrastChecker.ui.wcagAAANormal') }}</div>
+            <small>{{ $t('tools.contrastChecker.ui.requires') }} 7:1</small>
           </div>
         </div>
 
         <div class="compliance-item" :class="{ pass: wcagAAALarge }">
           <span>{{ wcagAAALarge ? '✅' : '❌' }}</span>
           <div>
-            <div>WCAG AAA 大文本</div>
-            <small>需要 4.5:1</small>
+            <div>{{ $t('tools.contrastChecker.ui.wcagAAALarge') }}</div>
+            <small>{{ $t('tools.contrastChecker.ui.requires') }} 4.5:1</small>
           </div>
         </div>
       </div>
@@ -77,10 +77,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ContrastChecker',
   setup() {
+    const { t } = useI18n()
     const foregroundColor = ref('#000000')
     const backgroundColor = ref('#FFFFFF')
 

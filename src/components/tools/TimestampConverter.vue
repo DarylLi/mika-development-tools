@@ -6,38 +6,38 @@
         <i class="fas fa-clock"></i>
       </div>
       <div class="tool-title">
-        <h2>时间戳转换工具</h2>
-        <p>Unix时间戳、ISO字符串、本地时间等格式互转</p>
+        <h2>{{ $t('tools.timestampConverter.ui.title') }}</h2>
+        <p>{{ $t('tools.timestampConverter.ui.description') }}</p>
       </div>
     </div>
 
     <!-- 当前时间显示 -->
     <div class="current-time-section">
-      <h3><i class="fas fa-clock"></i> 当前时间</h3>
+      <h3><i class="fas fa-clock"></i> {{ $t('tools.timestampConverter.ui.currentTime') }}</h3>
       <div class="time-display-grid">
         <div class="time-item">
-          <span class="time-label">Unix 时间戳 (秒)</span>
+          <span class="time-label">{{ $t('tools.timestampConverter.ui.unixTimestampSeconds') }}</span>
           <span class="time-value">{{ currentTime.unix }}</span>
           <button @click="copyToClipboard(currentTime.unix)" class="mini-copy-btn">
             <i class="fas fa-copy"></i>
           </button>
         </div>
         <div class="time-item">
-          <span class="time-label">Unix 时间戳 (毫秒)</span>
+          <span class="time-label">{{ $t('tools.timestampConverter.ui.unixTimestampMs') }}</span>
           <span class="time-value">{{ currentTime.unixMs }}</span>
           <button @click="copyToClipboard(currentTime.unixMs)" class="mini-copy-btn">
             <i class="fas fa-copy"></i>
           </button>
         </div>
         <div class="time-item">
-          <span class="time-label">ISO 8601 格式</span>
+          <span class="time-label">{{ $t('tools.timestampConverter.ui.iso8601') }}</span>
           <span class="time-value">{{ currentTime.iso }}</span>
           <button @click="copyToClipboard(currentTime.iso)" class="mini-copy-btn">
             <i class="fas fa-copy"></i>
           </button>
         </div>
         <div class="time-item">
-          <span class="time-label">本地时间</span>
+          <span class="time-label">{{ $t('tools.timestampConverter.ui.localTime') }}</span>
           <span class="time-value">{{ currentTime.local }}</span>
           <button @click="copyToClipboard(currentTime.local)" class="mini-copy-btn">
             <i class="fas fa-copy"></i>
@@ -48,71 +48,71 @@
 
     <!-- 时间戳转换 -->
     <div class="converter-section">
-      <h3><i class="fas fa-exchange-alt"></i> 时间戳转换</h3>
+      <h3><i class="fas fa-exchange-alt"></i> {{ $t('tools.timestampConverter.ui.timestampConversion') }}</h3>
       
       <!-- 输入时间戳 -->
       <div class="form-group">
-        <label>输入时间戳</label>
+        <label>{{ $t('tools.timestampConverter.ui.inputTimestamp') }}</label>
         <div class="input-with-buttons">
           <input 
             v-model="inputTimestamp" 
             type="text" 
-            placeholder="输入Unix时间戳（秒或毫秒）"
+            :placeholder="$t('tools.timestampConverter.ui.inputTimestampPlaceholder')"
             @input="convertFromTimestamp"
           >
           <button @click="setCurrentTimestamp" class="set-current-btn">
-            <i class="fas fa-clock"></i> 当前时间
+            <i class="fas fa-clock"></i> {{ $t('tools.timestampConverter.ui.currentTimeBtn') }}
           </button>
           <button @click="pasteFromClipboard" class="paste-btn">
-            <i class="fas fa-paste"></i> 粘贴
+            <i class="fas fa-paste"></i> {{ $t('tools.timestampConverter.ui.paste') }}
           </button>
         </div>
         <div class="timestamp-hints">
-          <small>支持10位（秒）或13位（毫秒）时间戳</small>
+          <small>{{ $t('tools.timestampConverter.ui.timestampHints') }}</small>
         </div>
       </div>
 
       <!-- 转换结果 -->
       <div v-if="timestampResult.valid" class="result-display">
-        <h4><i class="fas fa-arrow-right"></i> 转换结果</h4>
+        <h4><i class="fas fa-arrow-right"></i> {{ $t('tools.timestampConverter.ui.conversionResult') }}</h4>
         <div class="result-grid">
           <div class="result-item">
-            <span class="result-label">Unix 时间戳 (秒)</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.unixTimestampSeconds') }}</span>
             <span class="result-value">{{ timestampResult.unix }}</span>
             <button @click="copyToClipboard(timestampResult.unix)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
             </button>
           </div>
           <div class="result-item">
-            <span class="result-label">Unix 时间戳 (毫秒)</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.unixTimestampMs') }}</span>
             <span class="result-value">{{ timestampResult.unixMs }}</span>
             <button @click="copyToClipboard(timestampResult.unixMs)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
             </button>
           </div>
           <div class="result-item">
-            <span class="result-label">ISO 8601 (UTC)</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.iso8601Utc') }}</span>
             <span class="result-value">{{ timestampResult.isoUtc }}</span>
             <button @click="copyToClipboard(timestampResult.isoUtc)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
             </button>
           </div>
           <div class="result-item">
-            <span class="result-label">ISO 8601 (本地)</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.iso8601Local') }}</span>
             <span class="result-value">{{ timestampResult.isoLocal }}</span>
             <button @click="copyToClipboard(timestampResult.isoLocal)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
             </button>
           </div>
           <div class="result-item">
-            <span class="result-label">本地时间</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.localTime') }}</span>
             <span class="result-value">{{ timestampResult.local }}</span>
             <button @click="copyToClipboard(timestampResult.local)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
             </button>
           </div>
           <div class="result-item">
-            <span class="result-label">UTC 时间</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.utcTime') }}</span>
             <span class="result-value">{{ timestampResult.utc }}</span>
             <button @click="copyToClipboard(timestampResult.utc)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
@@ -124,56 +124,56 @@
 
     <!-- 时间字符串转换 -->
     <div class="converter-section">
-      <h3><i class="fas fa-calendar-alt"></i> 时间字符串转时间戳</h3>
+      <h3><i class="fas fa-calendar-alt"></i> {{ $t('tools.timestampConverter.ui.timeStringToTimestamp') }}</h3>
       
       <!-- 输入时间字符串 -->
       <div class="form-group">
-        <label>输入时间字符串</label>
+        <label>{{ $t('tools.timestampConverter.ui.inputTimeString') }}</label>
         <input 
           v-model="inputTimeString" 
           type="text" 
-          placeholder="如: 2024-01-01 12:00:00 或 2024-01-01T12:00:00Z"
+          :placeholder="$t('tools.timestampConverter.ui.inputTimeStringPlaceholder')"
           @input="convertFromString"
         >
         <div class="format-hints">
-          <small>支持格式: YYYY-MM-DD HH:mm:ss、ISO 8601等</small>
+          <small>{{ $t('tools.timestampConverter.ui.formatHints') }}</small>
         </div>
       </div>
 
       <!-- 时区选择 -->
       <div class="form-group">
-        <label>时区</label>
+        <label>{{ $t('tools.timestampConverter.ui.timezone') }}</label>
         <select v-model="selectedTimezone" @change="convertFromString">
-          <option value="local">本地时区</option>
+          <option value="local">{{ $t('tools.timestampConverter.ui.localTimezone') }}</option>
           <option value="UTC">UTC</option>
-          <option value="Asia/Shanghai">Asia/Shanghai (中国)</option>
-          <option value="America/New_York">America/New_York (美国东部)</option>
-          <option value="America/Los_Angeles">America/Los_Angeles (美国西部)</option>
-          <option value="Europe/London">Europe/London (英国)</option>
-          <option value="Asia/Tokyo">Asia/Tokyo (日本)</option>
+          <option value="Asia/Shanghai">{{ $t('tools.timestampConverter.ui.timezoneChina') }}</option>
+          <option value="America/New_York">{{ $t('tools.timestampConverter.ui.timezoneUSEast') }}</option>
+          <option value="America/Los_Angeles">{{ $t('tools.timestampConverter.ui.timezoneUSWest') }}</option>
+          <option value="Europe/London">{{ $t('tools.timestampConverter.ui.timezoneUK') }}</option>
+          <option value="Asia/Tokyo">{{ $t('tools.timestampConverter.ui.timezoneJapan') }}</option>
         </select>
       </div>
 
       <!-- 字符串转换结果 -->
       <div v-if="stringResult.valid" class="result-display">
-        <h4><i class="fas fa-arrow-right"></i> 转换结果</h4>
+        <h4><i class="fas fa-arrow-right"></i> {{ $t('tools.timestampConverter.ui.conversionResult') }}</h4>
         <div class="result-grid">
           <div class="result-item">
-            <span class="result-label">Unix 时间戳 (秒)</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.unixTimestampSeconds') }}</span>
             <span class="result-value">{{ stringResult.unix }}</span>
             <button @click="copyToClipboard(stringResult.unix)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
             </button>
           </div>
           <div class="result-item">
-            <span class="result-label">Unix 时间戳 (毫秒)</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.unixTimestampMs') }}</span>
             <span class="result-value">{{ stringResult.unixMs }}</span>
             <button @click="copyToClipboard(stringResult.unixMs)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
             </button>
           </div>
           <div class="result-item">
-            <span class="result-label">解析的时间</span>
+            <span class="result-label">{{ $t('tools.timestampConverter.ui.parsedTime') }}</span>
             <span class="result-value">{{ stringResult.parsed }}</span>
             <button @click="copyToClipboard(stringResult.parsed)" class="mini-copy-btn">
               <i class="fas fa-copy"></i>
@@ -185,27 +185,27 @@
 
     <!-- 时间计算 -->
     <div class="calculator-section">
-      <h3><i class="fas fa-calculator"></i> 时间计算</h3>
+      <h3><i class="fas fa-calculator"></i> {{ $t('tools.timestampConverter.ui.timeCalculation') }}</h3>
       
       <div class="calc-options">
         <div class="form-group">
-          <label>基础时间戳</label>
-          <input v-model="calcBase" type="text" placeholder="输入基础时间戳">
+          <label>{{ $t('tools.timestampConverter.ui.baseTimestamp') }}</label>
+          <input v-model="calcBase" type="text" :placeholder="$t('tools.timestampConverter.ui.baseTimestampPlaceholder')">
         </div>
         
         <div class="calc-operations">
-          <button @click="addTime('hour', 1)" class="calc-btn">+1小时</button>
-          <button @click="addTime('day', 1)" class="calc-btn">+1天</button>
-          <button @click="addTime('week', 1)" class="calc-btn">+1周</button>
-          <button @click="addTime('month', 1)" class="calc-btn">+1月</button>
-          <button @click="addTime('year', 1)" class="calc-btn">+1年</button>
-          <button @click="addTime('hour', -1)" class="calc-btn">-1小时</button>
-          <button @click="addTime('day', -1)" class="calc-btn">-1天</button>
-          <button @click="addTime('week', -1)" class="calc-btn">-1周</button>
+          <button @click="addTime('hour', 1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.add1Hour') }}</button>
+          <button @click="addTime('day', 1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.add1Day') }}</button>
+          <button @click="addTime('week', 1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.add1Week') }}</button>
+          <button @click="addTime('month', 1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.add1Month') }}</button>
+          <button @click="addTime('year', 1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.add1Year') }}</button>
+          <button @click="addTime('hour', -1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.minus1Hour') }}</button>
+          <button @click="addTime('day', -1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.minus1Day') }}</button>
+          <button @click="addTime('week', -1)" class="calc-btn">{{ $t('tools.timestampConverter.ui.minus1Week') }}</button>
         </div>
         
         <div v-if="calcResult" class="calc-result">
-          <span class="calc-result-label">计算结果:</span>
+          <span class="calc-result-label">{{ $t('tools.timestampConverter.ui.calcResult') }}</span>
           <span class="calc-result-value">{{ calcResult }}</span>
           <button @click="copyToClipboard(calcResult)" class="mini-copy-btn">
             <i class="fas fa-copy"></i>
@@ -222,13 +222,13 @@
 
     <!-- 使用说明 -->
     <div class="help-section">
-      <h3><i class="fas fa-question-circle"></i> 使用说明</h3>
+      <h3><i class="fas fa-question-circle"></i> {{ $t('tools.timestampConverter.ui.usageInstructions') }}</h3>
       <ul>
-        <li><strong>Unix时间戳：</strong>从1970年1月1日00:00:00 UTC开始的秒数或毫秒数</li>
-        <li><strong>自动识别：</strong>工具会自动识别10位（秒）或13位（毫秒）时间戳</li>
-        <li><strong>时区处理：</strong>支持多种时区转换，默认使用本地时区</li>
-        <li><strong>格式支持：</strong>支持ISO 8601、标准日期时间格式等多种输入</li>
-        <li><strong>时间计算：</strong>支持时间的加减运算，便于时间范围计算</li>
+        <li><strong>{{ $t('tools.timestampConverter.ui.unixTimestampDesc').split('：')[0] }}：</strong>{{ $t('tools.timestampConverter.ui.unixTimestampDesc').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.timestampConverter.ui.autoDetect').split('：')[0] }}：</strong>{{ $t('tools.timestampConverter.ui.autoDetect').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.timestampConverter.ui.timezoneHandling').split('：')[0] }}：</strong>{{ $t('tools.timestampConverter.ui.timezoneHandling').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.timestampConverter.ui.formatSupport').split('：')[0] }}：</strong>{{ $t('tools.timestampConverter.ui.formatSupport').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.timestampConverter.ui.timeCalculationDesc').split('：')[0] }}：</strong>{{ $t('tools.timestampConverter.ui.timeCalculationDesc').split('：')[1] }}</li>
       </ul>
     </div>
   </div>
@@ -236,10 +236,12 @@
 
 <script>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'TimestampConverter',
   setup() {
+    const { t } = useI18n()
     // 响应式数据
     const inputTimestamp = ref('')
     const inputTimeString = ref('')
@@ -307,7 +309,7 @@ export default {
         let timestamp = parseInt(inputTimestamp.value.trim())
         
         if (isNaN(timestamp)) {
-          errorMessage.value = '请输入有效的数字时间戳'
+          errorMessage.value = t('tools.timestampConverter.ui.invalidTimestamp')
           timestampResult.valid = false
           return
         }
@@ -325,13 +327,13 @@ export default {
           timestampResult.unix = Math.floor(timestamp / 1000).toString()
           timestampResult.unixMs = timestamp.toString()
         } else {
-          errorMessage.value = '时间戳长度应为10位（秒）或13位（毫秒）'
+          errorMessage.value = t('tools.timestampConverter.ui.timestampLengthError')
           timestampResult.valid = false
           return
         }
 
         if (isNaN(date.getTime())) {
-          errorMessage.value = '无效的时间戳'
+          errorMessage.value = t('tools.timestampConverter.ui.invalidTimestampValue')
           timestampResult.valid = false
           return
         }
@@ -350,7 +352,7 @@ export default {
         timestampResult.valid = true
 
       } catch (error) {
-        errorMessage.value = '时间戳转换失败: ' + error.message
+        errorMessage.value = t('tools.timestampConverter.ui.timestampConvertError') + error.message
         timestampResult.valid = false
       }
     }
@@ -385,7 +387,7 @@ export default {
         }
 
         if (isNaN(date.getTime())) {
-          errorMessage.value = '无法解析的时间格式'
+          errorMessage.value = t('tools.timestampConverter.ui.cannotParseTime')
           stringResult.valid = false
           return
         }
@@ -403,7 +405,7 @@ export default {
         stringResult.valid = true
 
       } catch (error) {
-        errorMessage.value = '时间字符串转换失败: ' + error.message
+        errorMessage.value = t('tools.timestampConverter.ui.timeStringConvertError') + error.message
         stringResult.valid = false
       }
     }
@@ -421,7 +423,7 @@ export default {
         inputTimestamp.value = text.trim()
         convertFromTimestamp()
       } catch (error) {
-        errorMessage.value = '无法读取剪贴板内容'
+        errorMessage.value = t('tools.timestampConverter.ui.cannotReadClipboard')
       }
     }
 
@@ -434,7 +436,7 @@ export default {
       try {
         let baseTimestamp = parseInt(calcBase.value)
         if (isNaN(baseTimestamp)) {
-          errorMessage.value = '请输入有效的基础时间戳'
+          errorMessage.value = t('tools.timestampConverter.ui.invalidBaseTimestamp')
           return
         }
 
@@ -445,7 +447,7 @@ export default {
         } else if (baseTimestamp.toString().length === 13) {
           baseDate = new Date(baseTimestamp)
         } else {
-          errorMessage.value = '基础时间戳长度应为10位（秒）或13位（毫秒）'
+          errorMessage.value = t('tools.timestampConverter.ui.baseTimestampLengthError')
           return
         }
 
@@ -476,7 +478,7 @@ export default {
         }
 
       } catch (error) {
-        errorMessage.value = '时间计算失败: ' + error.message
+        errorMessage.value = t('tools.timestampConverter.ui.timeCalculationError') + error.message
       }
     }
 
@@ -591,6 +593,7 @@ export default {
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
+  height: 50px;
   font-size: 0.8rem;
   white-space: nowrap;
 }

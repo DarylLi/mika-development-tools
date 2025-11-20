@@ -1,8 +1,8 @@
 <template>
   <div class="gif-split-container">
     <div class="tool-header">
-      <h3>GIF 帧拆分器</h3>
-      <p>将动画 GIF 拆分为单独的帧图片</p>
+      <h3>{{ $t('tools.gifSplit.ui.title') }}</h3>
+      <p>{{ $t('tools.gifSplit.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -23,8 +23,8 @@
         />
         <div class="upload-content">
           <div class="upload-icon">🎬</div>
-          <p>点击选择或拖拽 GIF 文件</p>
-          <small>仅支持 GIF 动画文件</small>
+          <p>{{ $t('tools.gifSplit.ui.uploadText') }}</p>
+          <small>{{ $t('tools.gifSplit.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
@@ -34,17 +34,17 @@
         <img :src="gifData.preview" :alt="gifData.name" />
         <div class="gif-info">
           <h4>{{ gifData.name }}</h4>
-          <p>文件大小: {{ formatFileSize(gifData.size) }}</p>
-          <p>尺寸: {{ gifData.width }} × {{ gifData.height }}</p>
-          <p v-if="frames.length > 0">帧数: {{ frames.length }}</p>
+          <p>{{ $t('tools.gifSplit.ui.fileSize') }}: {{ formatFileSize(gifData.size) }}</p>
+          <p>{{ $t('tools.gifSplit.ui.dimensions') }}: {{ gifData.width }} × {{ gifData.height }}</p>
+          <p v-if="frames.length > 0">{{ $t('tools.gifSplit.ui.frameCount') }}: {{ frames.length }}</p>
         </div>
       </div>
 
       <div class="controls-section">
         <div class="split-options">
-          <h4>拆分选项</h4>
+          <h4>{{ $t('tools.gifSplit.ui.splitOptions') }}</h4>
           <div class="option-group">
-            <label>输出格式:</label>
+            <label>{{ $t('tools.gifSplit.ui.outputFormat') }}:</label>
             <select v-model="outputFormat" class="format-select">
               <option value="png">PNG</option>
               <option value="jpeg">JPEG</option>
@@ -52,30 +52,30 @@
             </select>
           </div>
           <div class="option-group">
-            <label>帧间隔:</label>
+            <label>{{ $t('tools.gifSplit.ui.frameInterval') }}:</label>
             <select v-model="frameInterval" class="interval-select">
-              <option value="1">每一帧</option>
-              <option value="2">每2帧</option>
-              <option value="5">每5帧</option>
-              <option value="10">每10帧</option>
+              <option value="1">{{ $t('tools.gifSplit.ui.everyFrame') }}</option>
+              <option value="2">{{ $t('tools.gifSplit.ui.every2Frames') }}</option>
+              <option value="5">{{ $t('tools.gifSplit.ui.every5Frames') }}</option>
+              <option value="10">{{ $t('tools.gifSplit.ui.every10Frames') }}</option>
             </select>
           </div>
         </div>
 
         <div class="action-buttons">
           <button @click="splitGif" class="split-btn" :disabled="processing || !gifData">
-            {{ processing ? '拆分中...' : '开始拆分' }}
+            {{ processing ? $t('tools.gifSplit.ui.processing') : $t('tools.gifSplit.ui.startSplit') }}
           </button>
           <button @click="downloadAllFrames" class="download-btn" v-if="frames.length > 0">
-            下载所有帧
+            {{ $t('tools.gifSplit.ui.downloadAll') }}
           </button>
-          <button @click="reset" class="reset-btn">重新选择</button>
+          <button @click="reset" class="reset-btn">{{ $t('tools.gifSplit.ui.clear') }}</button>
         </div>
       </div>
     </div>
 
     <div class="frames-grid" v-if="frames.length > 0">
-      <h4>拆分结果 ({{ frames.length }} 帧)</h4>
+      <h4>{{ $t('tools.gifSplit.ui.splitResult') }} ({{ frames.length }} {{ $t('tools.gifSplit.ui.frames') }})</h4>
       <div class="grid-container">
         <div 
           v-for="(frame, index) in frames" 
@@ -87,7 +87,7 @@
             <div class="frame-number">{{ index + 1 }}</div>
           </div>
           <button @click="downloadFrame(index)" class="download-frame-btn">
-            下载
+            {{ $t('tools.gifSplit.ui.download') }}
           </button>
         </div>
       </div>
@@ -155,8 +155,8 @@ export default {
         // 这里使用简化的实现
         await this.extractFrames()
       } catch (error) {
-        console.error('拆分失败:', error)
-        this.$message.success('GIF 拆分失败')
+        console.error(this.$t('tools.gifSplit.ui.splitFailed'), error)
+        this.$message.success(this.$t('tools.gifSplit.ui.splitFailed'))
       } finally {
         this.processing = false
       }
@@ -224,7 +224,7 @@ export default {
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
       } catch (error) {
-        this.$message.success('批量下载失败，请逐个下载')
+        this.$message.success(this.$t('tools.gifSplit.ui.batchDownloadFailed'))
       }
     },
 

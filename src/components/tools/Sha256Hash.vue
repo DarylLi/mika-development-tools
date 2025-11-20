@@ -1,40 +1,41 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-shield-alt"></i> SHA-256 Hash</h2>
-    <p>计算安全的SHA-256哈希值，适用于密码存储和数据完整性验证</p>
+    <h2><i class="fas fa-shield-alt"></i> {{ $t('tools.sha256Hash.ui.title') }}</h2>
+    <p>{{ $t('tools.sha256Hash.ui.description') }}</p>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.sha256Hash.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="inputText" placeholder="输入要计算SHA-256哈希的文本..."></textarea>
+    <textarea v-model="inputText" :placeholder="$t('tools.sha256Hash.ui.placeholder')"></textarea>
     
     <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
-      <button @click="calculateHash">计算 SHA-256</button>
-      <button @click="clearText">清空</button>
+      <button @click="calculateHash">{{ $t('tools.sha256Hash.ui.calculateSha256') }}</button>
+      <button @click="clearText">{{ $t('tools.sha256Hash.ui.clear') }}</button>
     </div>
     
     <div class="result-display" v-if="result">
       <div class="hash-result">
-        <label>SHA-256 哈希值:</label>
+        <label>{{ $t('tools.sha256Hash.ui.sha256HashValue') }}</label>
         <div class="hash-value">{{ result }}</div>
         <button @click="copyHash" class="copy-btn">
-          <i class="fas fa-copy"></i> 复制
+          <i class="fas fa-copy"></i> {{ $t('tools.sha256Hash.ui.copy') }}
         </button>
       </div>
     </div>
 
     <div class="info-section">
-      <h4><i class="fas fa-info-circle"></i> 关于 SHA-256</h4>
-      <p>SHA-256 是一种安全的密码散列函数，比MD5更安全，推荐用于安全敏感场景。</p>
+      <h4><i class="fas fa-info-circle"></i> {{ $t('tools.sha256Hash.ui.aboutSha256') }}</h4>
+      <p>{{ $t('tools.sha256Hash.ui.sha256Info') }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import CryptoJS from 'crypto-js'
 
 export default {
@@ -43,6 +44,7 @@ export default {
     toolData: Object
   },
   setup() {
+    const { t } = useI18n()
     const inputText = ref('')
     const result = ref('')
 
@@ -68,7 +70,7 @@ export default {
       try {
         await navigator.clipboard.writeText(result.value)
       } catch (e) {
-        console.error('复制失败:', e)
+        console.error(t('tools.sha256Hash.ui.copyFailed'), e)
       }
     }
 

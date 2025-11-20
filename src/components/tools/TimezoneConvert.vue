@@ -1,15 +1,15 @@
 <template>
   <div class="timezone-convert-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-globe-asia"></i> 时区转换器</h3>
-      <p>转换不同时区的时间，查看世界时钟和时差计算</p>
+      <h3><i class="fas fa-globe-asia"></i> {{ $t('tools.timezoneConvert.ui.title') }}</h3>
+      <p>{{ $t('tools.timezoneConvert.ui.description') }}</p>
     </div>
 
     <!-- 主要转换区域 -->
     <div class="main-convert-section">
       <div class="convert-row">
         <div class="time-input-group">
-          <label>源时间</label>
+          <label>{{ $t('tools.timezoneConvert.ui.sourceTime') }}</label>
           <div class="input-row">
             <input 
               type="datetime-local" 
@@ -29,7 +29,7 @@
         </div>
 
         <div class="time-output-group">
-          <label>目标时间</label>
+          <label>{{ $t('tools.timezoneConvert.ui.targetTime') }}</label>
           <div class="input-row">
             <input 
               type="text" 
@@ -49,27 +49,27 @@
       <!-- 快速时间设置 -->
       <div class="quick-actions">
         <button @click="setCurrentTime" class="action-btn">
-          <i class="fas fa-clock"></i> 当前时间
+          <i class="fas fa-clock"></i> {{ $t('tools.timezoneConvert.ui.currentTime') }}
         </button>
         <button @click="swapTimezones" class="action-btn">
-          <i class="fas fa-exchange-alt"></i> 交换时区
+          <i class="fas fa-exchange-alt"></i> {{ $t('tools.timezoneConvert.ui.swapTimezone') }}
         </button>
         <button @click="copyResult" class="action-btn">
-          <i class="fas fa-copy"></i> 复制结果
+          <i class="fas fa-copy"></i> {{ $t('tools.timezoneConvert.ui.copyResult') }}
         </button>
       </div>
     </div>
 
     <!-- 时差信息 -->
     <div class="time-difference-section" v-if="timeDifference">
-      <h4><i class="fas fa-clock"></i> 时差信息</h4>
+      <h4><i class="fas fa-clock"></i> {{ $t('tools.timezoneConvert.ui.timeDifference') }}</h4>
       <div class="difference-info">
         <div class="diff-item">
-          <span class="label">时差：</span>
-          <span class="value">{{ timeDifference.hours }}小时 {{ timeDifference.minutes }}分钟</span>
+          <span class="label">{{ $t('tools.timezoneConvert.ui.timeDifferenceLabel') }}</span>
+          <span class="value">{{ timeDifference.hours }}{{ $t('tools.timezoneConvert.ui.hours') }} {{ timeDifference.minutes }}{{ $t('tools.timezoneConvert.ui.minutes') }}</span>
         </div>
         <div class="diff-item">
-          <span class="label">关系：</span>
+          <span class="label">{{ $t('tools.timezoneConvert.ui.relationship') }}</span>
           <span class="value">{{ timeDifference.relationship }}</span>
         </div>
       </div>
@@ -77,7 +77,7 @@
 
     <!-- 世界时钟 -->
     <div class="world-clock-section">
-      <h4><i class="fas fa-globe"></i> 世界时钟</h4>
+      <h4><i class="fas fa-globe"></i> {{ $t('tools.timezoneConvert.ui.worldClock') }}</h4>
       <div class="clocks-grid">
         <div 
           v-for="clock in worldClocks" 
@@ -91,7 +91,7 @@
           </div>
           <div class="clock-time">{{ clock.time }}</div>
           <div class="clock-date">{{ clock.date }}</div>
-          <button @click="useAsSource(clock.timezone)" class="use-btn">设为源</button>
+          <button @click="useAsSource(clock.timezone)" class="use-btn">{{ $t('tools.timezoneConvert.ui.setAsSource') }}</button>
         </div>
       </div>
     </div>
@@ -102,24 +102,24 @@
         <div class="detail-card">
           <h5>{{ getTimezoneInfo(sourceTimezone).name }}</h5>
           <div class="detail-item">
-            <span>UTC偏移：</span>
+            <span>{{ $t('tools.timezoneConvert.ui.utcOffset') }}</span>
             <span>{{ getTimezoneInfo(sourceTimezone).offset }}</span>
           </div>
           <div class="detail-item">
-            <span>夏令时：</span>
-            <span>{{ getTimezoneInfo(sourceTimezone).dst ? '是' : '否' }}</span>
+            <span>{{ $t('tools.timezoneConvert.ui.dst') }}</span>
+            <span>{{ getTimezoneInfo(sourceTimezone).dst ? $t('tools.timezoneConvert.ui.yes') : $t('tools.timezoneConvert.ui.no') }}</span>
           </div>
         </div>
 
         <div class="detail-card">
           <h5>{{ getTimezoneInfo(targetTimezone).name }}</h5>
           <div class="detail-item">
-            <span>UTC偏移：</span>
+            <span>{{ $t('tools.timezoneConvert.ui.utcOffset') }}</span>
             <span>{{ getTimezoneInfo(targetTimezone).offset }}</span>
           </div>
           <div class="detail-item">
-            <span>夏令时：</span>
-            <span>{{ getTimezoneInfo(targetTimezone).dst ? '是' : '否' }}</span>
+            <span>{{ $t('tools.timezoneConvert.ui.dst') }}</span>
+            <span>{{ getTimezoneInfo(targetTimezone).dst ? $t('tools.timezoneConvert.ui.yes') : $t('tools.timezoneConvert.ui.no') }}</span>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@
 
     <!-- 复制成功提示 -->
     <div v-if="showCopySuccess" class="copy-success-toast">
-      <i class="fas fa-check"></i> 已复制到剪贴板
+      <i class="fas fa-check"></i> {{ $t('tools.timezoneConvert.ui.copiedToClipboard') }}
     </div>
   </div>
 </template>
@@ -194,7 +194,7 @@ export default {
         
         return targetTime
       } catch (error) {
-        return '无效时间'
+        return this.$t('tools.timezoneConvert.ui.invalidTime')
       }
     },
     
@@ -214,11 +214,11 @@ export default {
         
         let relationship = ''
         if (diffMinutes > 0) {
-          relationship = `${this.getTimezoneName(this.targetTimezone)} 比 ${this.getTimezoneName(this.sourceTimezone)} 快 ${hours}小时${minutes > 0 ? minutes + '分钟' : ''}`
+          relationship = `${this.getTimezoneName(this.targetTimezone)} ${this.$t('tools.timezoneConvert.ui.fasterThan')} ${this.getTimezoneName(this.sourceTimezone)} ${this.$t('tools.timezoneConvert.ui.faster')} ${hours}${this.$t('tools.timezoneConvert.ui.hours')}${minutes > 0 ? minutes + this.$t('tools.timezoneConvert.ui.minutes') : ''}`
         } else if (diffMinutes < 0) {
-          relationship = `${this.getTimezoneName(this.targetTimezone)} 比 ${this.getTimezoneName(this.sourceTimezone)} 慢 ${hours}小时${minutes > 0 ? minutes + '分钟' : ''}`
+          relationship = `${this.getTimezoneName(this.targetTimezone)} ${this.$t('tools.timezoneConvert.ui.slowerThan')} ${this.getTimezoneName(this.sourceTimezone)} ${this.$t('tools.timezoneConvert.ui.slower')} ${hours}${this.$t('tools.timezoneConvert.ui.hours')}${minutes > 0 ? minutes + this.$t('tools.timezoneConvert.ui.minutes') : ''}`
         } else {
-          relationship = '两个时区时间相同'
+          relationship = this.$t('tools.timezoneConvert.ui.sameTime')
         }
         
         return {

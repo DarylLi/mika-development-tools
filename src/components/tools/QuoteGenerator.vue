@@ -1,60 +1,60 @@
 <template>
   <div class="quote-generator-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-quote-right"></i> 随机名言生成器</h3>
-      <p>生成励志名言、哲理语句、经典语录，激发你的灵感</p>
+      <h3><i class="fas fa-quote-right"></i> {{ $t('tools.quoteGenerator.ui.title') }}</h3>
+      <p>{{ $t('tools.quoteGenerator.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="generation-controls">
         <div class="control-group">
-          <label for="category">分类</label>
+          <label for="category">{{ $t('tools.quoteGenerator.ui.category') }}</label>
           <select id="category" v-model="category">
-            <option value="all">全部</option>
-            <option value="motivation">励志</option>
-            <option value="wisdom">智慧</option>
-            <option value="life">人生</option>
-            <option value="love">爱情</option>
-            <option value="success">成功</option>
-            <option value="learning">学习</option>
-            <option value="friendship">友谊</option>
-            <option value="happiness">快乐</option>
-            <option value="dreams">梦想</option>
-            <option value="courage">勇气</option>
+            <option value="all">{{ $t('tools.quoteGenerator.ui.categoryAll') }}</option>
+            <option value="motivation">{{ $t('tools.quoteGenerator.ui.categoryMotivation') }}</option>
+            <option value="wisdom">{{ $t('tools.quoteGenerator.ui.categoryWisdom') }}</option>
+            <option value="life">{{ $t('tools.quoteGenerator.ui.categoryLife') }}</option>
+            <option value="love">{{ $t('tools.quoteGenerator.ui.categoryLove') }}</option>
+            <option value="success">{{ $t('tools.quoteGenerator.ui.categorySuccess') }}</option>
+            <option value="learning">{{ $t('tools.quoteGenerator.ui.categoryLearning') }}</option>
+            <option value="friendship">{{ $t('tools.quoteGenerator.ui.categoryFriendship') }}</option>
+            <option value="happiness">{{ $t('tools.quoteGenerator.ui.categoryHappiness') }}</option>
+            <option value="dreams">{{ $t('tools.quoteGenerator.ui.categoryDreams') }}</option>
+            <option value="courage">{{ $t('tools.quoteGenerator.ui.categoryCourage') }}</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="language">语言</label>
+          <label for="language">{{ $t('tools.quoteGenerator.ui.language') }}</label>
           <select id="language" v-model="language">
-            <option value="zh">中文</option>
+            <option value="zh">{{ $t('tools.quoteGenerator.ui.languageZh') }}</option>
             <option value="en">English</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="includeAuthor">包含作者</label>
+          <label for="includeAuthor">{{ $t('tools.quoteGenerator.ui.includeAuthor') }}</label>
           <input type="checkbox" id="includeAuthor" v-model="includeAuthor" />
         </div>
         
         <div class="control-group">
-          <label for="count">生成数量</label>
+          <label for="count">{{ $t('tools.quoteGenerator.ui.count') }}</label>
           <input type="number" id="count" v-model.number="count" min="1" max="20" />
         </div>
       </div>
 
       <div class="actions">
         <button @click="generateQuotes" class="btn-primary">
-          <i class="fas fa-quote-left"></i> 生成名言
+          <i class="fas fa-quote-left"></i> {{ $t('tools.quoteGenerator.ui.generateQuotes') }}
         </button>
         <button @click="shareQuote" class="btn-secondary" :disabled="!quotes.length">
-          <i class="fas fa-share"></i> 分享
+          <i class="fas fa-share"></i> {{ $t('tools.quoteGenerator.ui.share') }}
         </button>
         <button @click="exportQuotes" class="btn-secondary" :disabled="!quotes.length">
-          <i class="fas fa-download"></i> 导出
+          <i class="fas fa-download"></i> {{ $t('tools.quoteGenerator.ui.export') }}
         </button>
         <button @click="copyAllQuotes" class="btn-secondary" :disabled="!quotes.length">
-          <i class="fas fa-copy"></i> 复制全部
+          <i class="fas fa-copy"></i> {{ $t('tools.quoteGenerator.ui.copyAll') }}
         </button>
       </div>
 
@@ -93,7 +93,7 @@
       </div>
 
       <div class="favorites-section" v-if="favoriteQuotes.length">
-        <h4>收藏的名言 ({{ favoriteQuotes.length }})</h4>
+        <h4>{{ $t('tools.quoteGenerator.ui.favoriteQuotes') }} ({{ favoriteQuotes.length }})</h4>
         <div class="favorites-list">
           <div v-for="(quote, index) in favoriteQuotes" :key="index" class="favorite-quote">
             <div class="favorite-text">{{ quote.text }}</div>
@@ -101,7 +101,7 @@
               <span v-if="quote.author">{{ quote.author }}</span>
               <span class="favorite-category">{{ getCategoryName(quote.category) }}</span>
             </div>
-            <button @click="removeFromFavorites(index)" class="remove-btn" title="移除">
+            <button @click="removeFromFavorites(index)" class="remove-btn" :title="$t('tools.quoteGenerator.ui.remove')">
               <i class="fas fa-times"></i>
             </button>
           </div>
@@ -112,12 +112,14 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'QuoteGenerator',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const category = ref('all')
     const language = ref('zh')
     const includeAuthor = ref(true)
@@ -241,7 +243,7 @@ export default {
           }, 150)
         }
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.quoteGenerator.ui.copyFailed') + ':', error)
       }
     }
 
@@ -254,9 +256,9 @@ export default {
       
       try {
         await navigator.clipboard.writeText(allQuotesText)
-        instance.proxy.$message.success('所有名言已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.quoteGenerator.ui.copyFailed') + ':', error)
       }
     }
 
@@ -270,12 +272,12 @@ export default {
       
       if (navigator.share) {
         navigator.share({
-          title: '名言分享',
+          title: t('tools.quoteGenerator.ui.shareTitle'),
           text: text
         })
       } else {
         copyQuote(quote)
-        instance.proxy.$message.success('名言已复制到剪贴板，你可以分享给朋友！')
+        messageService.success(t('common.copied'))
       }
     }
 
@@ -318,16 +320,16 @@ export default {
 
     const getCategoryName = (cat) => {
       const categoryNames = {
-        motivation: '励志',
-        wisdom: '智慧',
-        life: '人生',
-        love: '爱情',
-        success: '成功',
-        learning: '学习',
-        friendship: '友谊',
-        happiness: '快乐',
-        dreams: '梦想',
-        courage: '勇气'
+        motivation: t('tools.quoteGenerator.ui.categoryMotivation'),
+        wisdom: t('tools.quoteGenerator.ui.categoryWisdom'),
+        life: t('tools.quoteGenerator.ui.categoryLife'),
+        love: t('tools.quoteGenerator.ui.categoryLove'),
+        success: t('tools.quoteGenerator.ui.categorySuccess'),
+        learning: t('tools.quoteGenerator.ui.categoryLearning'),
+        friendship: t('tools.quoteGenerator.ui.categoryFriendship'),
+        happiness: t('tools.quoteGenerator.ui.categoryHappiness'),
+        dreams: t('tools.quoteGenerator.ui.categoryDreams'),
+        courage: t('tools.quoteGenerator.ui.categoryCourage')
       }
       return categoryNames[cat] || cat
     }

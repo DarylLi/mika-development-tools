@@ -1,8 +1,8 @@
 <template>
   <div class="favicon-generator-container">
     <div class="tool-header">
-      <h2>🏠 Favicon Maker</h2>
-      <p>生成多尺寸网站图标</p>
+      <h2>🏠 {{ $t('tools.faviconGenerator.ui.title') }}</h2>
+      <p>{{ $t('tools.faviconGenerator.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -10,18 +10,18 @@
         <input type="file" ref="fileInput" @change="handleFileSelect" accept="image/*" style="display: none;">
         <div v-if="!originalImage" class="upload-placeholder">
           <span class="upload-icon">📁</span>
-          <p>点击或拖拽图片到此处</p>
-          <small>支持 PNG, JPG, SVG 格式</small>
+          <p>{{ $t('tools.faviconGenerator.ui.uploadText') }}</p>
+          <small>{{ $t('tools.faviconGenerator.ui.uploadFormats') }}</small>
         </div>
         <div v-else class="image-preview">
-          <img :src="originalImage" alt="原图" class="preview-img">
+          <img :src="originalImage" :alt="$t('tools.faviconGenerator.ui.originalImage')" class="preview-img">
         </div>
       </div>
     </div>
 
     <div v-if="originalImage" class="settings-section">
       <div class="setting-group">
-        <label>背景颜色</label>
+        <label>{{ $t('tools.faviconGenerator.ui.backgroundColor') }}</label>
         <div class="color-control">
           <input type="color" v-model="backgroundColor" @input="generateFavicons">
           <input type="text" v-model="backgroundColor" @input="generateFavicons" class="color-text">
@@ -29,24 +29,24 @@
       </div>
 
       <div class="setting-group">
-        <label>内边距 ({{ padding }}px)</label>
+        <label>{{ $t('tools.faviconGenerator.ui.padding') }} ({{ padding }}px)</label>
         <input type="range" class="modern-slider" v-model="padding" min="0" max="50" @input="generateFavicons">
       </div>
 
       <div class="setting-group">
         <label>
           <input type="checkbox" v-model="roundCorners" @change="generateFavicons">
-          圆角处理
+          {{ $t('tools.faviconGenerator.ui.roundCorners') }}
         </label>
       </div>
     </div>
 
     <div v-if="originalImage" class="favicon-preview">
-      <h3>预览效果</h3>
+      <h3>{{ $t('tools.faviconGenerator.ui.previewEffect') }}</h3>
       <div class="preview-grid">
-        <div 
+          <div 
           v-for="size in faviconSizes" 
-          :key="size.name"
+          :key="size.key"
           class="preview-item"
         >
           <canvas 
@@ -64,17 +64,17 @@
     </div>
 
     <div v-if="originalImage" class="download-section">
-      <h3>下载图标</h3>
+      <h3>{{ $t('tools.faviconGenerator.ui.downloadIcons') }}</h3>
       <div class="download-options">
-        <button @click="downloadSingle" class="download-btn">📥 下载选中尺寸</button>
-        <button @click="downloadAll" class="download-btn">📦 下载全部尺寸</button>
-        <button @click="generateHTML" class="download-btn">📄 生成HTML代码</button>
+        <button @click="downloadSingle" class="download-btn">📥 {{ $t('tools.faviconGenerator.ui.downloadSelected') }}</button>
+        <button @click="downloadAll" class="download-btn">📦 {{ $t('tools.faviconGenerator.ui.downloadAll') }}</button>
+        <button @click="generateHTML" class="download-btn">📄 {{ $t('tools.faviconGenerator.ui.generateHTML') }}</button>
       </div>
       
       <div class="size-selector">
-        <label>选择下载尺寸:</label>
+        <label>{{ $t('tools.faviconGenerator.ui.selectDownloadSize') }}</label>
         <div class="size-checkboxes">
-          <label v-for="size in faviconSizes" :key="size.name" class="size-checkbox">
+          <label v-for="size in faviconSizes" :key="size.key" class="size-checkbox">
             <input type="checkbox" v-model="selectedSizes" :value="size">
             {{ size.name }}
           </label>
@@ -83,20 +83,22 @@
     </div>
 
     <div v-if="htmlCode" class="html-output">
-      <h3>HTML 代码</h3>
+      <h3>{{ $t('tools.faviconGenerator.ui.htmlCode') }}</h3>
       <textarea v-model="htmlCode" readonly class="html-textarea" @click="copyHTML"></textarea>
-      <button @click="copyHTML" class="copy-btn">📋 复制HTML</button>
+      <button @click="copyHTML" class="copy-btn">📋 {{ $t('tools.faviconGenerator.ui.copyHTML') }}</button>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, getCurrentInstance } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'FaviconGenerator',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const fileInput = ref(null)
     const originalImage = ref(null)
     const backgroundColor = ref('#FFFFFF')
@@ -105,17 +107,17 @@ export default {
     const selectedSizes = ref([])
     const htmlCode = ref('')
 
-    const faviconSizes = [
-      { name: 'Favicon', size: 16 },
-      { name: 'Favicon', size: 32 },
-      { name: 'Apple Touch', size: 57 },
-      { name: 'Apple Touch', size: 72 },
-      { name: 'Apple Touch', size: 114 },
-      { name: 'Apple Touch', size: 144 },
-      { name: 'Apple Touch', size: 180 },
-      { name: 'Android', size: 192 },
-      { name: 'Android', size: 512 }
-    ]
+    const faviconSizes = computed(() => [
+      { key: 'favicon-16', name: t('tools.faviconGenerator.ui.sizeFavicon'), size: 16 },
+      { key: 'favicon-32', name: t('tools.faviconGenerator.ui.sizeFavicon'), size: 32 },
+      { key: 'apple-57', name: t('tools.faviconGenerator.ui.sizeAppleTouch'), size: 57 },
+      { key: 'apple-72', name: t('tools.faviconGenerator.ui.sizeAppleTouch'), size: 72 },
+      { key: 'apple-114', name: t('tools.faviconGenerator.ui.sizeAppleTouch'), size: 114 },
+      { key: 'apple-144', name: t('tools.faviconGenerator.ui.sizeAppleTouch'), size: 144 },
+      { key: 'apple-180', name: t('tools.faviconGenerator.ui.sizeAppleTouch'), size: 180 },
+      { key: 'android-192', name: t('tools.faviconGenerator.ui.sizeAndroid'), size: 192 },
+      { key: 'android-512', name: t('tools.faviconGenerator.ui.sizeAndroid'), size: 512 }
+    ])
 
     const triggerFileInput = () => {
       fileInput.value?.click()
@@ -150,7 +152,7 @@ export default {
 
       const img = new Image()
       img.onload = () => {
-        faviconSizes.forEach(size => {
+        faviconSizes.value.forEach(size => {
           const canvas = document.querySelector(`canvas[width="${size.size}"]`)
           if (canvas) {
             const ctx = canvas.getContext('2d')
@@ -202,7 +204,7 @@ export default {
 
     const downloadSingle = () => {
       if (selectedSizes.value.length === 0) {
-        instance.proxy.$message.success('请选择要下载的尺寸')
+        messageService.warning(t('common.warning'))
         return
       }
 
@@ -218,7 +220,7 @@ export default {
     }
 
     const downloadAll = () => {
-      faviconSizes.forEach(size => {
+      faviconSizes.value.forEach(size => {
         const canvas = document.querySelector(`canvas[width="${size.size}"]`)
         if (canvas) {
           const link = document.createElement('a')
@@ -230,7 +232,7 @@ export default {
     }
 
     const generateHTML = () => {
-      let html = '<!-- Favicon HTML 代码 -->\n'
+      let html = '<!-- Favicon HTML Code -->\n'
       html += '<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">\n'
       html += '<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">\n'
       html += '<link rel="apple-touch-icon" sizes="57x57" href="favicon-57x57.png">\n'
@@ -248,14 +250,14 @@ export default {
     const copyHTML = async () => {
       try {
         await navigator.clipboard.writeText(htmlCode.value)
-        console.log('HTML已复制')
+        console.log(t('tools.faviconGenerator.ui.htmlCopied'))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.faviconGenerator.ui.copyFailed'), err)
       }
     }
 
     onMounted(() => {
-      selectedSizes.value = faviconSizes.slice(0, 3) // 默认选择前3个
+      selectedSizes.value = faviconSizes.value.slice(0, 3) // 默认选择前3个
     })
 
     return {

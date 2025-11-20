@@ -1,10 +1,10 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-calculator"></i> 计算器</h2>
+    <h2><i class="fas fa-calculator"></i> {{ $t('tools.calculator.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 演示计算
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.calculator.ui.loadExample') }}
       </button>
     </div>
     

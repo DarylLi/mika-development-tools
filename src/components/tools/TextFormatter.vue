@@ -1,20 +1,20 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fas fa-text-height"></i> 文本格式化</h2>
+    <h2><i class="fas fa-text-height"></i> {{ $t('tools.textFormatter.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.textFormatter.ui.loadExample') }}
       </button>
     </div>
     
-    <textarea v-model="textInput" placeholder="请输入要处理的文本..."></textarea>
+    <textarea v-model="textInput" :placeholder="$t('tools.textFormatter.ui.placeholder')"></textarea>
     
     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-      <button @click="formatText('upper')">转大写</button>
-      <button @click="formatText('lower')">转小写</button>
-      <button @click="formatText('title')">标题格式</button>
-      <button @click="formatText('reverse')">反转文本</button>
+      <button @click="formatText('upper')">{{ $t('tools.textFormatter.ui.toUpper') }}</button>
+      <button @click="formatText('lower')">{{ $t('tools.textFormatter.ui.toLower') }}</button>
+      <button @click="formatText('title')">{{ $t('tools.textFormatter.ui.toTitle') }}</button>
+      <button @click="formatText('reverse')">{{ $t('tools.textFormatter.ui.reverse') }}</button>
     </div>
     
     <div class="result-display">{{ textResult }}</div>

@@ -1,22 +1,19 @@
 <template>
   <div class="tool-card">
     <!-- 渐变色头部 -->
-    <div
-      class="tool-header"
-      style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
-    >
+    <div class="tool-header" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
       <div class="tool-icon">
         <i class="fas fa-file-word"></i>
       </div>
       <div class="tool-title">
-        <h2>Word转HTML工具</h2>
-        <p>将Word文档(.docx)转换为HTML格式</p>
+        <h2>{{ $t('tools.wordToHtml.ui.title') }}</h2>
+        <p>{{ $t('tools.wordToHtml.ui.description') }}</p>
       </div>
     </div>
 
     <!-- 文件上传区域 -->
     <div class="upload-section">
-      <div
+      <div 
         class="upload-area"
         :class="{ 'drag-over': isDragOver }"
         @drop="handleFileDrop"
@@ -26,41 +23,38 @@
       >
         <i class="fas fa-cloud-upload-alt upload-icon"></i>
         <p class="upload-text">
-          <strong>拖拽Word文档到此处</strong> 或
-          <label for="file-input" class="file-link">点击选择文件</label>
+          <strong>{{ $t('tools.wordToHtml.ui.dragFileHere') }}</strong> 或 
+          <label for="file-input" class="file-link">{{ $t('tools.wordToHtml.ui.clickToSelect') }}</label>
         </p>
-        <p class="upload-hint">支持 .docx 格式文件，最大 10MB</p>
-        <input
-          id="file-input"
-          type="file"
+        <p class="upload-hint">{{ $t('tools.wordToHtml.ui.fileHint') }}</p>
+        <input 
+          id="file-input" 
+          type="file" 
           accept=".docx"
           @change="handleFileSelect"
           style="display: none"
-        />
+        >
       </div>
     </div>
 
     <!-- 文件信息 -->
     <div v-if="fileInfo" class="file-info">
-      <h3><i class="fas fa-file-alt"></i> 文件信息</h3>
+      <h3><i class="fas fa-file-alt"></i> {{ $t('tools.wordToHtml.ui.fileInfo') }}</h3>
       <div class="info-grid">
         <div class="info-item">
-          <span class="info-label">文件名</span>
+          <span class="info-label">{{ $t('tools.wordToHtml.ui.fileName') }}</span>
           <span class="info-value">{{ fileInfo.name }}</span>
         </div>
         <div class="info-item">
-          <span class="info-label">文件大小</span>
+          <span class="info-label">{{ $t('tools.wordToHtml.ui.fileSize') }}</span>
           <span class="info-value">{{ formatFileSize(fileInfo.size) }}</span>
         </div>
         <div class="info-item">
-          <span class="info-label">文件类型</span>
-          <span class="info-value">{{
-            fileInfo.type ||
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-          }}</span>
+          <span class="info-label">{{ $t('tools.wordToHtml.ui.fileType') }}</span>
+          <span class="info-value">{{ fileInfo.type || 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }}</span>
         </div>
         <div class="info-item">
-          <span class="info-label">处理状态</span>
+          <span class="info-label">{{ $t('tools.wordToHtml.ui.processingStatus') }}</span>
           <span class="info-value" :class="statusClass">{{ status }}</span>
         </div>
       </div>
@@ -68,43 +62,43 @@
 
     <!-- 转换选项 -->
     <div v-if="fileInfo" class="options-section">
-      <h3><i class="fas fa-cog"></i> 转换选项</h3>
+      <h3><i class="fas fa-cog"></i> {{ $t('tools.wordToHtml.ui.conversionOptions') }}</h3>
       <div class="options-grid">
         <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="options.preserveStyles" />
-            <span>保留样式</span>
+          <label className="check-box-label">
+            <input type="checkbox" v-model="options.preserveStyles">
+            <span>{{ $t('tools.wordToHtml.ui.preserveStyles') }}</span>
           </label>
         </div>
         <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="options.extractImages" />
-            <span>提取图片</span>
+          <label className="check-box-label">
+            <input type="checkbox" v-model="options.extractImages">
+            <span>{{ $t('tools.wordToHtml.ui.extractImages') }}</span>
           </label>
         </div>
         <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="options.preserveTable" />
-            <span>保留表格</span>
+          <label className="check-box-label">
+            <input type="checkbox" v-model="options.preserveTable">
+            <span>{{ $t('tools.wordToHtml.ui.preserveTable') }}</span>
           </label>
         </div>
         <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="options.cleanHtml" />
-            <span>清理HTML</span>
+          <label className="check-box-label">
+            <input type="checkbox" v-model="options.cleanHtml">
+            <span>{{ $t('tools.wordToHtml.ui.cleanHtml') }}</span>
           </label>
         </div>
       </div>
-
+      
       <button @click="convertToHtml" class="convert-btn" :disabled="converting">
         <i class="fas fa-exchange-alt"></i>
-        {{ converting ? "转换中..." : "开始转换" }}
+        {{ converting ? $t('tools.wordToHtml.ui.converting') : $t('tools.wordToHtml.ui.startConverting') }}
       </button>
     </div>
 
     <!-- 转换进度 -->
     <div v-if="converting" class="progress-section">
-      <h3><i class="fas fa-spinner fa-spin"></i> 转换进度</h3>
+      <h3><i class="fas fa-spinner fa-spin"></i> {{ $t('tools.wordToHtml.ui.conversionProgress') }}</h3>
       <div class="progress-bar">
         <div class="progress-fill" :style="{ width: progress + '%' }"></div>
       </div>
@@ -113,90 +107,77 @@
 
     <!-- 转换结果 -->
     <div v-if="htmlResult" class="result-section">
-      <h3><i class="fas fa-code"></i> 转换结果</h3>
-
+      <h3><i class="fas fa-code"></i> {{ $t('tools.wordToHtml.ui.conversionResult') }}</h3>
+      
       <!-- 预览标签页 -->
       <div class="tab-container">
         <div class="tabs">
-          <button
+          <button 
             :class="['tab', { active: activeTab === 'preview' }]"
             @click="activeTab = 'preview'"
           >
-            <i class="fas fa-eye"></i> 预览
+            <i class="fas fa-eye"></i> {{ $t('tools.wordToHtml.ui.preview') }}
           </button>
-          <button
+          <button 
             :class="['tab', { active: activeTab === 'html' }]"
             @click="activeTab = 'html'"
           >
-            <i class="fas fa-code"></i> HTML代码
+            <i class="fas fa-code"></i> {{ $t('tools.wordToHtml.ui.htmlCode') }}
           </button>
-          <button
+          <button 
             :class="['tab', { active: activeTab === 'text' }]"
             @click="activeTab = 'text'"
           >
-            <i class="fas fa-font"></i> 纯文本
+            <i class="fas fa-font"></i> {{ $t('tools.wordToHtml.ui.plainText') }}
           </button>
         </div>
-
+        
         <div class="tab-content">
           <!-- HTML预览 -->
           <div v-if="activeTab === 'preview'" class="preview-container">
             <div class="preview-content" v-html="htmlResult"></div>
           </div>
-
+          
           <!-- HTML代码 -->
           <div v-if="activeTab === 'html'" class="code-container">
             <pre><code>{{ htmlResult }}</code></pre>
           </div>
-
+          
           <!-- 纯文本 -->
           <div v-if="activeTab === 'text'" class="text-container">
             <pre>{{ textResult }}</pre>
           </div>
         </div>
       </div>
-
+      
       <!-- 操作按钮 -->
       <div class="action-buttons">
         <button @click="copyToClipboard(htmlResult)" class="action-btn">
-          <i class="fas fa-copy"></i> 复制HTML
+          <i class="fas fa-copy"></i> {{ $t('tools.wordToHtml.ui.copyHtml') }}
         </button>
         <button @click="downloadHtml" class="action-btn">
-          <i class="fas fa-download"></i> 下载HTML
+          <i class="fas fa-download"></i> {{ $t('tools.wordToHtml.ui.downloadHtml') }}
         </button>
         <button @click="copyToClipboard(textResult)" class="action-btn">
-          <i class="fas fa-font"></i> 复制文本
+          <i class="fas fa-font"></i> {{ $t('tools.wordToHtml.ui.copyText') }}
         </button>
         <button @click="clearResults" class="action-btn clear-btn">
-          <i class="fas fa-trash"></i> 清除结果
+          <i class="fas fa-trash"></i> {{ $t('tools.wordToHtml.ui.clearResults') }}
         </button>
       </div>
     </div>
 
     <!-- 提取的图片 -->
     <div v-if="extractedImages.length > 0" class="images-section">
-      <h3>
-        <i class="fas fa-images"></i> 提取的图片 ({{ extractedImages.length }})
-      </h3>
+      <h3><i class="fas fa-images"></i> {{ $t('tools.wordToHtml.ui.extractedImages') }} ({{ extractedImages.length }})</h3>
       <div class="images-grid">
-        <div
-          v-for="(image, index) in extractedImages"
-          :key="index"
-          class="image-item"
-        >
-          <img
-            :src="image.src"
-            :alt="'Image ' + (index + 1)"
-            class="image-preview"
-          />
+        <div v-for="(image, index) in extractedImages" :key="index" class="image-item">
+          <img :src="image.src" :alt="'Image ' + (index + 1)" class="image-preview">
           <div class="image-info">
-            <span class="image-name">图片 {{ index + 1 }}</span>
+            <span class="image-name">{{ $t('tools.wordToHtml.ui.image') }} {{ index + 1 }}</span>
             <span class="image-size">{{ image.size }}</span>
           </div>
-          <button
-            @click="downloadImage(image, index)"
-            class="download-image-btn"
-          >
+          <button @click="downloadImage(image, index)" class="download-image-btn">
             <i class="fas fa-download"></i>
           </button>
         </div>
@@ -211,171 +192,174 @@
 
     <!-- 使用说明 -->
     <div class="help-section">
-      <h3><i class="fas fa-question-circle"></i> 使用说明</h3>
+      <h3><i class="fas fa-question-circle"></i> {{ $t('tools.wordToHtml.ui.usageInstructions') }}</h3>
       <ul>
-        <li><strong>支持格式：</strong>仅支持 .docx 格式的Word文档</li>
-        <li><strong>文件大小：</strong>建议文件大小不超过10MB</li>
-        <li><strong>样式保留：</strong>可选择是否保留字体、颜色、大小等样式</li>
-        <li><strong>图片处理：</strong>可提取文档中的图片并转换为base64格式</li>
-        <li><strong>表格支持：</strong>支持转换Word表格为HTML表格</li>
-        <li><strong>纯文本：</strong>可同时获得去除格式的纯文本内容</li>
+        <li><strong>{{ $t('tools.wordToHtml.ui.supportedFormat').split('：')[0] }}：</strong>{{ $t('tools.wordToHtml.ui.supportedFormat').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.wordToHtml.ui.fileSizeLimit').split('：')[0] }}：</strong>{{ $t('tools.wordToHtml.ui.fileSizeLimit').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.wordToHtml.ui.stylePreservation').split('：')[0] }}：</strong>{{ $t('tools.wordToHtml.ui.stylePreservation').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.wordToHtml.ui.imageProcessing').split('：')[0] }}：</strong>{{ $t('tools.wordToHtml.ui.imageProcessing').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.wordToHtml.ui.tableSupport').split('：')[0] }}：</strong>{{ $t('tools.wordToHtml.ui.tableSupport').split('：')[1] }}</li>
+        <li><strong>{{ $t('tools.wordToHtml.ui.plainTextDesc').split('：')[0] }}：</strong>{{ $t('tools.wordToHtml.ui.plainTextDesc').split('：')[1] }}</li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, reactive, getCurrentInstance } from "vue";
+import { ref, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
-  name: "WordToHtml",
+  name: 'WordToHtml',
   setup() {
-    const instance = getCurrentInstance();
+    const { t } = useI18n()
     // 响应式数据
-    const isDragOver = ref(false);
-    const fileInfo = ref(null);
-    const status = ref("");
-    const converting = ref(false);
-    const progress = ref(0);
-    const progressText = ref("");
-    const htmlResult = ref("");
-    const textResult = ref("");
-    const extractedImages = ref([]);
-    const activeTab = ref("preview");
-    const errorMessage = ref("");
+    const isDragOver = ref(false)
+    const fileInfo = ref(null)
+    const status = ref('')
+    const converting = ref(false)
+    const progress = ref(0)
+    const progressText = ref('')
+    const htmlResult = ref('')
+    const textResult = ref('')
+    const extractedImages = ref([])
+    const activeTab = ref('preview')
+    const errorMessage = ref('')
 
     // 转换选项
     const options = reactive({
       preserveStyles: true,
       extractImages: true,
       preserveTable: true,
-      cleanHtml: false,
-    });
+      cleanHtml: false
+    })
 
     // 状态样式类
-    const statusClass = ref("");
+    const statusClass = ref('')
 
     // 格式化文件大小
     const formatFileSize = (bytes) => {
-      if (bytes === 0) return "0 Bytes";
-      const k = 1024;
-      const sizes = ["Bytes", "KB", "MB", "GB"];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-    };
+      if (bytes === 0) return '0 Bytes'
+      const k = 1024
+      const sizes = ['Bytes', 'KB', 'MB', 'GB']
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    }
 
     // 处理文件选择
     const handleFileSelect = (event) => {
-      const file = event.target.files[0];
+      const file = event.target.files[0]
       if (file) {
-        processFile(file);
+        processFile(file)
       }
-    };
+    }
 
     // 处理文件拖拽
     const handleFileDrop = (event) => {
-      event.preventDefault();
-      isDragOver.value = false;
-
-      const files = event.dataTransfer.files;
+      event.preventDefault()
+      isDragOver.value = false
+      
+      const files = event.dataTransfer.files
       if (files.length > 0) {
-        processFile(files[0]);
+        processFile(files[0])
       }
-    };
+    }
 
     // 处理文件
     const processFile = (file) => {
-      errorMessage.value = "";
-
+      errorMessage.value = ''
+      
       // 验证文件类型
-      if (!file.name.toLowerCase().endsWith(".docx")) {
-        errorMessage.value = "请选择 .docx 格式的Word文档";
-        return;
+      if (!file.name.toLowerCase().endsWith('.docx')) {
+        errorMessage.value = t('tools.wordToHtml.ui.invalidFileType')
+        return
       }
 
       // 验证文件大小
       if (file.size > 10 * 1024 * 1024) {
-        errorMessage.value = "文件大小不能超过10MB";
-        return;
+        errorMessage.value = t('tools.wordToHtml.ui.fileSizeExceeded')
+        return
       }
 
       fileInfo.value = {
         name: file.name,
         size: file.size,
         type: file.type,
-        file: file,
-      };
+        file: file
+      }
 
-      status.value = "等待转换";
-      statusClass.value = "status-waiting";
-    };
+      status.value = t('tools.wordToHtml.ui.waitingForConversion')
+      statusClass.value = 'status-waiting'
+    }
 
     // 模拟Word转HTML转换
     const convertToHtml = async () => {
-      if (!fileInfo.value) return;
+      if (!fileInfo.value) return
 
-      converting.value = true;
-      progress.value = 0;
-      progressText.value = "开始解析文档...";
-      status.value = "转换中";
-      statusClass.value = "status-processing";
-      errorMessage.value = "";
+      converting.value = true
+      progress.value = 0
+      progressText.value = t('tools.wordToHtml.ui.startParsing')
+      status.value = t('tools.wordToHtml.ui.statusConverting')
+      statusClass.value = 'status-processing'
+      errorMessage.value = ''
 
       try {
         // 模拟转换过程
-        await simulateConversion();
-
+        await simulateConversion()
+        
         // 生成模拟的HTML结果
-        generateMockHtmlResult();
+        generateMockHtmlResult()
+        
+        status.value = t('tools.wordToHtml.ui.statusCompleted')
+        statusClass.value = 'status-success'
+        activeTab.value = 'preview'
 
-        status.value = "转换完成";
-        statusClass.value = "status-success";
-        activeTab.value = "preview";
       } catch (error) {
-        errorMessage.value = "转换失败: " + error.message;
-        status.value = "转换失败";
-        statusClass.value = "status-error";
+        errorMessage.value = t('tools.wordToHtml.ui.conversionFailed') + error.message
+        status.value = t('tools.wordToHtml.ui.statusFailed')
+        statusClass.value = 'status-error'
       } finally {
-        converting.value = false;
-        progress.value = 100;
+        converting.value = false
+        progress.value = 100
       }
-    };
+    }
 
     // 模拟转换过程
     const simulateConversion = () => {
       return new Promise((resolve) => {
         const steps = [
-          { progress: 20, text: "解析文档结构..." },
-          { progress: 40, text: "处理文本内容..." },
-          { progress: 60, text: "转换样式信息..." },
-          { progress: 80, text: "提取图片资源..." },
-          { progress: 100, text: "生成HTML代码..." },
-        ];
+          { progress: 20, text: t('tools.wordToHtml.ui.parsingStructure') },
+          { progress: 40, text: t('tools.wordToHtml.ui.processingText') },
+          { progress: 60, text: t('tools.wordToHtml.ui.convertingStyles') },
+          { progress: 80, text: t('tools.wordToHtml.ui.extractingImages') },
+          { progress: 100, text: t('tools.wordToHtml.ui.generatingHtml') }
+        ]
 
-        let currentStep = 0;
+        let currentStep = 0
         const interval = setInterval(() => {
           if (currentStep < steps.length) {
-            progress.value = steps[currentStep].progress;
-            progressText.value = steps[currentStep].text;
-            currentStep++;
+            progress.value = steps[currentStep].progress
+            progressText.value = steps[currentStep].text
+            currentStep++
           } else {
-            clearInterval(interval);
-            resolve();
+            clearInterval(interval)
+            resolve()
           }
-        }, 800);
-      });
-    };
+        }, 800)
+      })
+    }
 
     // 生成模拟HTML结果
     const generateMockHtmlResult = () => {
-      const fileName = fileInfo.value.name.replace(".docx", "");
-
+      const fileName = fileInfo.value.name.replace('.docx', '')
+      
       let htmlContent = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${fileName}</title>`;
+    <title>${fileName}</title>`
 
       if (options.preserveStyles) {
         htmlContent += `
@@ -388,7 +372,7 @@ export default {
         table { border-collapse: collapse; width: 100%; margin: 20px 0; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background-color: #f2f2f2; font-weight: bold; }
-    </style>`;
+    </style>`
       }
 
       htmlContent += `
@@ -450,10 +434,10 @@ export default {
         * 此为示例内容，实际转换结果会根据您上传的Word文档内容而定。
     </p>
 </body>
-</html>`;
+</html>`
 
-      htmlResult.value = htmlContent;
-
+      htmlResult.value = htmlContent
+      
       // 生成纯文本版本
       textResult.value = `文档标题：${fileName}
 
@@ -481,71 +465,71 @@ export default {
 3. 点击"开始转换"按钮
 4. 等待转换完成并查看结果
 
-* 此为示例内容，实际转换结果会根据您上传的Word文档内容而定。`;
+* 此为示例内容，实际转换结果会根据您上传的Word文档内容而定。`
 
       // 模拟提取的图片
       if (options.extractImages) {
         extractedImages.value = [
           {
-            src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
-            size: "1x1 像素",
-            name: "sample_image_1.png",
-          },
-        ];
+            src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+            size: '1x1 像素',
+            name: 'sample_image_1.png'
+          }
+        ]
       }
-    };
+    }
 
     // 复制到剪贴板
     const copyToClipboard = async (text) => {
       try {
-        await navigator.clipboard.writeText(text);
-        instance.proxy.$message.success("已复制到剪贴板！");
+        await navigator.clipboard.writeText(text)
+        messageService.success(t('common.copied'))
       } catch (err) {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-        instance.proxy.$message.success("已复制到剪贴板！");
+        const textArea = document.createElement('textarea')
+        textArea.value = text
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textArea)
+        messageService.success(t('common.copied'))
       }
-    };
+    }
 
     // 下载HTML文件
     const downloadHtml = () => {
-      if (!htmlResult.value) return;
+      if (!htmlResult.value) return
 
-      const blob = new Blob([htmlResult.value], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${fileInfo.value.name.replace(".docx", "")}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    };
+      const blob = new Blob([htmlResult.value], { type: 'text/html' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${fileInfo.value.name.replace('.docx', '')}.html`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    }
 
     // 下载图片
     const downloadImage = (image, index) => {
-      const a = document.createElement("a");
-      a.href = image.src;
-      a.download = `extracted_image_${index + 1}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    };
+      const a = document.createElement('a')
+      a.href = image.src
+      a.download = `extracted_image_${index + 1}.png`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    }
 
     // 清除结果
     const clearResults = () => {
-      fileInfo.value = null;
-      htmlResult.value = "";
-      textResult.value = "";
-      extractedImages.value = [];
-      status.value = "";
-      errorMessage.value = "";
-      document.getElementById("file-input").value = "";
-    };
+      fileInfo.value = null
+      htmlResult.value = ''
+      textResult.value = ''
+      extractedImages.value = []
+      status.value = ''
+      errorMessage.value = ''
+      document.getElementById('file-input').value = ''
+    }
 
     return {
       isDragOver,
@@ -568,10 +552,10 @@ export default {
       copyToClipboard,
       downloadHtml,
       downloadImage,
-      clearResults,
-    };
-  },
-};
+      clearResults
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -634,7 +618,7 @@ export default {
   background: white;
   padding: 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .info-label {
@@ -651,18 +635,10 @@ export default {
   word-break: break-all;
 }
 
-.status-waiting {
-  color: #ffc107;
-}
-.status-processing {
-  color: #007bff;
-}
-.status-success {
-  color: #28a745;
-}
-.status-error {
-  color: #dc3545;
-}
+.status-waiting { color: #ffc107; }
+.status-processing { color: #007bff; }
+.status-success { color: #28a745; }
+.status-error { color: #dc3545; }
 
 .options-section {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
@@ -740,14 +716,13 @@ export default {
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   margin-bottom: 1.5rem;
 }
 
 .tabs {
   display: flex;
   background: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
 }
 
 .tab {
@@ -785,17 +760,15 @@ export default {
   min-height: 300px;
 }
 
-.code-container,
-.text-container {
+.code-container, .text-container {
   padding: 0;
 }
 
-.code-container pre,
-.text-container pre {
+.code-container pre, .text-container pre {
   margin: 0;
   padding: 1.5rem;
   background: #f8f9fa;
-  font-family: "Courier New", monospace;
+  font-family: 'Courier New', monospace;
   font-size: 0.9rem;
   line-height: 1.4;
   white-space: pre-wrap;
@@ -846,7 +819,7 @@ export default {
   background: white;
   border-radius: 8px;
   padding: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   position: relative;
 }
 
@@ -917,7 +890,7 @@ export default {
 }
 
 .help-section li::before {
-  content: "•";
+  content: '•';
   color: #007bff;
   font-weight: bold;
   position: absolute;
@@ -925,23 +898,22 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .info-grid,
-  .options-grid {
+  .info-grid, .options-grid {
     grid-template-columns: 1fr;
   }
-
+  
   .action-buttons {
     flex-direction: column;
   }
-
+  
   .tabs {
     flex-direction: column;
   }
-
+  
   .tab {
     text-align: center;
   }
-
+  
   .images-grid {
     grid-template-columns: 1fr;
   }

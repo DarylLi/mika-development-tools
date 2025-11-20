@@ -1,29 +1,29 @@
 <template>
   <div class="countdown-timer-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-hourglass-half"></i> 倒计时器</h3>
-      <p>设置多个倒计时器，支持自定义时间、目标日期和提醒功能</p>
+      <h3><i class="fas fa-hourglass-half"></i> {{ $t('tools.countdownTimer.ui.title') }}</h3>
+      <p>{{ $t('tools.countdownTimer.ui.description') }}</p>
     </div>
 
     <!-- 新建倒计时 -->
     <div class="create-timer-section">
-      <h4><i class="fas fa-plus-circle"></i> 创建倒计时</h4>
+      <h4><i class="fas fa-plus-circle"></i> {{ $t('tools.countdownTimer.ui.createTimer') }}</h4>
       <div class="timer-form">
         <div class="form-row">
           <div class="input-group">
-            <label>倒计时名称</label>
+            <label>{{ $t('tools.countdownTimer.ui.timerName') }}</label>
             <input 
               type="text" 
               v-model="newTimer.name" 
-              placeholder="输入倒计时名称..."
+              :placeholder="$t('tools.countdownTimer.ui.timerNamePlaceholder')"
               class="name-input"
             >
           </div>
           <div class="input-group">
-            <label>倒计时类型</label>
+            <label>{{ $t('tools.countdownTimer.ui.timerType') }}</label>
             <select v-model="newTimer.type" class="type-select">
-              <option value="duration">时长倒计时</option>
-              <option value="target">目标时间</option>
+              <option value="duration">{{ $t('tools.countdownTimer.ui.durationType') }}</option>
+              <option value="target">{{ $t('tools.countdownTimer.ui.targetType') }}</option>
             </select>
           </div>
         </div>
@@ -32,7 +32,7 @@
         <div v-if="newTimer.type === 'duration'" class="duration-settings">
           <div class="time-inputs">
             <div class="time-input-group">
-              <label>小时</label>
+              <label>{{ $t('tools.countdownTimer.ui.hours') }}</label>
               <input 
                 type="number" 
                 v-model.number="newTimer.hours" 
@@ -42,7 +42,7 @@
               >
             </div>
             <div class="time-input-group">
-              <label>分钟</label>
+              <label>{{ $t('tools.countdownTimer.ui.minutes') }}</label>
               <input 
                 type="number" 
                 v-model.number="newTimer.minutes" 
@@ -52,7 +52,7 @@
               >
             </div>
             <div class="time-input-group">
-              <label>秒</label>
+              <label>{{ $t('tools.countdownTimer.ui.seconds') }}</label>
               <input 
                 type="number" 
                 v-model.number="newTimer.seconds" 
@@ -65,12 +65,12 @@
           
           <!-- 快速设置按钮 -->
           <div class="quick-presets">
-            <button @click="setQuickTime(5, 0, 0)" class="preset-btn">5分钟</button>
-            <button @click="setQuickTime(10, 0, 0)" class="preset-btn">10分钟</button>
-            <button @click="setQuickTime(15, 0, 0)" class="preset-btn">15分钟</button>
-            <button @click="setQuickTime(30, 0, 0)" class="preset-btn">30分钟</button>
-            <button @click="setQuickTime(0, 1, 0)" class="preset-btn">1小时</button>
-            <button @click="setQuickTime(0, 2, 0)" class="preset-btn">2小时</button>
+            <button @click="setQuickTime(5, 0, 0)" class="preset-btn">{{ $t('tools.countdownTimer.ui.preset5min') }}</button>
+            <button @click="setQuickTime(10, 0, 0)" class="preset-btn">{{ $t('tools.countdownTimer.ui.preset10min') }}</button>
+            <button @click="setQuickTime(15, 0, 0)" class="preset-btn">{{ $t('tools.countdownTimer.ui.preset15min') }}</button>
+            <button @click="setQuickTime(30, 0, 0)" class="preset-btn">{{ $t('tools.countdownTimer.ui.preset30min') }}</button>
+            <button @click="setQuickTime(0, 1, 0)" class="preset-btn">{{ $t('tools.countdownTimer.ui.preset1hour') }}</button>
+            <button @click="setQuickTime(0, 2, 0)" class="preset-btn">{{ $t('tools.countdownTimer.ui.preset2hours') }}</button>
           </div>
         </div>
 
@@ -78,7 +78,7 @@
         <div v-if="newTimer.type === 'target'" class="target-settings">
           <div class="target-inputs">
             <div class="input-group">
-              <label>目标日期时间</label>
+              <label>{{ $t('tools.countdownTimer.ui.targetDateTime') }}</label>
               <input 
                 type="datetime-local" 
                 v-model="newTimer.targetTime" 
@@ -89,11 +89,11 @@
           
           <!-- 快速目标设置 -->
           <div class="quick-targets">
-            <button @click="setQuickTarget('today-end')" class="preset-btn">今天结束</button>
-            <button @click="setQuickTarget('tomorrow-start')" class="preset-btn">明天开始</button>
-            <button @click="setQuickTarget('week-end')" class="preset-btn">本周结束</button>
-            <button @click="setQuickTarget('month-end')" class="preset-btn">本月结束</button>
-            <button @click="setQuickTarget('year-end')" class="preset-btn">年底</button>
+            <button @click="setQuickTarget('today-end')" class="preset-btn">{{ $t('tools.countdownTimer.ui.todayEnd') }}</button>
+            <button @click="setQuickTarget('tomorrow-start')" class="preset-btn">{{ $t('tools.countdownTimer.ui.tomorrowStart') }}</button>
+            <button @click="setQuickTarget('week-end')" class="preset-btn">{{ $t('tools.countdownTimer.ui.weekEnd') }}</button>
+            <button @click="setQuickTarget('month-end')" class="preset-btn">{{ $t('tools.countdownTimer.ui.monthEnd') }}</button>
+            <button @click="setQuickTarget('year-end')" class="preset-btn">{{ $t('tools.countdownTimer.ui.yearEnd') }}</button>
           </div>
         </div>
 
@@ -101,23 +101,23 @@
         <div class="notification-settings">
           <label class="checkbox-label">
             <input type="checkbox" v-model="newTimer.enableNotification">
-            <span>启用到时提醒</span>
+            <span>{{ $t('tools.countdownTimer.ui.enableReminder') }}</span>
           </label>
           <label class="checkbox-label">
             <input type="checkbox" v-model="newTimer.enableSound">
-            <span>播放提示音</span>
+            <span>{{ $t('tools.countdownTimer.ui.playSound') }}</span>
           </label>
         </div>
 
         <button @click="createTimer" class="create-btn" :disabled="!canCreateTimer">
-          <i class="fas fa-play"></i> 创建并启动
+          <i class="fas fa-play"></i> {{ $t('tools.countdownTimer.ui.createAndStart') }}
         </button>
       </div>
     </div>
 
     <!-- 活跃的倒计时列表 -->
     <div class="active-timers-section" v-if="timers.length > 0">
-      <h4><i class="fas fa-list"></i> 活跃倒计时</h4>
+      <h4><i class="fas fa-list"></i> {{ $t('tools.countdownTimer.ui.activeTimers') }}</h4>
       <div class="timers-grid">
         <div 
           v-for="timer in timers" 
@@ -152,10 +152,10 @@
             <div class="time-remaining">{{ formatTime(timer.timeLeft) }}</div>
             <div class="timer-info">
               <span v-if="timer.type === 'target'" class="target-info">
-                目标: {{ formatDateTime(timer.targetTime) }}
+                {{ $t('tools.countdownTimer.ui.target') }}: {{ formatDateTime(timer.targetTime) }}
               </span>
               <span v-else class="duration-info">
-                总时长: {{ formatTime(timer.originalDuration) }}
+                {{ $t('tools.countdownTimer.ui.totalDuration') }}: {{ formatTime(timer.originalDuration) }}
               </span>
             </div>
           </div>
@@ -175,7 +175,7 @@
               {{ getStatusText(timer.status) }}
             </span>
             <span v-if="timer.status === 'finished'" class="finish-time">
-              完成于 {{ formatDateTime(timer.finishTime) }}
+              {{ $t('tools.countdownTimer.ui.completedAt') }} {{ formatDateTime(timer.finishTime) }}
             </span>
           </div>
         </div>
@@ -184,7 +184,7 @@
 
     <!-- 历史记录 -->
     <div class="history-section" v-if="finishedTimers.length > 0">
-      <h4><i class="fas fa-history"></i> 历史记录</h4>
+      <h4><i class="fas fa-history"></i> {{ $t('tools.countdownTimer.ui.history') }}</h4>
       <div class="history-list">
         <div 
           v-for="timer in finishedTimers" 
@@ -198,19 +198,19 @@
           <div class="history-details">
             <span class="history-finish">{{ formatDateTime(timer.finishTime) }}</span>
             <button @click="recreateTimer(timer)" class="recreate-btn">
-              <i class="fas fa-redo"></i> 重新创建
+              <i class="fas fa-redo"></i> {{ $t('tools.countdownTimer.ui.recreate') }}
             </button>
           </div>
         </div>
       </div>
       <button @click="clearHistory" class="clear-history-btn">
-        <i class="fas fa-trash-alt"></i> 清空历史
+        <i class="fas fa-trash-alt"></i> {{ $t('tools.countdownTimer.ui.clearHistory') }}
       </button>
     </div>
 
     <!-- 统计信息 -->
     <div class="stats-section">
-      <h4><i class="fas fa-chart-pie"></i> 统计信息</h4>
+      <h4><i class="fas fa-chart-pie"></i> {{ $t('tools.countdownTimer.ui.statistics') }}</h4>
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-number">{{ totalTimersCreated }}</div>
@@ -235,7 +235,7 @@
     <div v-if="showNotificationRequest" class="notification-request">
       <div class="request-content">
         <i class="fas fa-bell"></i>
-        <h5>启用通知权限</h5>
+        <h5>{{ $t('tools.countdownTimer.ui.enableNotification') }}</h5>
         <p>允许显示桌面通知以便及时提醒倒计时结束</p>
         <div class="request-actions">
           <button @click="requestNotificationPermission" class="allow-btn">允许</button>

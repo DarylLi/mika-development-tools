@@ -1,39 +1,39 @@
 <template>
   <div class="shadow-generator-container">
     <div class="tool-header">
-      <h2>🔳 Shadow CSS</h2>
-      <p>盒阴影调配器</p>
+      <h2>🔳 {{ $t('tools.shadowGenerator.ui.title') }}</h2>
+      <p>{{ $t('tools.shadowGenerator.ui.description') }}</p>
     </div>
 
     <div class="preview-section">
       <div class="preview-box" :style="{ boxShadow: shadowCSS }">
-        盒阴影预览
+        {{ $t('tools.shadowGenerator.ui.previewText') }}
       </div>
     </div>
 
     <div class="shadow-controls">
       <div class="control-group">
-        <label>水平偏移 ({{ horizontalOffset }}px)</label>
+        <label>{{ $t('tools.shadowGenerator.ui.horizontalOffset') }} ({{ horizontalOffset }}px)</label>
         <input type="range" class="modern-slider" v-model="horizontalOffset" min="-50" max="50" @input="updateShadow">
       </div>
 
       <div class="control-group">
-        <label>垂直偏移 ({{ verticalOffset }}px)</label>
+        <label>{{ $t('tools.shadowGenerator.ui.verticalOffset') }} ({{ verticalOffset }}px)</label>
         <input type="range" class="modern-slider" v-model="verticalOffset" min="-50" max="50" @input="updateShadow">
       </div>
 
       <div class="control-group">
-        <label>模糊半径 ({{ blurRadius }}px)</label>
+        <label>{{ $t('tools.shadowGenerator.ui.blurRadius') }} ({{ blurRadius }}px)</label>
         <input type="range" class="modern-slider" v-model="blurRadius" min="0" max="50" @input="updateShadow">
       </div>
 
       <div class="control-group">
-        <label>扩展半径 ({{ spreadRadius }}px)</label>
+        <label>{{ $t('tools.shadowGenerator.ui.spreadRadius') }} ({{ spreadRadius }}px)</label>
         <input type="range" class="modern-slider" v-model="spreadRadius" min="-20" max="20" @input="updateShadow">
       </div>
 
       <div class="control-group">
-        <label>阴影颜色</label>
+        <label>{{ $t('tools.shadowGenerator.ui.shadowColor') }}</label>
         <div class="color-control">
           <input type="color" v-model="shadowColor" @input="updateShadow">
           <input type="text" v-model="shadowColor" @input="updateShadow" class="color-text">
@@ -41,30 +41,30 @@
       </div>
 
       <div class="control-group">
-        <label>不透明度 ({{ opacity }}%)</label>
+        <label>{{ $t('tools.shadowGenerator.ui.opacity') }} ({{ opacity }}%)</label>
         <input type="range" class="modern-slider" v-model="opacity" min="0" max="100" @input="updateShadow">
       </div>
 
       <div class="control-group">
-        <label>
+        <label class="check-box-label">
           <input type="checkbox" v-model="inset" @change="updateShadow">
-          内阴影
+          {{ $t('tools.shadowGenerator.ui.inset') }}
         </label>
       </div>
     </div>
 
     <div class="css-output">
-      <label>CSS 代码</label>
+      <label>{{ $t('tools.shadowGenerator.ui.cssCode') }}</label>
       <textarea v-model="shadowCSS" readonly class="css-textarea" @click="copyCSS"></textarea>
-      <button @click="copyCSS" class="copy-btn">📋 复制CSS</button>
+      <button @click="copyCSS" class="copy-btn">📋 {{ $t('tools.shadowGenerator.ui.copyCSS') }}</button>
     </div>
 
     <div class="shadow-presets">
-      <h3>预设阴影</h3>
+      <h3>{{ $t('tools.shadowGenerator.ui.shadowPresets') }}</h3>
       <div class="presets-grid">
         <div 
           v-for="preset in shadowPresets" 
-          :key="preset.name"
+          :key="preset.key"
           class="preset-item"
           @click="loadPreset(preset)"
         >
@@ -78,10 +78,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ShadowGenerator',
   setup() {
+    const { t } = useI18n()
     const horizontalOffset = ref(0)
     const verticalOffset = ref(4)
     const blurRadius = ref(8)
@@ -90,14 +92,14 @@ export default {
     const opacity = ref(25)
     const inset = ref(false)
 
-    const shadowPresets = [
-      { name: '轻微', shadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)' },
-      { name: '中等', shadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)' },
-      { name: '较强', shadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)' },
-      { name: '很强', shadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)' },
-      { name: '彩色', shadow: '0 4px 8px rgba(255,107,107,0.3)' },
-      { name: '内阴影', shadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }
-    ]
+    const shadowPresets = computed(() => [
+      { key: 'light', name: t('tools.shadowGenerator.ui.presetLight'), shadow: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)' },
+      { key: 'medium', name: t('tools.shadowGenerator.ui.presetMedium'), shadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)' },
+      { key: 'strong', name: t('tools.shadowGenerator.ui.presetStrong'), shadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)' },
+      { key: 'veryStrong', name: t('tools.shadowGenerator.ui.presetVeryStrong'), shadow: '0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)' },
+      { key: 'colored', name: t('tools.shadowGenerator.ui.presetColored'), shadow: '0 4px 8px rgba(255,107,107,0.3)' },
+      { key: 'inset', name: t('tools.shadowGenerator.ui.presetInset'), shadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }
+    ])
 
     const shadowCSS = computed(() => {
       const hex = shadowColor.value
@@ -123,15 +125,14 @@ export default {
     }
 
     const loadPreset = (preset) => {
-      // 简单设置，更复杂的解析可以后续添加
-      if (preset.name === '内阴影') {
+      if (preset.key === 'inset') {
         inset.value = true
         horizontalOffset.value = 0
         verticalOffset.value = 2
         blurRadius.value = 4
         spreadRadius.value = 0
         opacity.value = 10
-      } else if (preset.name === '彩色') {
+      } else if (preset.key === 'colored') {
         shadowColor.value = '#FF6B6B'
         horizontalOffset.value = 0
         verticalOffset.value = 4
@@ -139,14 +140,13 @@ export default {
         spreadRadius.value = 0
         opacity.value = 30
       } else {
-        // 重置为默认值
         inset.value = false
         horizontalOffset.value = 0
-        verticalOffset.value = parseInt(preset.name === '轻微' ? 1 : preset.name === '中等' ? 3 : preset.name === '较强' ? 10 : 14)
-        blurRadius.value = parseInt(preset.name === '轻微' ? 3 : preset.name === '中等' ? 6 : preset.name === '较强' ? 20 : 28)
+        verticalOffset.value = preset.key === 'light' ? 1 : preset.key === 'medium' ? 3 : preset.key === 'strong' ? 10 : 14
+        blurRadius.value = preset.key === 'light' ? 3 : preset.key === 'medium' ? 6 : preset.key === 'strong' ? 20 : 28
         spreadRadius.value = 0
         shadowColor.value = '#000000'
-        opacity.value = preset.name === '轻微' ? 12 : preset.name === '中等' ? 16 : preset.name === '较强' ? 19 : 25
+        opacity.value = preset.key === 'light' ? 12 : preset.key === 'medium' ? 16 : preset.key === 'strong' ? 19 : 25
       }
       updateShadow()
     }
@@ -154,9 +154,9 @@ export default {
     const copyCSS = async () => {
       try {
         await navigator.clipboard.writeText(`box-shadow: ${shadowCSS.value};`)
-        console.log('CSS已复制')
+        console.log(t('tools.shadowGenerator.ui.cssCopied'))
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.shadowGenerator.ui.copyFailed'), err)
       }
     }
 

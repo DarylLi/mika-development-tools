@@ -4,14 +4,14 @@
       <div class="header-icon">
         <i class="fas fa-code"></i>
       </div>
-      <h2>JSON → CSV 转换器</h2>
-      <p>将JSON数据转换为CSV格式，支持嵌套对象展平和自定义分隔符</p>
+      <h2>{{ $t('tools.jsonToCsv.ui.title') }}</h2>
+      <p>{{ $t('tools.jsonToCsv.ui.description') }}</p>
       
       <!-- 快速示例按钮 -->
       <div class="example-section">
-        <span class="example-label">快速开始：</span>
+        <span class="example-label">{{ $t('tools.jsonToCsv.ui.quickStart') }}</span>
         <button @click="loadExample" class="example-btn">
-          <i class="fas fa-magic"></i> 加载示例数据
+          <i class="fas fa-magic"></i> {{ $t('tools.jsonToCsv.ui.loadExample') }}
         </button>
       </div>
     </div>
@@ -19,29 +19,29 @@
     <div class="tool-content">
       <!-- 配置选项卡片 -->
       <div class="config-card">
-        <h3><i class="fas fa-cog"></i> 配置选项</h3>
+        <h3><i class="fas fa-cog"></i> {{ $t('tools.jsonToCsv.ui.configOptions') }}</h3>
         <div class="options-grid">
           <div class="option-item">
-            <label>分隔符</label>
+            <label>{{ $t('tools.jsonToCsv.ui.delimiter') }}</label>
             <select v-model="delimiter" class="styled-select">
-              <option value=",">,（逗号）</option>
-              <option value=";">；（分号）</option>
-              <option value="\t">Tab（制表符）</option>
-              <option value="|">|（管道符）</option>
+              <option value=",">{{ $t('tools.jsonToCsv.ui.delimiterComma') }}</option>
+              <option value=";">{{ $t('tools.jsonToCsv.ui.delimiterSemicolon') }}</option>
+              <option value="\t">{{ $t('tools.jsonToCsv.ui.delimiterTab') }}</option>
+              <option value="|">{{ $t('tools.jsonToCsv.ui.delimiterPipe') }}</option>
             </select>
           </div>
           <div class="option-item">
             <label class="checkbox-label">
               <input type="checkbox" v-model="includeHeaders" />
               <span class="checkmark"></span>
-              包含标题行
+              {{ $t('tools.jsonToCsv.ui.includeHeaders') }}
             </label>
           </div>
           <div class="option-item">
             <label class="checkbox-label">
               <input type="checkbox" v-model="flattenObjects" />
               <span class="checkmark"></span>
-              展平嵌套对象
+              {{ $t('tools.jsonToCsv.ui.flattenObjects') }}
             </label>
           </div>
         </div>
@@ -50,7 +50,7 @@
       <!-- 输入区域 -->
       <div class="input-card">
         <div class="card-header">
-          <h3><i class="fas fa-upload"></i> JSON 数据输入</h3>
+          <h3><i class="fas fa-upload"></i> {{ $t('tools.jsonToCsv.ui.jsonDataInput') }}</h3>
           <div class="upload-area">
             <input
               type="file"
@@ -61,7 +61,7 @@
             />
             <button @click="$refs.fileInput.click()" class="upload-btn">
               <i class="fas fa-cloud-upload-alt"></i>
-              选择文件
+              {{ $t('tools.jsonToCsv.ui.selectFile') }}
             </button>
             <span class="file-info" v-if="fileName">
               <i class="fas fa-file-code"></i>
@@ -73,7 +73,7 @@
         <div class="input-area">
           <textarea
             v-model="jsonText"
-            placeholder="在此粘贴JSON数据，可以是数组或单个对象..."
+            :placeholder="$t('tools.jsonToCsv.ui.jsonPlaceholder')"
             class="styled-textarea"
             rows="8"
           ></textarea>
@@ -82,11 +82,11 @@
           <div class="input-hints" v-if="!jsonText.trim()">
             <div class="hint-item">
               <i class="fas fa-lightbulb"></i>
-              <span>支持JSON数组和单个对象</span>
+              <span>{{ $t('tools.jsonToCsv.ui.hintArray') }}</span>
             </div>
             <div class="hint-item">
               <i class="fas fa-info-circle"></i>
-              <span>嵌套对象可自动展平</span>
+              <span>{{ $t('tools.jsonToCsv.ui.hintFlatten') }}</span>
             </div>
           </div>
         </div>
@@ -101,30 +101,30 @@
           :class="{ 'loading': isConverting }"
         >
           <i :class="isConverting ? 'fas fa-spinner fa-spin' : 'fas fa-exchange-alt'"></i>
-          {{ isConverting ? '转换中...' : '转换为 CSV' }}
+          {{ isConverting ? $t('tools.jsonToCsv.ui.converting') : $t('tools.jsonToCsv.ui.convertToCsv') }}
         </button>
         <button @click="clearAll" class="secondary-btn">
           <i class="fas fa-trash"></i>
-          清空
+          {{ $t('tools.jsonToCsv.ui.clear') }}
         </button>
       </div>
 
       <!-- 输出区域 -->
       <div class="output-card" v-if="csvResult">
         <div class="card-header">
-          <h3><i class="fas fa-table"></i> CSV 输出结果</h3>
+          <h3><i class="fas fa-table"></i> {{ $t('tools.jsonToCsv.ui.csvOutput') }}</h3>
           <div class="output-actions">
             <span class="result-info">
               <i class="fas fa-check-circle"></i>
-              成功转换 {{ rowCount }} 条记录
+              {{ $t('tools.jsonToCsv.ui.successConvert', { count: rowCount }) }}
             </span>
-            <button @click="copyCsv" class="action-btn" :class="{ 'success': copyText === '已复制!' }">
-              <i :class="copyText === '已复制!' ? 'fas fa-check' : 'fas fa-copy'"></i>
+            <button @click="copyCsv" class="action-btn" :class="{ 'success': copyText === t('tools.jsonToCsv.ui.copied') }">
+              <i :class="copyText === t('tools.jsonToCsv.ui.copied') ? 'fas fa-check' : 'fas fa-copy'"></i>
               {{ copyText }}
             </button>
             <button @click="downloadCsv" class="action-btn">
               <i class="fas fa-download"></i>
-              下载
+              {{ $t('tools.jsonToCsv.ui.download') }}
             </button>
           </div>
         </div>
@@ -134,7 +134,7 @@
           
           <!-- 预览表格 -->
           <div class="preview-section" v-if="previewData.length > 0">
-            <h4><i class="fas fa-table"></i> 数据预览</h4>
+            <h4><i class="fas fa-table"></i> {{ $t('tools.jsonToCsv.ui.dataPreview') }}</h4>
             <div class="table-container">
               <table class="preview-table">
                 <thead v-if="includeHeaders">
@@ -149,7 +149,7 @@
                 </tbody>
               </table>
               <div v-if="previewData.length > 5" class="more-rows">
-                还有 {{ previewData.length - 5 }} 行数据...
+                {{ $t('tools.jsonToCsv.ui.moreRows', { count: previewData.length - 5 }) }}
               </div>
             </div>
           </div>
@@ -160,22 +160,22 @@
       <div v-if="error" class="error-card">
         <i class="fas fa-exclamation-triangle"></i>
         <div>
-          <strong>转换失败</strong>
+          <strong>{{ $t('tools.jsonToCsv.ui.convertFailed') }}</strong>
           <p>{{ error }}</p>
         </div>
       </div>
 
       <!-- 使用说明 -->
       <div class="help-card">
-        <h3><i class="fas fa-question-circle"></i> 使用说明</h3>
+        <h3><i class="fas fa-question-circle"></i> {{ $t('tools.jsonToCsv.ui.usageInstructions') }}</h3>
         <div class="help-grid">
           <div class="help-item">
             <div class="help-icon">
               <i class="fas fa-file-code"></i>
             </div>
             <div class="help-content">
-              <h4>支持格式</h4>
-              <p>JSON数组或单个对象</p>
+              <h4>{{ $t('tools.jsonToCsv.ui.supportedFormats') }}</h4>
+              <p>{{ $t('tools.jsonToCsv.ui.supportedFormatsDesc') }}</p>
             </div>
           </div>
           <div class="help-item">
@@ -183,8 +183,8 @@
               <i class="fas fa-project-diagram"></i>
             </div>
             <div class="help-content">
-              <h4>嵌套处理</h4>
-              <p>自动展平复杂嵌套结构</p>
+              <h4>{{ $t('tools.jsonToCsv.ui.nestedHandling') }}</h4>
+              <p>{{ $t('tools.jsonToCsv.ui.nestedHandlingDesc') }}</p>
             </div>
           </div>
           <div class="help-item">
@@ -192,8 +192,8 @@
               <i class="fas fa-shield-alt"></i>
             </div>
             <div class="help-content">
-              <h4>隐私保护</h4>
-              <p>本地处理，数据不上传</p>
+              <h4>{{ $t('tools.jsonToCsv.ui.privacyProtection') }}</h4>
+              <p>{{ $t('tools.jsonToCsv.ui.privacyProtectionDesc') }}</p>
             </div>
           </div>
         </div>
@@ -204,10 +204,12 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'JsonToCsv',
   setup() {
+    const { t } = useI18n()
     const jsonText = ref('')
     const csvResult = ref('')
     const fileName = ref('')
@@ -215,7 +217,7 @@ export default {
     const includeHeaders = ref(true)
     const flattenObjects = ref(true)
     const error = ref('')
-    const copyText = ref('复制')
+    const copyText = ref(t('tools.jsonToCsv.ui.copy'))
     const rowCount = ref(0)
     const isConverting = ref(false)
 
@@ -371,7 +373,7 @@ export default {
             rowCount.value = includeHeaders.value ? rows.length - 1 : rows.length
             
           } catch (err) {
-            error.value = '转换失败: 请检查JSON格式是否正确'
+            error.value = t('tools.jsonToCsv.ui.convertFailed') + ': ' + t('tools.jsonToCsv.ui.checkJsonFormat')
             csvResult.value = ''
             rowCount.value = 0
           } finally {
@@ -379,7 +381,7 @@ export default {
           }
         }, 300)
       } catch (err) {
-        error.value = '转换失败: ' + err.message
+        error.value = t('tools.jsonToCsv.ui.convertFailed') + ': ' + err.message
         csvResult.value = ''
         rowCount.value = 0
         isConverting.value = false
@@ -388,8 +390,8 @@ export default {
 
     const copyCsv = () => {
       navigator.clipboard.writeText(csvResult.value).then(() => {
-        copyText.value = '已复制!'
-        setTimeout(() => copyText.value = '复制', 2000)
+        copyText.value = t('tools.jsonToCsv.ui.copied')
+        setTimeout(() => copyText.value = t('tools.jsonToCsv.ui.copy'), 2000)
       })
     }
 
@@ -410,7 +412,7 @@ export default {
       csvResult.value = ''
       fileName.value = ''
       error.value = ''
-      copyText.value = '复制'
+      copyText.value = t('tools.jsonToCsv.ui.copy')
       rowCount.value = 0
     }
 

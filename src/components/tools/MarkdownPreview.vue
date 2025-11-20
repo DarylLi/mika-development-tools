@@ -1,26 +1,26 @@
 <template>
   <div class="single-tool">
-    <h2><i class="fab fa-markdown"></i> Markdown Preview</h2>
+    <h2><i class="fab fa-markdown"></i> {{ $t('tools.markdownPreview.ui.title') }}</h2>
     
     <div class="example-section">
       <button class="example-btn" @click="loadExample">
-        <i class="fas fa-lightbulb"></i> 加载示例
+        <i class="fas fa-lightbulb"></i> {{ $t('tools.markdownPreview.ui.loadExample') }}
       </button>
     </div>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 500px;">
       <div style="display: flex; flex-direction: column;">
-        <h3>Markdown 输入</h3>
+        <h3>{{ $t('tools.markdownPreview.ui.markdownInput') }}</h3>
         <textarea 
           v-model="markdownInput" 
-          placeholder="请输入 Markdown 文本..."
+          :placeholder="$t('tools.markdownPreview.ui.placeholder')"
           style="flex: 1; resize: none; font-family: 'Courier New', monospace;"
           @input="convertMarkdown"
         ></textarea>
       </div>
       
       <div style="display: flex; flex-direction: column;">
-        <h3>HTML 预览</h3>
+        <h3>{{ $t('tools.markdownPreview.ui.htmlPreview') }}</h3>
         <div 
           class="markdown-preview" 
           v-html="htmlOutput"
@@ -29,15 +29,17 @@
       </div>
     </div>
     
-    <div style="margin-top: 1rem;">
-      <button @click="copyHtml">复制 HTML</button>
-      <button @click="copyMarkdown">复制 Markdown</button>
+    <div style="margin-top: 1rem;display: flex;justify-content: space-between;width: 320px;position: fixed;">
+      <button @click="copyHtml">{{ $t('tools.markdownPreview.ui.copyHtml') }}</button>
+      <button @click="copyMarkdown">{{ $t('tools.markdownPreview.ui.copyMarkdown') }}</button>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, getCurrentInstance } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'MarkdownPreview',
@@ -45,7 +47,7 @@ export default {
     toolData: Object
   },
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const markdownInput = ref('')
     const htmlOutput = ref('')
 
@@ -190,14 +192,14 @@ console.log(greet('World'));
     const copyHtml = () => {
       if (htmlOutput.value) {
         navigator.clipboard.writeText(htmlOutput.value)
-        instance.proxy.$message.success('HTML 已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       }
     }
 
     const copyMarkdown = () => {
       if (markdownInput.value) {
         navigator.clipboard.writeText(markdownInput.value)
-        instance.proxy.$message.success('Markdown 已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       }
     }
 

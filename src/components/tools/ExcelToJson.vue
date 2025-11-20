@@ -1,13 +1,13 @@
 <template>
   <div class="tool-container">
     <div class="tool-header">
-      <h2><i class="fas fa-file-excel"></i> Excel → JSON 转换器</h2>
-      <p>将Excel文件(.xlsx/.xls)转换为JSON格式，支持多工作表</p>
+      <h2><i class="fas fa-file-excel"></i> {{ $t('tools.excelToJson.ui.title') }}</h2>
+      <p>{{ $t('tools.excelToJson.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="input-section">
-        <h3><i class="fas fa-upload"></i> Excel 输入</h3>
+        <h3><i class="fas fa-upload"></i> {{ $t('tools.excelToJson.ui.excelInput') }}</h3>
         <div class="file-upload-area">
           <input
             type="file"
@@ -17,22 +17,22 @@
             style="display: none"
           />
           <button @click="$refs.fileInput.click()" class="upload-btn">
-            <i class="fas fa-cloud-upload-alt"></i> 选择Excel文件
+            <i class="fas fa-cloud-upload-alt"></i> {{ $t('tools.excelToJson.ui.selectExcelFile') }}
           </button>
-          <span class="file-info" v-if="fileName">已选择: {{ fileName }}</span>
+          <span class="file-info" v-if="fileName">{{ $t('tools.excelToJson.ui.selected') }} {{ fileName }}</span>
         </div>
 
         <div class="options-row" v-if="fileName">
           <div class="option-group">
             <label>
               <input type="checkbox" v-model="hasHeader" />
-              首行为标题
+              {{ $t('tools.excelToJson.ui.firstRowAsHeader') }}
             </label>
           </div>
           <div class="option-group">
             <label>
               <input type="checkbox" v-model="includeEmpty" />
-              包含空行
+              {{ $t('tools.excelToJson.ui.includeEmpty') }}
             </label>
           </div>
         </div>
@@ -41,22 +41,22 @@
       <div class="action-section">
         <button @click="convertToJson" class="convert-btn" :disabled="!fileName || isProcessing">
           <i :class="isProcessing ? 'fas fa-spinner fa-spin' : 'fas fa-exchange-alt'"></i>
-          {{ isProcessing ? '转换中...' : '转换为 JSON' }}
+          {{ isProcessing ? $t('tools.excelToJson.ui.converting') : $t('tools.excelToJson.ui.convertToJson') }}
         </button>
         <button @click="clearAll" class="clear-btn">
-          <i class="fas fa-trash"></i> 清空
+          <i class="fas fa-trash"></i> {{ $t('tools.excelToJson.ui.clear') }}
         </button>
       </div>
 
       <div class="output-section" v-if="jsonResult">
         <div class="output-header">
-          <h3><i class="fas fa-code"></i> JSON 输出</h3>
+          <h3><i class="fas fa-code"></i> {{ $t('tools.excelToJson.ui.jsonOutput') }}</h3>
           <div class="output-actions">
             <button @click="copyJson" class="copy-btn">
               <i class="fas fa-copy"></i> {{ copyText }}
             </button>
             <button @click="downloadJson" class="download-btn">
-              <i class="fas fa-download"></i> 下载JSON
+              <i class="fas fa-download"></i> {{ $t('tools.excelToJson.ui.downloadJson') }}
             </button>
           </div>
         </div>
@@ -68,12 +68,12 @@
       </div>
 
       <div class="note-section">
-        <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+        <h4><i class="fas fa-info-circle"></i> {{ $t('tools.excelToJson.ui.usageInstructions') }}</h4>
         <ul>
-          <li>支持 .xlsx 和 .xls 格式的Excel文件</li>
-          <li>处理第一个工作表的数据</li>
-          <li>首行为标题时，将作为JSON对象的键名</li>
-          <li>处理过程在浏览器本地完成，保护隐私</li>
+          <li>{{ $t('tools.excelToJson.ui.instruction1') }}</li>
+          <li>{{ $t('tools.excelToJson.ui.instruction2') }}</li>
+          <li>{{ $t('tools.excelToJson.ui.instruction3') }}</li>
+          <li>{{ $t('tools.excelToJson.ui.instruction4') }}</li>
         </ul>
       </div>
     </div>
@@ -82,16 +82,18 @@
 
 <script>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'ExcelToJson',
   setup() {
+    const { t } = useI18n()
     const fileName = ref('')
     const hasHeader = ref(true)
     const includeEmpty = ref(false)
     const jsonResult = ref('')
     const error = ref('')
-    const copyText = ref('复制')
+    const copyText = ref(t('tools.excelToJson.ui.copy'))
     const isProcessing = ref(false)
 
     const handleFileUpload = (event) => {
@@ -108,15 +110,15 @@ export default {
       
       // Excel转JSON需要专业的库（如SheetJS），这里提供说明
       setTimeout(() => {
-        error.value = '抱歉，Excel转JSON功能需要SheetJS等专业库。建议使用在线Excel转JSON工具。'
+        error.value = t('tools.excelToJson.ui.convertFailed')
         isProcessing.value = false
       }, 1000)
     }
 
     const copyJson = () => {
       navigator.clipboard.writeText(jsonResult.value).then(() => {
-        copyText.value = '已复制!'
-        setTimeout(() => copyText.value = '复制', 2000)
+        copyText.value = t('tools.excelToJson.ui.copied')
+        setTimeout(() => copyText.value = t('tools.excelToJson.ui.copy'), 2000)
       })
     }
 
@@ -136,7 +138,7 @@ export default {
       fileName.value = ''
       jsonResult.value = ''
       error.value = ''
-      copyText.value = '复制'
+      copyText.value = t('tools.excelToJson.ui.copy')
     }
 
     return {

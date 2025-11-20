@@ -5,8 +5,8 @@
       <div class="header-gradient csv-gradient">
         <div class="header-content">
           <div class="tool-info">
-            <h1><i class="fas fa-table"></i> CSV Viewer</h1>
-            <p>CSV文件预览与分析工具</p>
+            <h1><i class="fas fa-table"></i> {{ $t('tools.csvPreview.ui.title') }}</h1>
+            <p>{{ $t('tools.csvPreview.ui.description') }}</p>
           </div>
         </div>
       </div>
@@ -16,7 +16,7 @@
       <!-- 输入区域 -->
       <div class="input-section">
         <div class="section-header">
-          <h3><i class="fas fa-upload"></i> 数据输入</h3>
+          <h3><i class="fas fa-upload"></i> {{ $t('tools.csvPreview.ui.dataInput') }}</h3>
         </div>
         
         <!-- 文件上传 -->
@@ -31,24 +31,24 @@
                  style="display: none;">
           <div class="upload-content" @click="$refs.fileInput.click()">
             <i class="fas fa-cloud-upload-alt"></i>
-            <p>点击选择文件或拖拽CSV文件到此处</p>
-            <small>支持 .csv 和 .txt 格式</small>
+            <p>{{ $t('tools.csvPreview.ui.clickOrDrag') }}</p>
+            <small>{{ $t('tools.csvPreview.ui.supportedFormats') }}</small>
           </div>
         </div>
 
         <!-- CSV设置 -->
         <div class="csv-settings">
           <div class="setting-row">
-            <label>分隔符:</label>
+            <label>{{ $t('tools.csvPreview.ui.delimiter') }}</label>
             <select v-model="delimiter" @change="parseCSV">
-              <option value=",">逗号 (,)</option>
-              <option value=";">分号 (;)</option>
-              <option value="\t">制表符 (\t)</option>
-              <option value="|">竖线 (|)</option>
+              <option value=",">{{ $t('tools.csvPreview.ui.delimiterComma') }}</option>
+              <option value=";">{{ $t('tools.csvPreview.ui.delimiterSemicolon') }}</option>
+              <option value="\t">{{ $t('tools.csvPreview.ui.delimiterTab') }}</option>
+              <option value="|">{{ $t('tools.csvPreview.ui.delimiterPipe') }}</option>
             </select>
           </div>
           <div class="setting-row">
-            <label>编码:</label>
+            <label>{{ $t('tools.csvPreview.ui.encoding') }}</label>
             <select v-model="encoding">
               <option value="UTF-8">UTF-8</option>
               <option value="GBK">GBK</option>
@@ -58,30 +58,30 @@
           <div class="setting-row">
             <label>
               <input type="checkbox" v-model="hasHeader" @change="parseCSV">
-              首行为标题
+              {{ $t('tools.csvPreview.ui.firstRowAsHeader') }}
             </label>
           </div>
         </div>
 
         <!-- 文本输入 -->
         <div class="input-group">
-          <label>或直接输入CSV数据:</label>
+          <label>{{ $t('tools.csvPreview.ui.orInputDirectly') }}</label>
           <textarea v-model="csvInput" 
                     @input="parseCSV"
-                    placeholder="姓名,年龄,城市&#10;张三,25,北京&#10;李四,30,上海"
+                    :placeholder="$t('tools.csvPreview.ui.csvPlaceholder')"
                     rows="8"></textarea>
         </div>
 
         <!-- 示例按钮 -->
         <div class="example-buttons">
           <button @click="loadExample('basic')" class="example-btn">
-            <i class="fas fa-play"></i> 基础示例
+            <i class="fas fa-play"></i> {{ $t('tools.csvPreview.ui.basicExample') }}
           </button>
           <button @click="loadExample('sales')" class="example-btn">
-            <i class="fas fa-chart-line"></i> 销售数据
+            <i class="fas fa-chart-line"></i> {{ $t('tools.csvPreview.ui.salesData') }}
           </button>
           <button @click="loadExample('employees')" class="example-btn">
-            <i class="fas fa-users"></i> 员工信息
+            <i class="fas fa-users"></i> {{ $t('tools.csvPreview.ui.employeeInfo') }}
           </button>
         </div>
       </div>
@@ -89,15 +89,15 @@
       <!-- 表格显示 -->
       <div v-if="parsedData.length > 0" class="preview-section">
         <div class="section-header">
-          <h3><i class="fas fa-table"></i> 数据预览</h3>
+          <h3><i class="fas fa-table"></i> {{ $t('tools.csvPreview.ui.dataPreview') }}</h3>
           <div class="table-info">
             <span class="info-item">
               <i class="fas fa-database"></i> 
-              {{ parsedData.length }} 行数据
+              {{ parsedData.length }} {{ $t('tools.csvPreview.ui.rows') }}
             </span>
             <span class="info-item">
               <i class="fas fa-columns"></i> 
-              {{ headers.length }} 列
+              {{ headers.length }} {{ $t('tools.csvPreview.ui.columns') }}
             </span>
           </div>
         </div>
@@ -107,7 +107,7 @@
           <div class="search-box">
             <i class="fas fa-search"></i>
             <input v-model="searchTerm" 
-                   placeholder="搜索数据..."
+                   :placeholder="$t('tools.csvPreview.ui.searchData')"
                    @input="filterData">
           </div>
           <div class="page-controls">
@@ -154,10 +154,10 @@
         <!-- 导出按钮 -->
         <div class="export-section">
           <button @click="exportJSON" class="export-btn">
-            <i class="fas fa-download"></i> 导出为JSON
+            <i class="fas fa-download"></i> {{ $t('tools.csvPreview.ui.exportAsJson') }}
           </button>
           <button @click="exportCSV" class="export-btn">
-            <i class="fas fa-file-csv"></i> 导出为CSV
+            <i class="fas fa-file-csv"></i> {{ $t('tools.csvPreview.ui.exportAsCsv') }}
           </button>
         </div>
       </div>
@@ -165,8 +165,8 @@
       <!-- 空状态 -->
       <div v-else class="empty-state">
         <i class="fas fa-table"></i>
-        <h3>没有数据</h3>
-        <p>请上传CSV文件或输入数据</p>
+        <h3>{{ $t('tools.csvPreview.ui.noData') }}</h3>
+        <p>{{ $t('tools.csvPreview.ui.pleaseUploadOrInput') }}</p>
       </div>
     </div>
   </div>
@@ -174,10 +174,12 @@
 
 <script>
 import { ref, computed, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'CsvPreview',
   setup() {
+    const { t } = useI18n()
     const csvInput = ref('')
     const parsedData = ref([])
     const headers = ref([])
@@ -214,7 +216,7 @@ export default {
       })
 
       if (!hasHeader.value) {
-        headers.value = Array.from({ length: data[0]?.length || 0 }, (_, i) => `列${i + 1}`)
+        headers.value = Array.from({ length: data[0]?.length || 0 }, (_, i) => t('tools.csvPreview.ui.column') + (i + 1))
       }
 
       parsedData.value = data
@@ -397,7 +399,7 @@ E004,赵六,人事部,11000,2023-04-05`
     // 监听搜索
     watch(searchTerm, filterData)
 
-    return {
+      return {
       csvInput,
       parsedData,
       headers,
@@ -420,7 +422,8 @@ E004,赵六,人事部,11000,2023-04-05`
       previousPage,
       nextPage,
       exportJSON,
-      exportCSV
+      exportCSV,
+      t
     }
   }
 }

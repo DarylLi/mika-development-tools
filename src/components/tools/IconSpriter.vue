@@ -1,8 +1,8 @@
 <template>
   <div class="icon-spriter-container">
     <div class="tool-header">
-      <h3>SVG 雪碧图生成器</h3>
-      <p>将多个 SVG 图标合并为一个雪碧图文件</p>
+      <h3>{{ $t('tools.iconSpriter.ui.title') }}</h3>
+      <p>{{ $t('tools.iconSpriter.ui.description') }}</p>
     </div>
 
     <div class="upload-section">
@@ -24,28 +24,28 @@
         />
         <div class="upload-content">
           <div class="upload-icon">🎨</div>
-          <p>点击选择或拖拽 SVG 图标文件</p>
-          <small>支持批量上传多个 SVG 文件</small>
+          <p>{{ $t('tools.iconSpriter.ui.uploadText') }}</p>
+          <small>{{ $t('tools.iconSpriter.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
 
     <div class="sprite-settings" v-if="svgIcons.length > 0">
       <div class="settings-panel">
-        <h4>雪碧图设置</h4>
+        <h4>{{ $t('tools.iconSpriter.ui.spriteSettings') }}</h4>
         
         <div class="layout-settings">
           <div class="setting-group">
-            <label>布局方式:</label>
+            <label>{{ $t('tools.iconSpriter.ui.layout') }}:</label>
             <select v-model="layout" class="setting-select">
-              <option value="horizontal">水平排列</option>
-              <option value="vertical">垂直排列</option>
-              <option value="grid">网格排列</option>
+              <option value="horizontal">{{ $t('tools.iconSpriter.ui.horizontal') }}</option>
+              <option value="vertical">{{ $t('tools.iconSpriter.ui.vertical') }}</option>
+              <option value="grid">{{ $t('tools.iconSpriter.ui.grid') }}</option>
             </select>
           </div>
 
           <div class="setting-group" v-if="layout === 'grid'">
-            <label>每行图标数:</label>
+            <label>{{ $t('tools.iconSpriter.ui.iconsPerRow') }}:</label>
             <input 
               type="number" 
               v-model="gridColumns" 
@@ -56,7 +56,7 @@
           </div>
 
           <div class="setting-group">
-            <label>图标间距 (px):</label>
+            <label>{{ $t('tools.iconSpriter.ui.iconSpacing') }}:</label>
             <input 
               type="number" 
               v-model="iconSpacing" 
@@ -67,7 +67,7 @@
           </div>
 
           <div class="setting-group">
-            <label>图标尺寸 (px):</label>
+            <label>{{ $t('tools.iconSpriter.ui.iconSize') }}:</label>
             <input 
               type="number" 
               v-model="iconSize" 
@@ -80,25 +80,25 @@
 
         <div class="output-settings">
           <div class="setting-group">
-            <label>输出格式:</label>
+            <label>{{ $t('tools.iconSpriter.ui.outputFormat') }}:</label>
             <div class="format-options">
               <label class="checkbox-option">
                 <input type="checkbox" v-model="generateSvg" />
-                <span>SVG 雪碧图</span>
+                <span>{{ $t('tools.iconSpriter.ui.svgSprite') }}</span>
               </label>
               <label class="checkbox-option">
                 <input type="checkbox" v-model="generateCss" />
-                <span>CSS 样式文件</span>
+                <span>{{ $t('tools.iconSpriter.ui.cssFile') }}</span>
               </label>
               <label class="checkbox-option">
                 <input type="checkbox" v-model="generateHtml" />
-                <span>HTML 示例</span>
+                <span>{{ $t('tools.iconSpriter.ui.htmlExample') }}</span>
               </label>
             </div>
           </div>
 
           <div class="setting-group">
-            <label>CSS 类名前缀:</label>
+            <label>{{ $t('tools.iconSpriter.ui.cssPrefix') }}:</label>
             <input 
               type="text" 
               v-model="cssPrefix" 
@@ -110,18 +110,18 @@
 
         <div class="action-buttons">
           <button @click="generateSprite" class="generate-btn" :disabled="processing">
-            {{ processing ? '生成中...' : '生成雪碧图' }}
+            {{ processing ? $t('tools.iconSpriter.ui.processing') : $t('tools.iconSpriter.ui.generateSprite') }}
           </button>
           <button @click="downloadSprite" class="download-btn" v-if="spriteGenerated">
-            下载文件
+            {{ $t('tools.iconSpriter.ui.downloadSprite') }}
           </button>
-          <button @click="clearAll" class="clear-btn">清空</button>
+          <button @click="clearAll" class="clear-btn">{{ $t('tools.iconSpriter.ui.clear') }}</button>
         </div>
       </div>
     </div>
 
     <div class="icons-preview" v-if="svgIcons.length > 0">
-      <h4>图标预览 ({{ svgIcons.length }} 个)</h4>
+      <h4>{{ $t('tools.iconSpriter.ui.iconsPreview') }} ({{ svgIcons.length }} {{ $t('tools.iconSpriter.ui.iconCountUnit') }})</h4>
       <div class="icons-grid">
         <div 
           v-for="(icon, index) in svgIcons" 
@@ -131,7 +131,7 @@
           <div class="icon-preview" v-html="icon.content"></div>
           <div class="icon-info">
             <h6>{{ icon.name }}</h6>
-            <small>{{ icon.size }} bytes</small>
+            <small>{{ icon.size }} {{ $t('tools.iconSpriter.ui.bytes') }}</small>
           </div>
           <button @click="removeIcon(index)" class="remove-icon-btn">×</button>
         </div>
@@ -139,43 +139,43 @@
     </div>
 
     <div class="sprite-preview" v-if="spriteGenerated">
-      <h4>雪碧图预览</h4>
+      <h4>{{ $t('tools.iconSpriter.ui.spritePreview') }}</h4>
       <div class="preview-container">
         <div class="sprite-display" v-html="spriteContent"></div>
         <div class="sprite-info">
-          <p>尺寸: {{ spriteWidth }} × {{ spriteHeight }}</p>
-          <p>图标数量: {{ svgIcons.length }}</p>
-          <p>文件大小: {{ formatFileSize(spriteSize) }}</p>
+          <p>{{ $t('tools.iconSpriter.ui.dimensions') }}: {{ spriteWidth }} × {{ spriteHeight }}</p>
+          <p>{{ $t('tools.iconSpriter.ui.iconCount') }}: {{ svgIcons.length }}</p>
+          <p>{{ $t('tools.iconSpriter.ui.fileSize') }}: {{ formatFileSize(spriteSize) }}</p>
         </div>
       </div>
     </div>
 
     <div class="css-preview" v-if="cssContent">
-      <h4>CSS 样式预览</h4>
+      <h4>{{ $t('tools.iconSpriter.ui.cssPreview') }}</h4>
       <div class="code-container">
         <pre><code>{{ cssContent }}</code></pre>
-        <button @click="copyCss" class="copy-btn">复制 CSS</button>
+        <button @click="copyCss" class="copy-btn">{{ $t('tools.iconSpriter.ui.copyCss') }}</button>
       </div>
     </div>
 
     <div class="usage-guide">
-      <h4>💡 使用指南</h4>
+      <h4>💡 {{ $t('tools.iconSpriter.ui.guideTitle') }}</h4>
       <div class="guide-content">
         <div class="guide-section">
-          <h5>1. 上传图标</h5>
-          <p>选择或拖拽多个 SVG 图标文件到上传区域</p>
+          <h5>{{ $t('tools.iconSpriter.ui.guideStep1') }}</h5>
+          <p>{{ $t('tools.iconSpriter.ui.guideStep1Desc') }}</p>
         </div>
         <div class="guide-section">
-          <h5>2. 配置设置</h5>
-          <p>选择布局方式、图标尺寸和间距等参数</p>
+          <h5>{{ $t('tools.iconSpriter.ui.guideStep2') }}</h5>
+          <p>{{ $t('tools.iconSpriter.ui.guideStep2Desc') }}</p>
         </div>
         <div class="guide-section">
-          <h5>3. 生成雪碧图</h5>
-          <p>点击生成按钮创建 SVG 雪碧图和 CSS 文件</p>
+          <h5>{{ $t('tools.iconSpriter.ui.guideStep3') }}</h5>
+          <p>{{ $t('tools.iconSpriter.ui.guideStep3Desc') }}</p>
         </div>
         <div class="guide-section">
-          <h5>4. 下载使用</h5>
-          <p>下载生成的文件并在项目中引用</p>
+          <h5>{{ $t('tools.iconSpriter.ui.guideStep4') }}</h5>
+          <p>{{ $t('tools.iconSpriter.ui.guideStep4Desc') }}</p>
         </div>
       </div>
     </div>
@@ -278,8 +278,8 @@ export default {
         await this.createSpriteContent()
         this.spriteGenerated = true
       } catch (error) {
-        console.error('生成雪碧图失败:', error)
-        this.$message.success('生成失败')
+        console.error(this.$t('tools.iconSpriter.ui.generateFailed'), error)
+        this.$message.success(this.$t('tools.iconSpriter.ui.generateError'))
       } finally {
         this.processing = false
       }
@@ -466,14 +466,14 @@ export default {
           document.body.removeChild(a)
           URL.revokeObjectURL(url)
         } catch (error) {
-          this.$message.success('下载失败')
+          this.$message.success(this.$t('tools.iconSpriter.ui.downloadFailed'))
         }
       }
     },
 
     copyCss() {
       navigator.clipboard.writeText(this.cssContent).then(() => {
-        this.$message.success('CSS 已复制到剪贴板')
+          this.$message.success(this.$t('tools.iconSpriter.ui.cssCopied'))
       })
     },
 

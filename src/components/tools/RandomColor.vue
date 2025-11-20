@@ -1,14 +1,14 @@
 <template>
   <div class="random-color-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-palette"></i> 随机颜色生成器</h3>
-      <p>生成随机颜色，支持多种格式和调色方案</p>
+      <h3><i class="fas fa-palette"></i> {{ $t('tools.randomColor.ui.title') }}</h3>
+      <p>{{ $t('tools.randomColor.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
       <div class="generation-controls">
         <div class="control-group">
-          <label for="colorSpace">颜色空间</label>
+          <label for="colorSpace">{{ $t('tools.randomColor.ui.colorSpace') }}</label>
           <select id="colorSpace" v-model="colorSpace">
             <option value="hex">HEX</option>
             <option value="rgb">RGB</option>
@@ -18,58 +18,58 @@
         </div>
         
         <div class="control-group">
-          <label for="scheme">配色方案</label>
+          <label for="scheme">{{ $t('tools.randomColor.ui.scheme') }}</label>
           <select id="scheme" v-model="scheme">
-            <option value="random">完全随机</option>
-            <option value="warm">暖色调</option>
-            <option value="cool">冷色调</option>
-            <option value="pastel">柔和色调</option>
-            <option value="vibrant">鲜艳色调</option>
-            <option value="monochrome">单色调</option>
-            <option value="analogous">相似色</option>
-            <option value="complementary">互补色</option>
-            <option value="triadic">三色调和</option>
+            <option value="random">{{ $t('tools.randomColor.ui.schemeRandom') }}</option>
+            <option value="warm">{{ $t('tools.randomColor.ui.schemeWarm') }}</option>
+            <option value="cool">{{ $t('tools.randomColor.ui.schemeCool') }}</option>
+            <option value="pastel">{{ $t('tools.randomColor.ui.schemePastel') }}</option>
+            <option value="vibrant">{{ $t('tools.randomColor.ui.schemeVibrant') }}</option>
+            <option value="monochrome">{{ $t('tools.randomColor.ui.schemeMonochrome') }}</option>
+            <option value="analogous">{{ $t('tools.randomColor.ui.schemeAnalogous') }}</option>
+            <option value="complementary">{{ $t('tools.randomColor.ui.schemeComplementary') }}</option>
+            <option value="triadic">{{ $t('tools.randomColor.ui.schemeTriadic') }}</option>
           </select>
         </div>
         
         <div class="control-group">
-          <label for="count">生成数量</label>
+          <label for="count">{{ $t('tools.randomColor.ui.count') }}</label>
           <input type="number" id="count" v-model.number="count" min="1" max="50" />
         </div>
         
         <div class="control-group">
-          <label for="includeNames">包含颜色名称</label>
+          <label for="includeNames">{{ $t('tools.randomColor.ui.includeNames') }}</label>
           <input type="checkbox" id="includeNames" v-model="includeNames" />
         </div>
       </div>
 
       <div class="actions">
         <button @click="generateColors" class="btn-primary">
-          <i class="fas fa-palette"></i> 生成颜色
+          <i class="fas fa-palette"></i> {{ $t('tools.randomColor.ui.generateColors') }}
         </button>
         <button @click="exportColors" class="btn-secondary" :disabled="!colors.length">
-          <i class="fas fa-download"></i> 导出色板
+          <i class="fas fa-download"></i> {{ $t('tools.randomColor.ui.exportPalette') }}
         </button>
         <button @click="copyAllColors" class="btn-secondary" :disabled="!colors.length">
-          <i class="fas fa-copy"></i> 复制全部
+          <i class="fas fa-copy"></i> {{ $t('tools.randomColor.ui.copyAll') }}
         </button>
         <button @click="clearHistory" class="btn-secondary" :disabled="!favoriteColors.length">
-          <i class="fas fa-trash"></i> 清空收藏
+          <i class="fas fa-trash"></i> {{ $t('tools.randomColor.ui.clearFavorites') }}
         </button>
       </div>
 
       <div class="colors-display" v-if="colors.length">
-        <h4>生成的颜色 ({{ colors.length }})</h4>
+        <h4>{{ $t('tools.randomColor.ui.generatedColors') }} ({{ colors.length }})</h4>
         <div class="colors-grid">
           <div v-for="(color, index) in colors" :key="index" class="color-card">
             <div class="color-preview" :style="{ backgroundColor: color.hex }">
               <div class="color-overlay">
-                <button @click="copyColor(color)" class="copy-btn" title="复制颜色值">
+                <button @click="copyColor(color)" class="copy-btn" :title="$t('tools.randomColor.ui.copyColorValue')">
                   <i class="fas fa-copy"></i>
                 </button>
                 <button @click="addToFavorites(color)" class="favorite-btn" 
                         :class="{ active: isFavorite(color) }"
-                        :title="isFavorite(color) ? '取消收藏' : '添加收藏'">
+                        :title="isFavorite(color) ? $t('tools.randomColor.ui.removeFromFavorites') : $t('tools.randomColor.ui.addToFavorites')">
                   <i class="fas fa-heart"></i>
                 </button>
               </div>
@@ -92,7 +92,7 @@
               </div>
               
               <div v-if="includeNames && color.name" class="color-name">
-                <strong>名称:</strong> {{ color.name }}
+                <strong>{{ $t('tools.randomColor.ui.name') }}</strong> {{ color.name }}
               </div>
               
               <div class="color-meta">
@@ -107,7 +107,7 @@
       </div>
 
       <div class="favorites-section" v-if="favoriteColors.length">
-        <h4>收藏的颜色 ({{ favoriteColors.length }})</h4>
+        <h4>{{ $t('tools.randomColor.ui.favoriteColors') }} ({{ favoriteColors.length }})</h4>
         <div class="favorites-grid">
           <div v-for="(color, index) in favoriteColors" :key="index" class="favorite-color">
             <div class="favorite-preview" :style="{ backgroundColor: color.hex }"></div>
@@ -115,7 +115,7 @@
               <div class="favorite-hex">{{ color.hex }}</div>
               <div class="favorite-scheme">{{ getSchemeText(color.scheme) }}</div>
             </div>
-            <button @click="removeFromFavorites(index)" class="remove-btn" title="移除">
+            <button @click="removeFromFavorites(index)" class="remove-btn" :title="$t('tools.randomColor.ui.remove')">
               <i class="fas fa-times"></i>
             </button>
           </div>
@@ -126,12 +126,14 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import messageService from '../../utils/message.js'
 
 export default {
   name: 'RandomColor',
   setup() {
-    const instance = getCurrentInstance()
+    const { t } = useI18n()
     const colorSpace = ref('hex')
     const scheme = ref('random')
     const count = ref(6)
@@ -329,7 +331,7 @@ export default {
           }, 150)
         }
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.randomColor.ui.copyFailed') + ':', error)
       }
     }
 
@@ -341,9 +343,9 @@ export default {
       
       try {
         await navigator.clipboard.writeText(colorList)
-        instance.proxy.$message.success('所有颜色已复制到剪贴板！')
+        messageService.success(t('common.copied'))
       } catch (error) {
-        console.error('复制失败:', error)
+        console.error(t('tools.randomColor.ui.copyFailed') + ':', error)
       }
     }
 
@@ -385,7 +387,7 @@ export default {
     }
 
     const clearHistory = async () => {
-      if (await instance.proxy.$message.confirm('确定要清空所有收藏的颜色吗？')) {
+      if (await messageService.confirm(t('common.confirm'))) {
         favoriteColors.value = []
       }
     }
@@ -397,22 +399,22 @@ export default {
     }
 
     const getBrightnessText = (brightness) => {
-      if (brightness < 0.3) return '深色'
-      if (brightness > 0.7) return '浅色'
-      return '中等'
+      if (brightness < 0.3) return t('tools.randomColor.ui.brightnessDark')
+      if (brightness > 0.7) return t('tools.randomColor.ui.brightnessLight')
+      return t('tools.randomColor.ui.brightnessMedium')
     }
 
     const getSchemeText = (schemeValue) => {
       const schemeMap = {
-        random: '随机',
-        warm: '暖色调',
-        cool: '冷色调',
-        pastel: '柔和色调',
-        vibrant: '鲜艳色调',
-        monochrome: '单色调',
-        analogous: '相似色',
-        complementary: '互补色',
-        triadic: '三色调和'
+        random: t('tools.randomColor.ui.schemeRandom'),
+        warm: t('tools.randomColor.ui.schemeWarm'),
+        cool: t('tools.randomColor.ui.schemeCool'),
+        pastel: t('tools.randomColor.ui.schemePastel'),
+        vibrant: t('tools.randomColor.ui.schemeVibrant'),
+        monochrome: t('tools.randomColor.ui.schemeMonochrome'),
+        analogous: t('tools.randomColor.ui.schemeAnalogous'),
+        complementary: t('tools.randomColor.ui.schemeComplementary'),
+        triadic: t('tools.randomColor.ui.schemeTriadic')
       }
       return schemeMap[schemeValue] || schemeValue
     }

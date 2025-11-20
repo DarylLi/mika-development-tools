@@ -1,8 +1,8 @@
 <template>
   <div class="regex-cheatsheet-tool">
     <div class="tool-header">
-      <h3><i class="fas fa-search"></i> 正则表达式速查表</h3>
-      <p>常用正则表达式模式和语法参考</p>
+      <h3><i class="fas fa-search"></i> {{ $t('tools.regexCheatsheet.ui.title') }}</h3>
+      <p>{{ $t('tools.regexCheatsheet.ui.description') }}</p>
     </div>
 
     <div class="tool-content">
@@ -12,7 +12,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="搜索正则表达式..."
+            :placeholder="$t('tools.regexCheatsheet.ui.searchPlaceholder')"
             class="search-input"
           />
         </div>
@@ -39,7 +39,7 @@
         >
           <div class="regex-header">
             <h4>{{ regex.name }}</h4>
-            <button @click="copyRegex(regex.pattern)" class="copy-btn" title="复制正则表达式">
+            <button @click="copyRegex(regex.pattern)" class="copy-btn" :title="$t('tools.regexCheatsheet.ui.copyRegex')">
               <i class="fas fa-copy"></i>
             </button>
           </div>
@@ -48,7 +48,7 @@
           </div>
           <div class="regex-description">{{ regex.description }}</div>
           <div v-if="regex.examples" class="regex-examples">
-            <h5>示例:</h5>
+            <h5>{{ $t('tools.regexCheatsheet.ui.examples') }}</h5>
             <div class="examples-list">
               <span
                 v-for="example in regex.examples"
@@ -67,52 +67,57 @@
 
 <script>
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'RegexCheatsheet',
   setup() {
+    const { t } = useI18n()
     const searchQuery = ref('')
     const activeCategory = ref('all')
 
-    const categories = [
-      { id: 'all', name: '全部', icon: 'fas fa-list' },
-      { id: 'basic', name: '基础语法', icon: 'fas fa-code' },
-      { id: 'validation', name: '验证', icon: 'fas fa-check-circle' },
-      { id: 'extraction', name: '提取', icon: 'fas fa-extract' },
-      { id: 'replacement', name: '替换', icon: 'fas fa-edit' }
-    ]
-
-    const regexes = ref([
-      // 基础语法
-      { id: 1, category: 'basic', name: '任意字符', pattern: '.', description: '匹配除换行符外的任意字符', examples: ['a', '1', '@'] },
-      { id: 2, category: 'basic', name: '数字', pattern: '\\d', description: '匹配任意数字字符 [0-9]', examples: ['0', '5', '9'] },
-      { id: 3, category: 'basic', name: '非数字', pattern: '\\D', description: '匹配任意非数字字符', examples: ['a', '@', ' '] },
-      { id: 4, category: 'basic', name: '字母数字', pattern: '\\w', description: '匹配字母、数字、下划线 [a-zA-Z0-9_]', examples: ['a', '1', '_'] },
-      { id: 5, category: 'basic', name: '非字母数字', pattern: '\\W', description: '匹配非字母数字字符', examples: ['@', '#', ' '] },
-      { id: 6, category: 'basic', name: '空白字符', pattern: '\\s', description: '匹配任意空白字符', examples: [' ', '\\t', '\\n'] },
-      { id: 7, category: 'basic', name: '非空白字符', pattern: '\\S', description: '匹配任意非空白字符', examples: ['a', '1', '@'] },
-      { id: 8, category: 'basic', name: '行首', pattern: '^', description: '匹配行的开始', examples: ['^hello'] },
-      { id: 9, category: 'basic', name: '行尾', pattern: '$', description: '匹配行的结束', examples: ['world$'] },
-      
-      // 验证
-      { id: 10, category: 'validation', name: '邮箱地址', pattern: '^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$', description: '验证邮箱地址格式', examples: ['user@example.com', 'test.email@domain.org'] },
-      { id: 11, category: 'validation', name: '手机号码', pattern: '^1[3-9]\\d{9}$', description: '验证中国大陆手机号', examples: ['13812345678', '18888888888'] },
-      { id: 12, category: 'validation', name: 'URL地址', pattern: '^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$', description: '验证URL地址', examples: ['http://example.com', 'https://www.google.com'] },
-      { id: 13, category: 'validation', name: 'IP地址', pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$', description: '验证IPv4地址', examples: ['192.168.1.1', '8.8.8.8'] },
-      { id: 14, category: 'validation', name: '密码强度', pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$', description: '至少8位，包含大小写字母、数字和特殊字符', examples: ['MyPass123!', 'SecuRe#456'] },
-      { id: 15, category: 'validation', name: '身份证号', pattern: '^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$', description: '验证18位身份证号码', examples: ['110101199003074567'] },
-      
-      // 提取
-      { id: 16, category: 'extraction', name: '提取域名', pattern: 'https?:\\/\\/(www\\.)?([^\\s\\/]+)', description: '从URL中提取域名', examples: ['example.com', 'google.com'] },
-      { id: 17, category: 'extraction', name: '提取文件扩展名', pattern: '\\.([a-zA-Z0-9]+)$', description: '提取文件扩展名', examples: ['.jpg', '.pdf', '.txt'] },
-      { id: 18, category: 'extraction', name: '提取HTML标签', pattern: '<([a-z]+)[^>]*>', description: '提取HTML标签名', examples: ['<div>', '<span class="test">'] },
-      { id: 19, category: 'extraction', name: '提取引号内容', pattern: '"([^"]*)"', description: '提取双引号内的内容', examples: ['"Hello World"', '"test"'] },
-      
-      // 替换
-      { id: 20, category: 'replacement', name: '去除多余空格', pattern: '\\s+', description: '匹配连续空格用于替换', examples: ['   ', '\\t\\t'] },
-      { id: 21, category: 'replacement', name: '去除首尾空格', pattern: '^\\s+|\\s+$', description: '匹配行首行尾空格', examples: ['  text  '] },
-      { id: 22, category: 'replacement', name: '转换驼峰命名', pattern: '[-_]([a-z])', description: '匹配连字符或下划线后的字母', examples: ['hello-world', 'test_case'] }
+    const categories = computed(() => [
+      { id: 'all', name: t('tools.regexCheatsheet.ui.categoryAll'), icon: 'fas fa-list' },
+      { id: 'basic', name: t('tools.regexCheatsheet.ui.categoryBasic'), icon: 'fas fa-code' },
+      { id: 'validation', name: t('tools.regexCheatsheet.ui.categoryValidation'), icon: 'fas fa-check-circle' },
+      { id: 'extraction', name: t('tools.regexCheatsheet.ui.categoryExtraction'), icon: 'fas fa-extract' },
+      { id: 'replacement', name: t('tools.regexCheatsheet.ui.categoryReplacement'), icon: 'fas fa-edit' }
     ])
+
+    const regexes = computed(() => {
+      // 使用 t() 函数直接获取每个字符串值，而不是获取整个对象
+      return [
+        // 基础语法
+        { id: 1, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic1.name'), pattern: '.', description: t('tools.regexCheatsheet.ui.regexes.basic1.description'), examples: ['a', '1', '@'] },
+        { id: 2, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic2.name'), pattern: '\\d', description: t('tools.regexCheatsheet.ui.regexes.basic2.description'), examples: ['0', '5', '9'] },
+        { id: 3, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic3.name'), pattern: '\\D', description: t('tools.regexCheatsheet.ui.regexes.basic3.description'), examples: ['a', '@', ' '] },
+        { id: 4, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic4.name'), pattern: '\\w', description: t('tools.regexCheatsheet.ui.regexes.basic4.description'), examples: ['a', '1', '_'] },
+        { id: 5, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic5.name'), pattern: '\\W', description: t('tools.regexCheatsheet.ui.regexes.basic5.description'), examples: ['@', '#', ' '] },
+        { id: 6, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic6.name'), pattern: '\\s', description: t('tools.regexCheatsheet.ui.regexes.basic6.description'), examples: [' ', '\\t', '\\n'] },
+        { id: 7, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic7.name'), pattern: '\\S', description: t('tools.regexCheatsheet.ui.regexes.basic7.description'), examples: ['a', '1', '@'] },
+        { id: 8, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic8.name'), pattern: '^', description: t('tools.regexCheatsheet.ui.regexes.basic8.description'), examples: ['^hello'] },
+        { id: 9, category: 'basic', name: t('tools.regexCheatsheet.ui.regexes.basic9.name'), pattern: '$', description: t('tools.regexCheatsheet.ui.regexes.basic9.description'), examples: ['world$'] },
+        
+        // 验证
+        { id: 10, category: 'validation', name: t('tools.regexCheatsheet.ui.regexes.validation10.name'), pattern: '^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$', description: t('tools.regexCheatsheet.ui.regexes.validation10.description'), examples: ['user@example.com', 'test.email@domain.org'] },
+        { id: 11, category: 'validation', name: t('tools.regexCheatsheet.ui.regexes.validation11.name'), pattern: '^1[3-9]\\d{9}$', description: t('tools.regexCheatsheet.ui.regexes.validation11.description'), examples: ['13812345678', '18888888888'] },
+        { id: 12, category: 'validation', name: t('tools.regexCheatsheet.ui.regexes.validation12.name'), pattern: '^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$', description: t('tools.regexCheatsheet.ui.regexes.validation12.description'), examples: ['http://example.com', 'https://www.google.com'] },
+        { id: 13, category: 'validation', name: t('tools.regexCheatsheet.ui.regexes.validation13.name'), pattern: '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$', description: t('tools.regexCheatsheet.ui.regexes.validation13.description'), examples: ['192.168.1.1', '8.8.8.8'] },
+        { id: 14, category: 'validation', name: t('tools.regexCheatsheet.ui.regexes.validation14.name'), pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$', description: t('tools.regexCheatsheet.ui.regexes.validation14.description'), examples: ['MyPass123!', 'SecuRe#456'] },
+        { id: 15, category: 'validation', name: t('tools.regexCheatsheet.ui.regexes.validation15.name'), pattern: '^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$', description: t('tools.regexCheatsheet.ui.regexes.validation15.description'), examples: ['110101199003074567'] },
+        
+        // 提取
+        { id: 16, category: 'extraction', name: t('tools.regexCheatsheet.ui.regexes.extraction16.name'), pattern: 'https?:\\/\\/(www\\.)?([^\\s\\/]+)', description: t('tools.regexCheatsheet.ui.regexes.extraction16.description'), examples: ['example.com', 'google.com'] },
+        { id: 17, category: 'extraction', name: t('tools.regexCheatsheet.ui.regexes.extraction17.name'), pattern: '\\.([a-zA-Z0-9]+)$', description: t('tools.regexCheatsheet.ui.regexes.extraction17.description'), examples: ['.jpg', '.pdf', '.txt'] },
+        { id: 18, category: 'extraction', name: t('tools.regexCheatsheet.ui.regexes.extraction18.name'), pattern: '<([a-z]+)[^>]*>', description: t('tools.regexCheatsheet.ui.regexes.extraction18.description'), examples: ['<div>', '<span class="test">'] },
+        { id: 19, category: 'extraction', name: t('tools.regexCheatsheet.ui.regexes.extraction19.name'), pattern: '"([^"]*)"', description: t('tools.regexCheatsheet.ui.regexes.extraction19.description'), examples: ['"Hello World"', '"test"'] },
+        
+        // 替换
+        { id: 20, category: 'replacement', name: t('tools.regexCheatsheet.ui.regexes.replacement20.name'), pattern: '\\s+', description: t('tools.regexCheatsheet.ui.regexes.replacement20.description'), examples: ['   ', '\\t\\t'] },
+        { id: 21, category: 'replacement', name: t('tools.regexCheatsheet.ui.regexes.replacement21.name'), pattern: '^\\s+|\\s+$', description: t('tools.regexCheatsheet.ui.regexes.replacement21.description'), examples: ['  text  '] },
+        { id: 22, category: 'replacement', name: t('tools.regexCheatsheet.ui.regexes.replacement22.name'), pattern: '[-_]([a-z])', description: t('tools.regexCheatsheet.ui.regexes.replacement22.description'), examples: ['hello-world', 'test_case'] }
+      ]
+    })
 
     const filteredRegexes = computed(() => {
       let filtered = regexes.value
@@ -139,7 +144,7 @@ export default {
       try {
         await navigator.clipboard.writeText(pattern)
       } catch (err) {
-        console.error('复制失败:', err)
+        console.error(t('tools.regexCheatsheet.ui.copyFailed') + ':', err)
       }
     }
 

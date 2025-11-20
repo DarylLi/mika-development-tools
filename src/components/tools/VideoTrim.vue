@@ -1,8 +1,8 @@
 <template>
   <div class="video-trim-container">
     <div class="tool-header">
-      <h3>视频剪辑工具</h3>
-      <p>浏览器端剪辑视频，支持时间范围选择</p>
+      <h3>{{ $t('tools.videoTrim.ui.title') }}</h3>
+      <p>{{ $t('tools.videoTrim.ui.description') }}</p>
     </div>
 
     <div class="upload-section" v-if="!videoData">
@@ -23,8 +23,8 @@
         />
         <div class="upload-content">
           <div class="upload-icon">🎬</div>
-          <p>点击选择或拖拽视频文件</p>
-          <small>支持 MP4、WebM、MOV 等格式</small>
+          <p>{{ $t('tools.videoTrim.ui.uploadText') }}</p>
+          <small>{{ $t('tools.videoTrim.ui.uploadFormats') }}</small>
         </div>
       </div>
     </div>
@@ -43,7 +43,7 @@
         <div class="timeline-section">
           <div class="timeline-controls">
             <div class="time-range">
-              <label>开始时间:</label>
+              <label>{{ $t('tools.videoTrim.ui.startTime') }}:</label>
               <input 
                 type="range" 
                 class="modern-slider time-slider"
@@ -57,7 +57,7 @@
             </div>
             
             <div class="time-range">
-              <label>结束时间:</label>
+              <label>{{ $t('tools.videoTrim.ui.endTime') }}:</label>
               <input 
                 type="range" 
                 class="modern-slider time-slider"
@@ -72,26 +72,26 @@
           </div>
 
           <div class="trim-info">
-            <p>裁剪长度: {{ formatTime(endTime - startTime) }}</p>
-            <p>原始长度: {{ formatTime(duration) }}</p>
+            <p>{{ $t('tools.videoTrim.ui.trimLength') }}: {{ formatTime(endTime - startTime) }}</p>
+            <p>{{ $t('tools.videoTrim.ui.originalLength') }}: {{ formatTime(duration) }}</p>
           </div>
         </div>
 
         <div class="preview-controls">
           <button @click="previewTrim" class="preview-btn">
-            预览裁剪片段
+            {{ $t('tools.videoTrim.ui.previewTrim') }}
           </button>
           <button @click="resetSelection" class="reset-btn">
-            重置选择
+            {{ $t('tools.videoTrim.ui.resetSelection') }}
           </button>
         </div>
       </div>
 
       <div class="output-settings">
-        <h4>输出设置</h4>
+        <h4>{{ $t('tools.videoTrim.ui.outputSettings') }}</h4>
         
         <div class="setting-group">
-          <label>输出格式:</label>
+          <label>{{ $t('tools.videoTrim.ui.outputFormat') }}:</label>
           <select v-model="outputFormat" class="format-select">
             <option value="mp4">MP4</option>
             <option value="webm">WebM</option>
@@ -100,40 +100,40 @@
         </div>
 
         <div class="setting-group">
-          <label>视频质量:</label>
+          <label>{{ $t('tools.videoTrim.ui.videoQuality') }}:</label>
           <select v-model="quality" class="quality-select">
-            <option value="high">高质量</option>
-            <option value="medium">中等质量</option>
-            <option value="low">低质量</option>
+            <option value="high">{{ $t('tools.videoTrim.ui.qualityHigh') }}</option>
+            <option value="medium">{{ $t('tools.videoTrim.ui.qualityMedium') }}</option>
+            <option value="low">{{ $t('tools.videoTrim.ui.qualityLow') }}</option>
           </select>
         </div>
 
         <div class="action-buttons">
           <button @click="trimVideo" class="trim-btn" :disabled="processing || !canTrim">
-            {{ processing ? '处理中...' : '开始剪辑' }}
+            {{ processing ? $t('tools.videoTrim.ui.processing') : $t('tools.videoTrim.ui.startTrim') }}
           </button>
           <button @click="downloadTrimmed" class="download-btn" v-if="trimmedVideo">
-            下载剪辑视频
+            {{ $t('tools.videoTrim.ui.downloadTrimmed') }}
           </button>
-          <button @click="reset" class="reset-btn">重新选择</button>
+          <button @click="reset" class="reset-btn">{{ $t('tools.videoTrim.ui.reselect') }}</button>
         </div>
 
         <div class="progress-section" v-if="processing">
           <div class="progress-bar">
             <div class="progress-fill" :style="{ width: progress + '%' }"></div>
           </div>
-          <p>处理进度: {{ Math.round(progress) }}%</p>
+          <p>{{ $t('tools.videoTrim.ui.progress') }}: {{ Math.round(progress) }}%</p>
         </div>
       </div>
     </div>
 
     <div class="warning-section">
-      <h4>⚠️ 注意事项</h4>
+      <h4>⚠️ {{ $t('tools.videoTrim.ui.warnings') }}</h4>
       <ul>
-        <li>大文件处理可能需要较长时间</li>
-        <li>建议文件大小不超过 100MB</li>
-        <li>处理过程中请勿关闭页面</li>
-        <li>所有处理都在本地完成，不会上传到服务器</li>
+        <li>{{ $t('tools.videoTrim.ui.largeFileProcessing') }}</li>
+        <li>{{ $t('tools.videoTrim.ui.suggestFileSizeLimit') }}</li>
+        <li>{{ $t('tools.videoTrim.ui.dontClosePage') }}</li>
+        <li>{{ $t('tools.videoTrim.ui.localProcessing') }}</li>
       </ul>
     </div>
   </div>
@@ -182,7 +182,7 @@ export default {
 
     loadVideo(file) {
       if (file.size > 100 * 1024 * 1024) { // 100MB
-        this.$message.success('文件太大，建议选择小于 100MB 的文件')
+        this.$message.success(this.$t('tools.videoTrim.ui.fileTooLarge'))
         return
       }
 
@@ -260,8 +260,8 @@ export default {
         this.progress = 100
         
       } catch (error) {
-        console.error('视频处理失败:', error)
-        this.$message.success('视频处理失败')
+        console.error(this.$t('tools.videoTrim.ui.videoProcessFailed'), error)
+        this.$message.success(this.$t('tools.videoTrim.ui.videoProcessFailed'))
       } finally {
         this.processing = false
       }

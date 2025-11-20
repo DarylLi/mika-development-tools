@@ -1,26 +1,26 @@
 <template>
   <div class="cron-parser-tool">
-    <h2>Cron 表达式解析器</h2>
-    <p>解析、验证和预测 Cron 表达式的执行时间</p>
+    <h2>{{ $t('tools.cronParser.ui.title') }}</h2>
+    <p>{{ $t('tools.cronParser.ui.description') }}</p>
 
     <!-- Cron表达式输入 -->
     <div class="input-section">
       <div class="form-group">
-        <label>Cron 表达式</label>
+        <label>{{ $t('tools.cronParser.ui.cronExpression') }}</label>
         <div class="input-with-validation">
           <input 
             type="text" 
             v-model="cronExpression" 
-            placeholder="例如: 0 0 12 * * ?"
+            :placeholder="$t('tools.cronParser.ui.cronExpressionPlaceholder')"
             @input="parseCron"
             :class="{ 'error': !isValid && cronExpression }"
           >
           <div class="validation-status">
             <span v-if="isValid" class="valid">
-              <i class="fas fa-check-circle"></i> 有效
+              <i class="fas fa-check-circle"></i> {{ $t('tools.cronParser.ui.valid') }}
             </span>
             <span v-else-if="cronExpression" class="invalid">
-              <i class="fas fa-times-circle"></i> 无效
+              <i class="fas fa-times-circle"></i> {{ $t('tools.cronParser.ui.invalid') }}
             </span>
           </div>
         </div>
@@ -31,7 +31,7 @@
 
       <!-- 预设Cron表达式 -->
       <div class="presets-section">
-        <h3>常用 Cron 表达式</h3>
+        <h3>{{ $t('tools.cronParser.ui.commonCronExpressions') }}</h3>
         <div class="presets-grid">
           <div 
             v-for="preset in cronPresets" 
@@ -48,45 +48,45 @@
 
     <!-- 解析结果 -->
     <div class="results-section" v-if="isValid && parsedCron">
-      <h3>解析结果</h3>
+      <h3>{{ $t('tools.cronParser.ui.parseResult') }}</h3>
       
       <!-- Cron字段说明 -->
       <div class="cron-breakdown">
         <div class="breakdown-item">
-          <label>秒</label>
+          <label>{{ $t('tools.cronParser.ui.seconds') }}</label>
           <div class="breakdown-value">{{ parsedCron.seconds }}</div>
         </div>
         <div class="breakdown-item">
-          <label>分钟</label>
+          <label>{{ $t('tools.cronParser.ui.minutes') }}</label>
           <div class="breakdown-value">{{ parsedCron.minutes }}</div>
         </div>
         <div class="breakdown-item">
-          <label>小时</label>
+          <label>{{ $t('tools.cronParser.ui.hours') }}</label>
           <div class="breakdown-value">{{ parsedCron.hours }}</div>
         </div>
         <div class="breakdown-item">
-          <label>日期</label>
+          <label>{{ $t('tools.cronParser.ui.dayOfMonth') }}</label>
           <div class="breakdown-value">{{ parsedCron.dayOfMonth }}</div>
         </div>
         <div class="breakdown-item">
-          <label>月份</label>
+          <label>{{ $t('tools.cronParser.ui.month') }}</label>
           <div class="breakdown-value">{{ parsedCron.month }}</div>
         </div>
         <div class="breakdown-item">
-          <label>星期</label>
+          <label>{{ $t('tools.cronParser.ui.dayOfWeek') }}</label>
           <div class="breakdown-value">{{ parsedCron.dayOfWeek }}</div>
         </div>
       </div>
 
       <!-- 人类可读描述 -->
       <div class="description-section">
-        <h4>执行描述</h4>
+        <h4>{{ $t('tools.cronParser.ui.executionDescription') }}</h4>
         <div class="description-text">{{ cronDescription }}</div>
       </div>
 
       <!-- 下次执行时间 -->
       <div class="next-runs-section">
-        <h4>接下来的执行时间</h4>
+        <h4>{{ $t('tools.cronParser.ui.nextExecutionTimes') }}</h4>
         <div class="next-runs-list">
           <div 
             v-for="(nextRun, index) in nextRuns" 
@@ -102,53 +102,53 @@
 
     <!-- Cron格式说明 -->
     <div class="help-section">
-      <h3>Cron 表达式格式</h3>
+      <h3>{{ $t('tools.cronParser.ui.cronFormat') }}</h3>
       <div class="help-content">
         <div class="format-explanation">
           <div class="format-pattern">
-            <span class="field">秒</span>
-            <span class="field">分</span>
-            <span class="field">时</span>
-            <span class="field">日</span>
-            <span class="field">月</span>
-            <span class="field">周</span>
+            <span class="field">{{ $t('tools.cronParser.ui.seconds') }}</span>
+            <span class="field">{{ $t('tools.cronParser.ui.minutes') }}</span>
+            <span class="field">{{ $t('tools.cronParser.ui.hours') }}</span>
+            <span class="field">{{ $t('tools.cronParser.ui.dayOfMonth') }}</span>
+            <span class="field">{{ $t('tools.cronParser.ui.month') }}</span>
+            <span class="field">{{ $t('tools.cronParser.ui.dayOfWeek') }}</span>
           </div>
         </div>
         
         <div class="special-chars">
-          <h4>特殊字符说明</h4>
+          <h4>{{ $t('tools.cronParser.ui.specialChars') }}</h4>
           <div class="chars-grid">
             <div class="char-item">
               <span class="char">*</span>
-              <span class="desc">任意值</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.anyValue') }}</span>
             </div>
             <div class="char-item">
               <span class="char">?</span>
-              <span class="desc">不指定值</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.notSpecified') }}</span>
             </div>
             <div class="char-item">
               <span class="char">-</span>
-              <span class="desc">范围</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.range') }}</span>
             </div>
             <div class="char-item">
               <span class="char">,</span>
-              <span class="desc">列举</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.list') }}</span>
             </div>
             <div class="char-item">
               <span class="char">/</span>
-              <span class="desc">步长</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.step') }}</span>
             </div>
             <div class="char-item">
               <span class="char">L</span>
-              <span class="desc">最后</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.last') }}</span>
             </div>
             <div class="char-item">
               <span class="char">W</span>
-              <span class="desc">工作日</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.weekday') }}</span>
             </div>
             <div class="char-item">
               <span class="char">#</span>
-              <span class="desc">第几个</span>
+              <span class="desc">{{ $t('tools.cronParser.ui.nth') }}</span>
             </div>
           </div>
         </div>
@@ -173,16 +173,16 @@ export default {
   computed: {
     cronPresets() {
       return [
-        { expression: '0 0 0 * * ?', description: '每天午夜' },
-        { expression: '0 0 12 * * ?', description: '每天中午12点' },
-        { expression: '0 0 9-17 * * MON-FRI', description: '工作日9-17点每小时' },
-        { expression: '0 30 10 * * ?', description: '每天10:30' },
-        { expression: '0 0 0 1 * ?', description: '每月1号午夜' },
-        { expression: '0 0 0 * * MON', description: '每周一午夜' },
-        { expression: '0 */15 * * * ?', description: '每15分钟' },
-        { expression: '0 0 */2 * * ?', description: '每2小时' },
-        { expression: '0 0 0 1 1 ?', description: '每年1月1日' },
-        { expression: '0 0 8 * * MON-FRI', description: '工作日早8点' }
+        { expression: '0 0 0 * * ?', description: this.$t('tools.cronParser.ui.presetMidnight') },
+        { expression: '0 0 12 * * ?', description: this.$t('tools.cronParser.ui.presetNoon') },
+        { expression: '0 0 9-17 * * MON-FRI', description: this.$t('tools.cronParser.ui.presetWorkdayHours') },
+        { expression: '0 30 10 * * ?', description: this.$t('tools.cronParser.ui.presetDaily1030') },
+        { expression: '0 0 0 1 * ?', description: this.$t('tools.cronParser.ui.presetMonthly1st') },
+        { expression: '0 0 0 * * MON', description: this.$t('tools.cronParser.ui.presetMondayMidnight') },
+        { expression: '0 */15 * * * ?', description: this.$t('tools.cronParser.ui.presetEvery15Min') },
+        { expression: '0 0 */2 * * ?', description: this.$t('tools.cronParser.ui.presetEvery2Hours') },
+        { expression: '0 0 0 1 1 ?', description: this.$t('tools.cronParser.ui.presetNewYear') },
+        { expression: '0 0 8 * * MON-FRI', description: this.$t('tools.cronParser.ui.presetWorkday8am') }
       ]
     }
   },
@@ -197,7 +197,7 @@ export default {
         const parts = this.cronExpression.trim().split(/\s+/)
         
         if (parts.length !== 6) {
-          throw new Error('Cron表达式应包含6个字段（秒 分 时 日 月 周）')
+          throw new Error(this.$t('tools.cronParser.ui.errorShouldHave6Fields'))
         }
 
         this.parsedCron = {
@@ -224,8 +224,8 @@ export default {
 
     parseField(field, fieldType) {
       // 简化的字段解析逻辑
-      if (field === '*') return '任意值'
-      if (field === '?') return '不指定'
+      if (field === '*') return this.$t('tools.cronParser.ui.anyValue')
+      if (field === '?') return this.$t('tools.cronParser.ui.notSpecified')
       
       // 范围处理
       if (field.includes('-')) {
@@ -241,7 +241,7 @@ export default {
       // 步长处理
       if (field.includes('/')) {
         const [base, step] = field.split('/')
-        return `每${step}${this.getFieldUnit(fieldType)}`
+        return `${this.$t('tools.cronParser.ui.every')}${step}${this.getFieldUnit(fieldType)}`
       }
       
       // 具体值
@@ -257,26 +257,23 @@ export default {
 
     getFieldUnit(fieldType) {
       const units = {
-        seconds: '秒',
-        minutes: '分钟',
-        hours: '小时',
-        dayOfMonth: '天',
-        month: '月',
-        dayOfWeek: '周'
+        seconds: this.$t('tools.cronParser.ui.fieldUnitSeconds'),
+        minutes: this.$t('tools.cronParser.ui.fieldUnitMinutes'),
+        hours: this.$t('tools.cronParser.ui.fieldUnitHours'),
+        dayOfMonth: this.$t('tools.cronParser.ui.fieldUnitDays'),
+        month: this.$t('tools.cronParser.ui.fieldUnitMonths'),
+        dayOfWeek: this.$t('tools.cronParser.ui.fieldUnitWeeks')
       }
       return units[fieldType] || ''
     },
 
     getMonthName(month) {
-      const months = ['', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+      const months = this.$t('tools.cronParser.ui.monthNames')
       return months[parseInt(month)] || month
     },
 
     getDayName(day) {
-      const days = {
-        '0': '周日', '1': '周一', '2': '周二', '3': '周三', '4': '周四', '5': '周五', '6': '周六',
-        'SUN': '周日', 'MON': '周一', 'TUE': '周二', 'WED': '周三', 'THU': '周四', 'FRI': '周五', 'SAT': '周六'
-      }
+      const days = this.$t('tools.cronParser.ui.dayNames')
       return days[day.toUpperCase()] || day
     },
 
@@ -285,20 +282,20 @@ export default {
       const parts = this.cronExpression.trim().split(/\s+/)
       const [sec, min, hour, day, month, dow] = parts
       
-      let desc = '在'
+      let desc = this.$t('tools.cronParser.ui.descriptionAt')
       
       if (hour !== '*') {
-        desc += `${hour}时`
+        desc += `${hour}${this.$t('tools.cronParser.ui.descriptionHour')}`
       }
       if (min !== '*') {
-        desc += `${min}分`
+        desc += `${min}${this.$t('tools.cronParser.ui.descriptionMinute')}`
       }
       if (sec !== '*' && sec !== '0') {
-        desc += `${sec}秒`
+        desc += `${sec}${this.$t('tools.cronParser.ui.descriptionSecond')}`
       }
       
       if (day !== '*') {
-        desc += ` 每月${day}日`
+        desc += ` ${this.$t('tools.cronParser.ui.descriptionEveryMonth')}${day}${this.$t('tools.cronParser.ui.descriptionDay')}`
       }
       if (month !== '*') {
         desc += ` ${this.getMonthName(month)}`
@@ -307,7 +304,7 @@ export default {
         desc += ` ${this.getDayName(dow)}`
       }
       
-      desc += ' 执行'
+      desc += ` ${this.$t('tools.cronParser.ui.descriptionExecute')}`
       this.cronDescription = desc
     },
 
@@ -332,9 +329,9 @@ export default {
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       
       if (hours > 0) {
-        return `${hours}小时${minutes}分钟后`
+        return `${hours}${this.$t('tools.cronParser.ui.fieldUnitHours')}${minutes}${this.$t('tools.cronParser.ui.fieldUnitMinutes')}${this.$t('tools.cronParser.ui.minutesLater')}`
       } else {
-        return `${minutes}分钟后`
+        return `${minutes}${this.$t('tools.cronParser.ui.fieldUnitMinutes')}${this.$t('tools.cronParser.ui.minutesLater')}`
       }
     },
 
