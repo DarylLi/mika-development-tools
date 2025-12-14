@@ -179,8 +179,8 @@ export default {
         // 构建API URL
         // 如果没有输入IP，则查询当前IP
       const apiUrl = ip 
-        ? `https://ip-api.com/json/${ip}?fields=66842623`
-        : 'https://ip-api.com/json/?fields=66842623'
+        ? `https://franxxdaryl.site:1919/ipapi?ip=${ip}`
+        : 'https://franxxdaryl.site:1919/ipapi?ip='
       const response = await fetch(apiUrl)
        if (!response.ok) {
           throw new Error(t('tools.ipInfo.ui.invalidIPFormat'))
@@ -201,7 +201,7 @@ export default {
         isp,
         org,
         proxy,
-        asname} = data;
+        asname} = data.data;
       let rsltData = {
         ip:query,
         country,
