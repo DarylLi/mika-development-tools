@@ -6,10 +6,9 @@
     </button>
     
     <!-- 语言切换按钮 -->
-    <LanguageSwitcher class="language-switcher-btn" />
-
+    <LanguageSwitcher class="language-switcher-btn" @changeType="setCurrentLanguage" />
     <header class="hero-banner">
-      <div class="hero-content">
+      <div :class="['hero-content',currentLangType]">
         <div class="container">
           <div class="clockbase"></div>
           <div class="clockbase-design"></div>
@@ -479,7 +478,7 @@ export default {
 
     const currentTool = ref(null)
     const currentSubTool = ref(null)
-    
+    const currentLangType = ref(null)
     // 主题管理 - 默认深色主题
     const isDarkTheme = ref(localStorage.getItem('theme') !== 'light')
     
@@ -1179,7 +1178,9 @@ export default {
         ]
       }
     ])
-    
+    const setCurrentLanguage = (type) => {
+      currentLangType.value = type;
+    }
     const setCurrentTool = (toolId) => {
       currentTool.value = toolId
       currentSubTool.value = null
@@ -1284,6 +1285,8 @@ export default {
     }
     
     return {
+      setCurrentLanguage,
+      currentLangType,
       currentTool,
       currentSubTool,
       tools,
@@ -1354,6 +1357,15 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.hero-content.en-US h1{
+  font-size: 48px;
+}
+.hero-content.ja-JP h1{
+  font-size: 36px;
+}
+.hero-content.ko-KR h1{
+  font-size: 50px;
 }
 
 .hero-text {

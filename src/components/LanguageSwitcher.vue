@@ -34,10 +34,15 @@ import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'LanguageSwitcher',
-  setup() {
+  props: {
+    onChangeType: {
+      type: Function,
+      default: () => {}
+    }
+  },
+  setup(props,{emit}) {
     const { locale, t } = useI18n()
     const showMenu = ref(false)
-    
     const languages = [
       { code: 'zh-CN', name: '简体中文', flag: '🇨🇳' },
       { code: 'en-US', name: 'English', flag: '🇺🇸' },
@@ -52,6 +57,7 @@ export default {
     }
     
     const changeLanguage = (langCode) => {
+      emit('changeType', langCode)
       locale.value = langCode
       localStorage.setItem('locale', langCode)
       showMenu.value = false

@@ -39,10 +39,10 @@
               <span class="label">{{ $t('tools.ipInfo.ui.ipAddress') }}</span>
               <span class="value">{{ ipInfo.ip }}</span>
             </div>
-            <div class="info-item">
+            <!-- <div class="info-item">
               <span class="label">{{ $t('tools.ipInfo.ui.ipVersion') }}</span>
               <span class="value">{{ ipInfo.version }}</span>
-            </div>
+            </div> -->
             <div class="info-item">
               <span class="label">{{ $t('tools.ipInfo.ui.isp') }}</span>
               <span class="value">{{ ipInfo.isp || $t('tools.ipInfo.ui.unknown') }}</span>
@@ -81,24 +81,24 @@
                 {{ ipInfo.proxy ? $t('tools.ipInfo.ui.yes') : $t('tools.ipInfo.ui.no') }}
               </span>
             </div>
-            <div class="info-item">
+            <!-- <div class="info-item">
               <span class="label">{{ $t('tools.ipInfo.ui.isVPN') }}</span>
               <span class="value" :class="ipInfo.vpn ? 'warning' : 'safe'">
                 {{ ipInfo.vpn ? $t('tools.ipInfo.ui.yes') : $t('tools.ipInfo.ui.no') }}
               </span>
-            </div>
-            <div class="info-item">
+            </div> -->
+            <!-- <div class="info-item">
               <span class="label">{{ $t('tools.ipInfo.ui.isTor') }}</span>
               <span class="value" :class="ipInfo.tor ? 'danger' : 'safe'">
                 {{ ipInfo.tor ? $t('tools.ipInfo.ui.yes') : $t('tools.ipInfo.ui.no') }}
               </span>
-            </div>
-            <div class="info-item">
+            </div> -->
+            <!-- <div class="info-item">
               <span class="label">{{ $t('tools.ipInfo.ui.threatLevel') }}</span>
               <span class="value" :class="getThreatClass(ipInfo.threat)">
                 {{ getThreatLevel(ipInfo.threat) }}
               </span>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -156,14 +156,14 @@ export default {
     }
 
     async function queryIP() {
-      if (loading.value) return
+      if (loading.value && !isValidIP(ipAddress.value.trim())) return
 
       loading.value = true
       error.value = ''
       ipInfo.value = null
 
       try {
-        // 模拟 IP 查询 API
+        // 使用 ip-api.com 查询 API
         const result = await simulateIPLookup(ipAddress.value.trim())
         ipInfo.value = result
       } catch (err) {
@@ -173,91 +173,47 @@ export default {
       }
     }
 
-    // 模拟 IP 查询
+    // 使用 ip-api.com 查询 IP
     async function simulateIPLookup(ip) {
-      // 模拟网络延迟
-      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000))
-
-      // 如果没有提供 IP，模拟获取当前 IP
-      if (!ip) {
-        ip = '203.208.60.1' // 模拟当前 IP
+        
+        // 构建API URL
+        // 如果没有输入IP，则查询当前IP
+      const apiUrl = ip 
+        ? `https://ip-api.com/json/${ip}?fields=66842623`
+        : 'https://ip-api.com/json/?fields=66842623'
+      const response = await fetch(apiUrl)
+       if (!response.ok) {
+          throw new Error(t('tools.ipInfo.ui.invalidIPFormat'))
+      }
+      const data = await response.json();
+      const {
+        query,
+        status,
+        continent,
+        continentCode,
+        country,
+        countryCode,
+        region,
+        regionName,
+        city,
+        timezone,
+        zip,
+        isp,
+        org,
+        proxy,
+        asname} = data;
+      let rsltData = {
+        ip:query,
+        country,
+        region:regionName,
+        city,
+        timezone,
+        isp,
+        org,
+        proxy,
       }
 
-      // 验证 IP 格式
-      if (!isValidIP(ip)) {
-        throw new Error(t('tools.ipInfo.ui.invalidIPFormat'))
-      }
-
-      // 模拟返回数据
-      const mockData = {
-        '8.8.8.8': {
-          ip: '8.8.8.8',
-          version: 'IPv4',
-          country: '美国',
-          region: '加利福尼亚州',
-          city: '山景城',
-          timezone: 'America/Los_Angeles',
-          isp: 'Google LLC',
-          org: 'Google Public DNS',
-          proxy: false,
-          vpn: false,
-          tor: false,
-          threat: 0
-        },
-        '1.1.1.1': {
-          ip: '1.1.1.1',
-          version: 'IPv4',
-          country: '美国',
-          region: '加利福尼亚州',
-          city: '旧金山',
-          timezone: 'America/Los_Angeles',
-          isp: 'Cloudflare Inc',
-          org: 'Cloudflare Public DNS',
-          proxy: false,
-          vpn: false,
-          tor: false,
-          threat: 0
-        },
-        '114.114.114.114': {
-          ip: '114.114.114.114',
-          version: 'IPv4',
-          country: '中国',
-          region: '江苏省',
-          city: '南京',
-          timezone: 'Asia/Shanghai',
-          isp: '南京信风网络科技有限公司',
-          org: '114DNS',
-          proxy: false,
-          vpn: false,
-          tor: false,
-          threat: 0
-        }
-      }
-
-      // 如果有预设数据则返回，否则生成随机数据
-      if (mockData[ip]) {
-        return mockData[ip]
-      }
-
-      // 生成随机模拟数据
-      const countries = ['美国', '中国', '日本', '德国', '英国', '法国', '加拿大']
-      const cities = ['北京', '上海', '纽约', '洛杉矶', '伦敦', '巴黎', '东京']
-      const isps = ['China Telecom', 'China Unicom', 'Comcast', 'Verizon', 'AT&T']
-
-      return {
-        ip: ip,
-        version: ip.includes(':') ? 'IPv6' : 'IPv4',
-        country: countries[Math.floor(Math.random() * countries.length)],
-        region: '未知',
-        city: cities[Math.floor(Math.random() * cities.length)],
-        timezone: 'UTC+8',
-        isp: isps[Math.floor(Math.random() * isps.length)],
-        org: '未知',
-        proxy: Math.random() > 0.9,
-        vpn: Math.random() > 0.8,
-        tor: Math.random() > 0.95,
-        threat: Math.floor(Math.random() * 5)
-      }
+      return rsltData
     }
 
     function isValidIP(ip) {
@@ -318,6 +274,7 @@ export default {
 </script>
 
 <style scoped>
+  
 .ip-info-tool {
   max-width: 1000px;
   margin: 0 auto;
@@ -366,6 +323,7 @@ export default {
   color: var(--text-primary);
   font-size: 16px;
   transition: all 0.3s;
+  margin-bottom: 0px;
 }
 
 .ip-input:focus {
@@ -375,7 +333,6 @@ export default {
 }
 
 .query-btn {
-  padding: 10px;
   background: var(--accent-color);
   color: white;
   border: none;
